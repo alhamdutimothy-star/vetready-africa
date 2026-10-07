@@ -1,0 +1,51 @@
+{
+  "name": "vetready-africa",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev:web": "npm run dev -w @vetready/web",
+    "dev:api": "npm run dev -w @vetready/api",
+    "build:foundation": "npm run build -w @vetready/contracts && npm run build -w @vetready/domain && npm run build -w @vetready/api",
+    "build": "npm run build:foundation && npm run build -w @vetready/web",
+    "typecheck": "npm run build:foundation && npm run typecheck -w @vetready/web && tsc -p tsconfig.tooling.json",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:migrate": "node --env-file-if-exists=.local/database.env --import tsx scripts/migrate.ts",
+    "db:seed": "node --env-file-if-exists=.local/database.env --import tsx scripts/seed.ts",
+    "test": "npm run build && node --env-file-if-exists=.local/database.env node_modules/vitest/vitest.mjs run",
+    "test:unit": "npm run build:foundation && vitest run tests/unit",
+    "test:integration": "npm run build && node --env-file-if-exists=.local/database.env node_modules/vitest/vitest.mjs run tests/integration tests/e2e",
+    "env:up": "node --import tsx scripts/env-up.ts",
+    "admin:bootstrap": "node --env-file-if-exists=.local/database.env --import tsx scripts/bootstrap-admin.ts",
+    "api:docs": "npm run build:foundation && tsx scripts/openapi.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@nestjs/common": "12.1.2",
+    "@nestjs/core": "12.1.2",
+    "@nestjs/swagger": "12.0.2",
+    "@types/express": "5.0.6",
+    "@types/node": "^24.10.0",
+    "@types/pg": "^8.15.5",
+    "@types/supertest": "^6.0.3",
+    "eslint": "10.12.0",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "supertest": "^7.1.4",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "8.71.1",
+    "vitest": "5.0.3"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
+  }
+}

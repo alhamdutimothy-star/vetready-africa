@@ -1,0 +1,205 @@
+import { randomBytes } from 'node:crypto';
+import { createHash } from 'node:crypto';
+import {
+  EncryptJWT,
+  jwtDecrypt,
+  createRemoteJWKSet,
+  jwtVerify,
+  type JWTPayload,
+} from 'jose';
+import { z } from 'zod';
+const envSchema = z.object({
+  OIDC_ISSUER: z.url(),
+  OIDC_CLIENT_ID: z.string().min(1),
+  OIDC_CLIENT_SECRET: z.string().min(1).optional(),
+  OIDC_AUDIENCE: z.string().min(1),
+  SESSION_SECRET: z.string().regex(/^[a-f0-9]{64}$/),
+  APP_ORIGIN: z.url(),
+  API_INTERNAL_URL: z.url(),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
+});
+export type WebConfig = z.infer<typeof envSchema>;
+export function webConfig(env: NodeJS.ProcessEnv): WebConfig {
+  const result = envSchema.safeParse(env);
+  if (!result.success)
+    throw new Error('Authentication configuration is incomplete');
+  for (const field of [
+    'OIDC_ISSUER',
+    'APP_ORIGIN',
+    'API_INTERNAL_URL',
+  ] as const) {
+    const url = new URL(result.data[field]);
+    if (url.username || url.password)
+      throw new Error('Invalid authentication endpoint');
+    if (
+      url.protocol !== 'https:' &&
+      !(
+        result.data.NODE_ENV !== 'production' &&
+        url.protocol === 'http:' &&
+        ['localhost', '127.0.0.1'].includes(url.hostname)
+      )
+    )
+      throw new Error('HTTPS required');
+  }
+  if (
+    new URL(result.data.APP_ORIGIN).pathname !== '/' ||
+    new URL(result.data.APP_ORIGIN).search ||
+    new URL(result.data.APP_ORIGIN).hash
+  )
+    throw new Error('APP_ORIGIN must be an origin');
+  if (result.data.OIDC_AUDIENCE === result.data.OIDC_CLIENT_ID)
+    throw new Error('API and web audiences must differ');
+  result.data.APP_ORIGIN = new URL(result.data.APP_ORIGIN).origin;
+  return result.data;
+}
+const discoverySchema = z.object({
+  issuer: z.url(),
+  authorization_endpoint: z.url(),
+  token_endpoint: z.url(),
+  jwks_uri: z.url(),
+});
+export async function discovery(config: WebConfig) {
+  const response = await fetch(
+    `${config.OIDC_ISSUER.replace(/\/$/, '')}/.well-known/openid-configuration`,
+    { signal: AbortSignal.timeout(5000), cache: 'no-store', redirect: 'error' },
+  );
+  if (!response.ok) throw new Error('Identity provider unavailable');
+  const data = discoverySchema.parse(await response.json());
+  if (data.issuer !== config.OIDC_ISSUER) throw new Error('Issuer mismatch');
+  for (const endpoint of [
+    data.authorization_endpoint,
+    data.token_endpoint,
+    data.jwks_uri,
+  ]) {
+    const u = new URL(endpoint);
+    if (
+      u.protocol !== 'https:' &&
+      !(
+        config.NODE_ENV !== 'production' &&
+        u.protocol === 'http:' &&
+        ['localhost', '127.0.0.1'].includes(u.hostname)
+      )
+    )
+      throw new Error('Insecure identity endpoint');
+    if (u.username || u.password) throw new Error('Invalid identity endpoint');
+  }
+  return data;
+}
+export function newFlow() {
+  const verifier = randomBytes(32).toString('base64url');
+  return {
+    state: randomBytes(32).toString('base64url'),
+    nonce: randomBytes(32).toString('base64url'),
+    verifier,
+    challenge: createHash('sha256').update(verifier).digest('base64url'),
+  };
+}
+export async function encryptCookie(
+  payload: JWTPayload,
+  secret: string,
+  audience: 'flow' | 'session',
+  seconds: number,
+) {
+  const value = await new EncryptJWT(payload)
+    .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
+    .setIssuer('vetready-web')
+    .setAudience(audience)
+    .setIssuedAt()
+    .setExpirationTime(`${seconds}s`)
+    .encrypt(Buffer.from(secret, 'hex'));
+  if (value.length > 3800)
+    throw new Error('Session token exceeds secure cookie capacity');
+  return value;
+}
+export async function decryptCookie(
+  value: string,
+  secret: string,
+  audience: 'flow' | 'session',
+) {
+  const result = await jwtDecrypt(value, Buffer.from(secret, 'hex'), {
+    issuer: 'vetready-web',
+    audience,
+    requiredClaims: ['exp', 'iat'],
+    keyManagementAlgorithms: ['dir'],
+    contentEncryptionAlgorithms: ['A256GCM'],
+  });
+  return result.payload;
+}
+export async function exchangeCode(
+  config: WebConfig,
+  code: string,
+  flow: JWTPayload,
+) {
+  if (typeof flow.verifier !== 'string' || typeof flow.nonce !== 'string')
+    throw new Error('Invalid login flow');
+  const provider = await discovery(config);
+  const form = new URLSearchParams({
+    grant_type: 'authorization_code',
+    client_id: config.OIDC_CLIENT_ID,
+    code,
+    redirect_uri: `${config.APP_ORIGIN}/auth/callback`,
+    code_verifier: flow.verifier,
+  });
+  if (config.OIDC_CLIENT_SECRET)
+    form.set('client_secret', config.OIDC_CLIENT_SECRET);
+  const response = await fetch(provider.token_endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: form,
+    signal: AbortSignal.timeout(5000),
+    cache: 'no-store',
+    redirect: 'error',
+  });
+  if (!response.ok) throw new Error('Code exchange failed');
+  const tokens = z
+    .object({
+      access_token: z.string().min(1).max(16000),
+      id_token: z.string(),
+      expires_in: z.number().int().positive().max(86400),
+      token_type: z.string().refine((v) => v.toLowerCase() === 'bearer'),
+    })
+    .parse(await response.json());
+  const { payload } = await jwtVerify(
+    tokens.id_token,
+    createRemoteJWKSet(new URL(provider.jwks_uri)),
+    {
+      issuer: config.OIDC_ISSUER,
+      audience: config.OIDC_CLIENT_ID,
+      algorithms: ['RS256', 'ES256'],
+      requiredClaims: ['exp', 'iat', 'sub'],
+    },
+  );
+  if (payload.nonce !== flow.nonce) throw new Error('Nonce mismatch');
+  if (
+    Array.isArray(payload.aud) &&
+    payload.aud.length > 1 &&
+    payload.azp !== config.OIDC_CLIENT_ID
+  )
+    throw new Error('Authorized party mismatch');
+  // Access JWT has a separate API audience; an ID token cannot be used at the API.
+  const access = await jwtVerify(
+    tokens.access_token,
+    createRemoteJWKSet(new URL(provider.jwks_uri)),
+    {
+      issuer: config.OIDC_ISSUER,
+      audience: config.OIDC_AUDIENCE,
+      algorithms: ['RS256', 'ES256'],
+      requiredClaims: ['exp', 'iat', 'sub'],
+    },
+  );
+  if (
+    access.payload.sub !== payload.sub ||
+    typeof access.payload.scope !== 'string' ||
+    !access.payload.scope.split(' ').includes('vetready:access')
+  )
+    throw new Error('Access identity/scope mismatch');
+  return {
+    ...tokens,
+    expires_in: Math.min(
+      tokens.expires_in,
+      Math.max(1, (access.payload.exp ?? 0) - Math.floor(Date.now() / 1000)),
+    ),
+  };
+}

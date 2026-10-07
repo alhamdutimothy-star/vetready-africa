@@ -1,0 +1,223 @@
+{
+  "validationNotice": "REQUIRES DOMAIN EXPERT VALIDATION",
+  "core": [
+    {
+      "code": "CORE_PROFESSIONALISM",
+      "name": "Professionalism and accountability"
+    },
+    {
+      "code": "CORE_COMMUNICATION",
+      "name": "Farmer and customer communication"
+    },
+    {
+      "code": "CORE_REPORTING",
+      "name": "Professional report writing"
+    },
+    {
+      "code": "CORE_DIGITAL",
+      "name": "Digital literacy"
+    },
+    {
+      "code": "CORE_DATA",
+      "name": "Spreadsheet and data interpretation"
+    },
+    {
+      "code": "CORE_REASONING",
+      "name": "Structured problem solving"
+    },
+    {
+      "code": "CORE_COMMERCIAL",
+      "name": "Commercial awareness"
+    },
+    {
+      "code": "CORE_ETHICS",
+      "name": "Ethics and evidence-based claims"
+    },
+    {
+      "code": "CORE_TEAMWORK",
+      "name": "Teamwork and staff coordination"
+    },
+    {
+      "code": "CORE_TIME",
+      "name": "Time and task management"
+    },
+    {
+      "code": "CORE_FIELD",
+      "name": "Field safety and readiness"
+    },
+    {
+      "code": "CORE_CUSTOMER",
+      "name": "Customer-needs assessment"
+    }
+  ],
+  "pathways": [
+    {
+      "code": "DAIRY",
+      "name": "Commercial Dairy Practice",
+      "description": "Herd-level health, production and farm reasoning.",
+      "competencies": [
+        {
+          "code": "DAIRY_HERD",
+          "name": "Dairy herd health and preventive medicine"
+        },
+        {
+          "code": "DAIRY_YOUNGSTOCK",
+          "name": "Calf health and heifer development"
+        },
+        {
+          "code": "DAIRY_TRANSITION",
+          "name": "Transition and fresh-cow monitoring"
+        },
+        {
+          "code": "DAIRY_REPRO",
+          "name": "Reproduction and fertility records"
+        },
+        {
+          "code": "DAIRY_MASTITIS",
+          "name": "Mastitis investigation and control"
+        },
+        {
+          "code": "DAIRY_MOBILITY",
+          "name": "Locomotion and body-condition scoring"
+        },
+        {
+          "code": "DAIRY_NUTRITION",
+          "name": "Dairy nutrition, TMR and forage assessment"
+        },
+        {
+          "code": "DAIRY_PERFORMANCE",
+          "name": "Herd KPIs, economics and investigation"
+        }
+      ]
+    },
+    {
+      "code": "PHARMA_SALES",
+      "name": "Veterinary Pharmaceutical Technical Sales",
+      "description": "Ethical technical-to-commercial application of veterinary medicines.",
+      "competencies": [
+        {
+          "code": "PHARMA_KNOWLEDGE",
+          "name": "Pharmacology, product knowledge and appropriate use"
+        },
+        {
+          "code": "PHARMA_STEWARDSHIP",
+          "name": "Antimicrobial stewardship"
+        },
+        {
+          "code": "PHARMA_SAFETY",
+          "name": "Pharmacovigilance and escalation"
+        },
+        {
+          "code": "PHARMA_PRESENTATION",
+          "name": "Evidence-based product presentation"
+        },
+        {
+          "code": "PHARMA_TERRITORY",
+          "name": "Territory management and segmentation"
+        },
+        {
+          "code": "PHARMA_PIPELINE",
+          "name": "CRM, pipeline and forecasting"
+        },
+        {
+          "code": "PHARMA_NEGOTIATION",
+          "name": "Objection handling and ethical negotiation"
+        },
+        {
+          "code": "PHARMA_VISITS",
+          "name": "Customer visits, follow-up and technical reporting"
+        }
+      ]
+    },
+    {
+      "code": "POULTRY_MANAGEMENT",
+      "name": "Poultry Farm Management",
+      "description": "Integrated production, health, nutrition, people and financial management.",
+      "competencies": [
+        {
+          "code": "POULTRY_PRODUCTION",
+          "name": "Broiler, layer and pullet production management"
+        },
+        {
+          "code": "POULTRY_ENVIRONMENT",
+          "name": "Brooding, housing, water and environment"
+        },
+        {
+          "code": "POULTRY_HEALTH",
+          "name": "Flock health, mortality and supervised necropsy"
+        },
+        {
+          "code": "POULTRY_PREVENTION",
+          "name": "Biosecurity, vaccination and stewardship"
+        },
+        {
+          "code": "POULTRY_NUTRITION",
+          "name": "Nutrition, feed quality and heat-stress reasoning"
+        },
+        {
+          "code": "POULTRY_LAYER_KPI",
+          "name": "Layer production and cost KPI interpretation"
+        },
+        {
+          "code": "POULTRY_BROILER_KPI",
+          "name": "Broiler production and cost KPI interpretation"
+        },
+        {
+          "code": "POULTRY_OPERATIONS",
+          "name": "Staff, SOP, inventory and budgeting"
+        },
+        {
+          "code": "POULTRY_ANALYTICS",
+          "name": "Production dashboards and investigation"
+        }
+      ]
+    },
+    {
+      "code": "PREMIX_SALES",
+      "name": "Premix & Feed Additives Technical Sales",
+      "description": "Investigate nutrition/performance needs before proposing supported solutions.",
+      "competencies": [
+        {
+          "code": "PREMIX_NUTRITION",
+          "name": "Animal nutrition and nutrient-density fundamentals"
+        },
+        {
+          "code": "PREMIX_INGREDIENTS",
+          "name": "Nigerian ingredients and quality variability"
+        },
+        {
+          "code": "PREMIX_HANDLING",
+          "name": "Premix inclusion, stability, handling and mixing"
+        },
+        {
+          "code": "PREMIX_ADDITIVES",
+          "name": "Feed-additive mechanisms, evidence and limitations"
+        },
+        {
+          "code": "PREMIX_FORMULATION",
+          "name": "Formulation and feed-label interpretation"
+        },
+        {
+          "code": "PREMIX_PERFORMANCE",
+          "name": "Poultry and dairy performance interpretation"
+        },
+        {
+          "code": "PREMIX_MILL",
+          "name": "Feed-mill audits, QA and traceability"
+        },
+        {
+          "code": "PREMIX_PRESENTATION",
+          "name": "Technical presentation and ethical comparison"
+        },
+        {
+          "code": "PREMIX_TRIALS",
+          "name": "Trial design, monitoring, interpretation and ROI"
+        },
+        {
+          "code": "PREMIX_TERRITORY",
+          "name": "Territory, pricing, CRM and customer follow-up"
+        }
+      ]
+    }
+  ]
+}
