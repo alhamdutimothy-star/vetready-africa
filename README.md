@@ -12,6 +12,10 @@ Phase 2 adds the 69 proposed assessable children, immutable assessment/item vers
 
 Not implemented: approved production examinations, real supervised simulation/practical/workplace capture, private document/image storage, final scoring/readiness policies, Skills Passport sharing, search/matching, vacancy workflows, payments or AI. Professional readiness remains NOT ASSESSED.
 
+## Phase 3 setup checkpoint
+
+The validated Phase 1–2 history is preserved on GitHub `main`. Phase 3 is authorized and paused at the requested Auth0 tenant-configuration checkpoint. Follow the [exact setup and safe configuration guide](docs/PHASE3_SETUP_CHECKPOINT.md). Phase 3 functionality has not yet been implemented.
+
 ## Local development
 
 Requirements: Node 24.19.x, npm 11, Docker daemon. From repository root:

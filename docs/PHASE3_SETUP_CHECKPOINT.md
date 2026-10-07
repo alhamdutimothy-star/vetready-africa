@@ -1,0 +1,163 @@
+# Phase 3 setup checkpoint
+
+Phase 3 is authorized. Implementation is paused at the founder's explicit Auth0 intervention checkpoint in section 20 of the accepted Phase 3 request. This is not a claim that local LMS development technically needs live identity credentials; the pause follows the requested workflow.
+
+## GitHub preservation completed
+
+Repository: https://github.com/alhamdutimothy-star/vetready-africa
+
+Before pushing, the checkout was clean and the remote advertised no branches. Both commits were preserved unchanged:
+
+- `b176f63`: Phase 1 foundation.
+- `9385bc1`: Phase 2 assessment and development foundations.
+
+A normal, non-force push created `main` at `9385bc12277e8e54a7987ba71b27fe79dd55561a`. A subsequent remote read confirmed the exact SHA. No remote work was replaced. Phase 3 preparation uses `feat/phase-3-training-verification`.
+
+Gitleaks 8.24.2 scanned all local commit history with fully redacted output and reported **zero findings**. The scanner release was downloaded from its official GitHub release and checked against the published SHA-256 checksum. Tracked-file review found only the empty `.env.example`, not populated credential files. `.local/database.env`, `.local/api.env` and `apps/web/.env.local` are ignored. This scan does not guarantee absence of every possible secret; further changes will be scanned before publication.
+
+## Current authentication state
+
+No Auth0 tenant identifiers or application/session secrets are configured in the cloud runtime. GitHub access works through the existing authenticated environment; no GitHub token needs to be supplied in chat. The database-backed OIDC/PKCE adapter remains unchanged, and synthetic test identity remains isolated to automated tests.
+
+The current `main` has the previously validated Phase 2 application. Phase 3 LMS, scoped practical verification, source governance and secure attachments have not been implemented yet. The prior 78-test result is the Phase 2 baseline, not Phase 3 completion evidence.
+
+## Required founder action: create the Auth0 pilot
+
+Use the Auth0 dashboard at https://manage.auth0.com/ and enable account administrator MFA. Create a dedicated development/pilot tenant; keep production configuration separate. Select and record the tenant region after considering your hosting and Nigerian cross-border data-protection arrangements. Use synthetic candidate data until the live-data/privacy review is complete.
+
+### 1. Register the API
+
+Under Applications → APIs, create:
+
+- Name: `VetReady Africa API`.
+- Identifier/audience: `https://github.com/alhamdutimothy-star/vetready-africa/api` is a suitable stable pilot identifier using this repository's namespace. It is a token audience, **not a running API endpoint**. If you already chose another stable identifier, use that exact value consistently.
+- Signing algorithm: `RS256`.
+- Permission/scope: `vetready:access`.
+
+Ensure the web application's authorized users can obtain `vetready:access` according to Auth0's permission/consent settings. Database roles remain the platform authorization authority. Do not enable Auth0 RBAC in a way that removes this scope without also configuring assignments appropriately. The application checks the access token's `scope`, not an Auth0 role claim.
+
+### 2. Register the web application
+
+Under Applications → Applications, create:
+
+- Name: `VetReady Africa Web`.
+- Type: **Regular Web Application**.
+- Flow: Authorization Code with S256 PKCE; the existing application sends the challenge automatically.
+- Token endpoint authentication: `client_secret_post`, matching the existing confidential-client adapter. If policy requires another method, report the method without sending a secret so the adapter can be reviewed.
+
+For development on your own computer, register exactly:
+
+| Setting               | Value                                 |
+| --------------------- | ------------------------------------- |
+| Allowed Callback URLs | `http://localhost:3000/auth/callback` |
+| Allowed Logout URLs   | `http://localhost:3000`               |
+| Allowed Web Origins   | `http://localhost:3000`               |
+
+For a hosted/cloud browser session, register the **actual HTTPS application origin** and its `/auth/callback` URL instead. Do not invent an origin, add a wildcard, or assume your browser's localhost reaches the cloud container. The current app performs local session logout; these settings do not enable Auth0 SSO logout by themselves.
+
+Copy the tenant Domain and web Client ID. Keep the web Client Secret private. Obtain the exact `issuer` and `jwks_uri` from `https://YOUR-TENANT-DOMAIN/.well-known/openid-configuration`; record those public values, including the issuer's trailing slash if present. Dashboard labels can change; the fields/contract above are the application requirements.
+
+### 3. Place configuration in private local files or a deployment secret manager
+
+From the repository root, the existing development database credentials are generated by `npm run env:up` in `.local/database.env`. Do not copy them into tracked files.
+
+Create `.local/api.env` privately using these **non-secret identifiers**, with actual tenant values:
+
+```dotenv
+NODE_ENV=development
+PORT=4000
+OIDC_ISSUER=https://YOUR-TENANT-DOMAIN/
+OIDC_JWKS_URI=https://YOUR-TENANT-DOMAIN/.well-known/jwks.json
+OIDC_AUDIENCE=https://github.com/alhamdutimothy-star/vetready-africa/api
+```
+
+Use discovery's actual `issuer`/`jwks_uri` if they differ. The API process also loads `.local/database.env` for `DATABASE_URL`.
+
+Create `apps/web/.env.local` privately:
+
+```dotenv
+OIDC_ISSUER=https://YOUR-TENANT-DOMAIN/
+OIDC_AUDIENCE=https://github.com/alhamdutimothy-star/vetready-africa/api
+OIDC_CLIENT_ID=YOUR-WEB-CLIENT-ID
+APP_ORIGIN=http://localhost:3000
+API_INTERNAL_URL=http://127.0.0.1:4000
+```
+
+Insert `OIDC_CLIENT_SECRET` directly from the Auth0 dashboard into this ignored file or your secret manager; do not paste it into chat. Add a genuine cryptographically random `SESSION_SECRET` as 64 hexadecimal characters. It must be a runtime encryption key, not a network proxy credential placeholder.
+
+For local development, the following command adds a generated key **directly to the ignored web file without printing it**, preserves an existing key, and restricts file permissions. Run from the repository root after creating the file:
+
+```sh
+node - <<'JS'
+const fs = require('node:fs');
+const crypto = require('node:crypto');
+const path = 'apps/web/.env.local';
+const previous = fs.existsSync(path) ? fs.readFileSync(path, 'utf8') : '';
+if (!/^SESSION_SECRET=/m.test(previous)) {
+  const prefix = previous && !previous.endsWith('\n') ? '\n' : '';
+  fs.appendFileSync(path, prefix + 'SESSION_SECRET=' + crypto.randomBytes(32).toString('hex') + '\n', {mode: 0o600});
+}
+fs.chmodSync(path, 0o600);
+JS
+chmod 600 .local/api.env apps/web/.env.local
+```
+
+A blank existing `SESSION_SECRET=` line must be removed privately before generating; an invalid existing key is not silently replaced. Do not rotate a working key casually because that invalidates sessions. These are setup commands for your configured local environment, not commands already executed against real Auth0 credentials here.
+
+| Value                                            | Secret?                               | Location                                                                              |
+| ------------------------------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------- |
+| Tenant domain, issuer, JWKS URI                  | No                                    | API/web identifiers; exact tenant host is also needed for the cloud network allowlist |
+| API identifier/audience                          | No                                    | API and web configuration, identical value                                            |
+| Regular web Client ID                            | No                                    | Web configuration only                                                                |
+| `OIDC_CLIENT_SECRET`                             | **Yes**                               | Web private environment/secret manager only                                           |
+| `SESSION_SECRET`                                 | **Yes**                               | Web private environment/secret manager only                                           |
+| `DATABASE_URL`, `TEST_DATABASE_URL`              | **Yes when they contain credentials** | Ignored local database configuration or secret manager                                |
+| Auth0 account password, recovery codes, MFA seed | **Yes**                               | Your account/password manager; never application configuration or chat                |
+
+Never commit populated environment files, private keys, account credentials, client secrets, session secrets or database credentials. Do not put secrets in `NEXT_PUBLIC_*` variables. Only the empty placeholder `.env.example` is tracked.
+
+### 4. Return public identifiers and configure network access
+
+Send only the **tenant domain, web Client ID and API audience** when ready. If your application will run at a hosted HTTPS origin, include that public origin. Do not send the Client Secret, session key, passwords, recovery codes or database URL.
+
+Once the exact tenant host is known, it can be added to the cloud's restricted destination policy through environment settings. No guessed tenant domain or broad `*.auth0.com` wildcard has been added. Existing `SESSION_SECRET` and database credentials must be supplied as genuine runtime values; network proxy placeholder secret bindings are not interchangeable with local encryption/database credentials.
+
+### 5. Run and inspect the existing application locally
+
+On your own computer with Node 24.19.x/npm 11 and Docker, clone first if you do not already have the checkout. Then create the ignored configuration files from step 3 in that checkout; skip cloning if it already exists. The setup/build commands are:
+
+```sh
+git clone https://github.com/alhamdutimothy-star/vetready-africa.git
+cd vetready-africa
+npm ci
+npm run env:up
+npm run build
+```
+
+API terminal:
+
+```sh
+node --env-file=.local/database.env --env-file=.local/api.env apps/api/dist/main.js
+```
+
+Web terminal:
+
+```sh
+npm run dev:web
+```
+
+Inspect the local application at `http://localhost:3000` **on that same computer**. Sign in with a synthetic test account; inspect `/dashboard`, `/development` and an assessment opened from the demo catalog. Staff workspace: `/assessment-workspace`, after an operator grants the required role. Do not weaken RBAC to gain access. Follow README's administrator bootstrap instructions when needed; account creation does not automatically grant administration.
+
+Verify real sign-in, callback, issuer/audience/scope checks, private profile storage, session behavior and role boundaries before treating live identity as verified. The hosted Auth0 connection has not yet been tested.
+
+## Phase 3 work queued after this checkpoint
+
+1. Traceable source/claim versions with contextual numerical records; unvalidated claims marked SOURCE VALIDATION REQUIRED.
+2. One proposed integrated blueprint per pathway, with demonstration datasets and criterion mapping.
+3. Versioned course → module → lesson → outcome → competency → assessment mapping and resumable learning progress. Completion creates TRAINING COMPLETED only.
+4. Scoped assessor governance and structured supervised simulation/practical/workplace records, with human moderation and preserved provenance.
+5. Private attachment storage with validated types/sizes, quarantine/scanning, authorized access logs and retention; no convenient local production storage fallback.
+6. Candidate and staff UI covering training, competencies, evidence, development and supervised assessment; mobile-width tests and an end-to-end demo workflow.
+7. Full tests, lint, strict types, formatting, migration/build/OpenAPI/audit/security checks and the requested completion report.
+
+No professional thresholds, final employability or matching weights, automated certification, public ranking, payments, native apps or unsupervised AI practical decisions are authorized. Google Drive remains deferred. Phase 4 has not begun.
