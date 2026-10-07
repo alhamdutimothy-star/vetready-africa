@@ -1,6 +1,6 @@
 # Relational database architecture
 
-This document distinguishes the target relational model from the implemented Phase 1 schema. UUID primary keys, `timestamptz` timestamps, explicit foreign keys and scoped authorization apply throughout. Monetary values use integer minor units with currency; no floating-point salaries.
+This document distinguishes the target relational model from the implemented Phases 1–2 schema. UUID primary keys, `timestamptz` timestamps, explicit foreign keys and scoped authorization apply throughout. Monetary values use integer minor units with currency; no floating-point salaries.
 
 ## Core entities and relationships
 
@@ -112,6 +112,46 @@ erDiagram
  USER ||--o{ AUDIT_EVENT : acts
 ```
 
-Candidate competency identity is `(candidate_id, competency_id)`, independent of pathway. Evidence references a version and has candidate-owner and competency-consistency checks. Organization role assignments require matching membership and scope. Approved definitions/pathway mappings and audit/review events are protected by triggers. No candidate projection is populated automatically by evidence submission. Operational assessor decisions, document storage, verification projections and detailed role policies are not implemented yet.
+Candidate competency identity is `(candidate_id, competency_id)`, independent of pathway. Evidence references a version and has candidate-owner and competency-consistency checks. Organization role assignments require matching membership and scope. Approved definitions/pathway mappings and audit/review events are protected by triggers. No candidate projection is populated automatically by evidence submission. Phase 2 adds assigned assessment review and evidence-gap projections below; private document storage and professional eligibility policies remain pending.
 
 Schema migrations use a checksum ledger and advisory lock, with one transaction per migration. Repeated seeds preserve existing version records and approved content. Tests only reset a dedicated local `_test` database. Runtime database access is not yet split from migration-owner privileges locally; separate least-privilege database roles are a production release prerequisite.
+
+## Implemented Phase 2 schema (migrations 003–007)
+
+Existing `competencies`/`competency_versions` remain the 47 organizing groups. `child_competencies`/`child_competency_versions` represent the 69 unique assessable children. `child_criteria` hold ordered outcomes, and reusable `child_group_mappings` preserve cross-pathway identities. `pathway_domain_groups` attaches a normalized domain to each pathway/group placement. `pathway_child_requirements` and `role_child_requirements` store proposed evidence routes; all seeded mandatory values remain null.
+
+```mermaid
+erDiagram
+  pathway_versions ||--o{ pathway_domain_groups : organizes
+  competency_domains ||--o{ pathway_domain_groups : classifies
+  competency_versions ||--o{ child_group_mappings : groups
+  child_competency_versions ||--o{ child_group_mappings : reuses
+  child_competency_versions ||--o{ child_criteria : defines
+  pathway_versions ||--o{ pathway_child_requirements : proposes
+  role_profiles ||--o{ role_child_requirements : augments
+  child_competency_versions ||--o{ pathway_child_requirements : requires
+  assessments ||--o{ assessment_versions : versions
+  assessment_versions ||--o{ assessment_blueprint : maps
+  assessment_item_versions ||--o{ assessment_blueprint : delivers
+  assessment_items ||--o{ assessment_item_versions : versions
+  assessment_item_versions ||--o{ rubric_criteria : observes
+  child_criteria ||--o{ rubric_criteria : anchors
+  candidate_profiles ||--o{ assessment_attempts : attempts
+  assessment_versions ||--o{ assessment_attempts : freezes
+  assessment_attempts ||--o{ attempt_items : orders
+  attempt_items ||--o| candidate_responses : answers
+  assessment_attempts ||--o{ assessor_reviews : reviews
+  assessor_reviews ||--o{ rubric_observations : records
+  assessor_reviews ||--o{ assessment_moderations : moderates
+  assessment_attempts ||--o{ assessment_appeals : appeals
+  assessment_attempts ||--o{ competency_evidence : generates
+  child_competency_versions ||--o{ competency_evidence : supports
+  competency_evidence ||--o{ competency_evidence_reviews : decisions
+  assessment_item_versions ||--o| assessment_item_retirements : retires
+  candidate_profiles ||--o{ development_plans : plans
+  development_plans ||--o{ development_plan_items : recommends
+```
+
+Composite foreign keys bind responses and evidence to the correct candidate/attempt/item, and blueprint group/child mappings to the selected pathway. Delivered content, rubrics, mappings and referenced children freeze; submitted responses freeze. Question retirement is an append-only event. Evidence provenance is immutable; verification requires approved non-demo content, an assigned independent assessor and latest-review moderation. Online evidence cannot be verified as simulation/practical/workplace performance. Audit/review/observation/plan records are append-only; development-item completion is a tracking field and never modifies competence.
+
+Evidence context remains attached JSON because each assessment-derived record has one context; its parent attempt/version supplies provenance. Computed competency states/gaps remain projections. Saved plans contain a consistent requirement/evidence/gap snapshot and engine version rather than a mutable competing state table. Indices cover candidate attempts, evidence/child lookups and saved plans. See [ADR 0003](docs/adr/0003-baseline-evidence-and-development.md).

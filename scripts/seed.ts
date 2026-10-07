@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { z } from 'zod';
 import { databasePool, transaction } from './db';
+import { seedPhase2 } from './seed-phase2';
 const competency = z.object({ code: z.string(), name: z.string() });
 const schema = z.object({
   validationNotice: z.literal('REQUIRES DOMAIN EXPERT VALIDATION'),
@@ -29,6 +30,10 @@ async function main() {
         'evidence:own',
         'admin:summary',
         'roles:grant',
+        'assessment:author',
+        'assessment:assign',
+        'assessment:review',
+        'assessment:moderate',
       ];
       for (const p of permissions)
         await client.query(
@@ -42,14 +47,30 @@ async function main() {
         },
         EMPLOYER: { scope: 'ORGANIZATION', permissions: ['employer:own'] },
         TRAINER: { scope: 'PLATFORM', permissions: ['catalog:read'] },
-        ASSESSOR: { scope: 'PLATFORM', permissions: ['catalog:read'] },
+        ASSESSOR: {
+          scope: 'PLATFORM',
+          permissions: ['catalog:read', 'assessment:review'],
+        },
         ADMIN: {
           scope: 'PLATFORM',
-          permissions: ['catalog:read', 'admin:summary'],
+          permissions: [
+            'catalog:read',
+            'admin:summary',
+            'assessment:author',
+            'assessment:assign',
+            'assessment:moderate',
+          ],
         },
         SUPER_ADMIN: {
           scope: 'PLATFORM',
-          permissions: ['catalog:read', 'admin:summary', 'roles:grant'],
+          permissions: [
+            'catalog:read',
+            'admin:summary',
+            'roles:grant',
+            'assessment:author',
+            'assessment:assign',
+            'assessment:moderate',
+          ],
         },
       };
       for (const [code, role] of Object.entries(roles)) {
@@ -136,6 +157,10 @@ async function main() {
           );
         }
       }
+    });
+    await transaction(pool, async (client) => {
+      await client.query('SELECT pg_advisory_xact_lock(418272)');
+      await seedPhase2(client);
     });
     console.log(
       'Reference catalogs present; new definitions are draft, existing approvals preserved, no thresholds assigned by seed.',

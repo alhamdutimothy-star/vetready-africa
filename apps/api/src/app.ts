@@ -20,6 +20,9 @@ import { AuthGuard, PermissionsGuard } from './auth';
 import { FoundationController } from './controller';
 import { FoundationService } from './service';
 import { FoundationRepository } from './repository';
+import { AssessmentController } from './assessment/controller';
+import { AssessmentService } from './assessment/service';
+import { AssessmentRepository } from './assessment/repository';
 @Catch()
 class SafeErrors implements ExceptionFilter {
   catch(error: unknown, host: ArgumentsHost) {
@@ -58,12 +61,14 @@ class SafeErrors implements ExceptionFilter {
 export async function createApp(config: ApiConfig): Promise<INestApplication> {
   @Module({
     imports: [ThrottlerModule.forRoot([{ ttl: 60000, limit: 120 }])],
-    controllers: [FoundationController],
+    controllers: [FoundationController, AssessmentController],
     providers: [
       { provide: API_CONFIG, useValue: config },
       Database,
       FoundationRepository,
       FoundationService,
+      AssessmentRepository,
+      AssessmentService,
       { provide: APP_GUARD, useClass: ThrottlerGuard },
       { provide: APP_GUARD, useClass: AuthGuard },
       { provide: APP_GUARD, useClass: PermissionsGuard },
@@ -107,7 +112,7 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
     const document = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('VetReady Africa foundation API')
+        .setTitle('VetReady Africa assessment and development API')
         .setVersion('0.1.0')
         .addBearerAuth(
           { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },

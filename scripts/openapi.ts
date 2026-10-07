@@ -14,7 +14,7 @@ async function main() {
     const document = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('VetReady Africa foundation API')
+        .setTitle('VetReady Africa assessment and development API')
         .setVersion('0.1.0')
         .addBearerAuth({ type: 'http', scheme: 'bearer' }, 'access-token')
         .build(),

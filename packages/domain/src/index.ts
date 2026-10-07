@@ -5,7 +5,11 @@ export type Permission =
   | 'catalog:read'
   | 'evidence:own'
   | 'admin:summary'
-  | 'roles:grant';
+  | 'roles:grant'
+  | 'assessment:author'
+  | 'assessment:assign'
+  | 'assessment:review'
+  | 'assessment:moderate';
 export interface RoleGrant {
   permission: string;
   organizationId: string | null;
@@ -57,3 +61,5 @@ export type {
   Evidence,
   PathwayCompetency,
 } from './models';
+
+export * from './assessment';

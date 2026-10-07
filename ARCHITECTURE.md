@@ -61,3 +61,7 @@ An optional service can generate draft cases or feedback using reviewed/redacted
 ## Phase 1 implementation status
 
 The modular monolith foundation is implemented. Managed-provider OIDC is wired and protocol-tested, but no Auth0 tenant has been provisioned. Persistence uses parameterized `pg` queries and transactional repositories, avoiding schema sync or duplicate ORM/schema sources in the initial migration set. Private object storage, workers/outbox, assessment governance execution and matching remain future milestones. Four draft pathway catalogs share one competency identity per core skill. Presentation → application/API → domain → persistence boundaries are retained.
+
+## Implemented Phase 2 module
+
+The assessment controller/service/repository implements the delivery, review and development API. Pure domain functions grade objective responses, compare exact evidence facets against version-bound requirements, and generate gap-linked activities. Shared contracts validate all untrusted inputs. Versioned content and frozen blueprints preserve prior attempts; a repeatable-read evaluation snapshot preserves each saved plan. No scoring/readiness aggregation or AI decisions are present. See [ADR 0003](docs/adr/0003-baseline-evidence-and-development.md) and [completion boundaries](docs/PHASE2_COMPLETION.md).

@@ -1,0 +1,1278 @@
+[
+  {
+    "code": "PROF_ACCOUNTABILITY",
+    "groups": ["CORE_PROFESSIONALISM"],
+    "statement": "Document limitations, responsibilities and an appropriate escalation for a professional task",
+    "route": "M(C+W)",
+    "criteria": [
+      "Honest record",
+      "scope limits",
+      "named escalation",
+      "corroborated behavior"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "VCN scope, supervision, confidentiality and professional conduct",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "COMM_BRIEF",
+    "groups": ["CORE_COMMUNICATION"],
+    "statement": "Explain a technical finding to a farmer/customer and check understanding",
+    "route": "P",
+    "criteria": [
+      "Audience adaptation",
+      "listening",
+      "plain language",
+      "questions",
+      "understanding check"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "REPORT_PRODUCE",
+    "groups": ["CORE_REPORTING"],
+    "statement": "Produce a traceable professional report distinguishing findings, interpretation and actions",
+    "route": "C",
+    "criteria": [
+      "Source data",
+      "uncertainty",
+      "prioritized recommendations",
+      "monitoring",
+      "confidentiality"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DIGITAL_WORKFLOW",
+    "groups": ["CORE_DIGITAL"],
+    "statement": "Create, organize and securely share a work document using common digital tools",
+    "route": "P",
+    "criteria": [
+      "Files",
+      "email",
+      "document editing",
+      "safe sharing",
+      "interrupted connection recovery"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DATA_PREPARE",
+    "groups": ["CORE_DATA"],
+    "statement": "Prepare a spreadsheet dataset and identify missing values, unit errors and inconsistent records",
+    "route": "C",
+    "criteria": [
+      "Input validation",
+      "units",
+      "formulas",
+      "documented corrections",
+      "preserve original data"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DATA_VISUALIZE",
+    "groups": ["CORE_DATA"],
+    "statement": "Create and explain a reproducible summary and chart from operational records",
+    "route": "C",
+    "criteria": [
+      "Formula traceability",
+      "denominator",
+      "time period",
+      "chart",
+      "limits of inference"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "REASON_INVESTIGATE",
+    "groups": ["CORE_REASONING"],
+    "statement": "Construct and defend a structured investigation with competing explanations and requested evidence",
+    "route": "C",
+    "criteria": [
+      "Problem",
+      "hypotheses",
+      "needed data",
+      "confounding",
+      "prioritization",
+      "monitoring"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "AUDIT_METHOD",
+    "groups": ["CORE_REASONING"],
+    "statement": "Conduct a structured evidence-based audit and document corrective actions",
+    "route": "P",
+    "criteria": [
+      "Interview",
+      "observations",
+      "records",
+      "findings",
+      "limitations",
+      "actions"
+    ],
+    "context": "SITE_CONTEXT",
+    "standard": "Audit scope and relevant site safety; no generic technical checklist implied",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "COMMERCIAL_VALUE",
+    "groups": ["CORE_COMMERCIAL"],
+    "statement": "Evaluate a proposed intervention using explicit cost, benefit and uncertainty assumptions",
+    "route": "C",
+    "criteria": [
+      "Cost categories",
+      "alternatives",
+      "value/ROI assumptions",
+      "sensitivity",
+      "no unsupported guarantee"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "ETHICS_CLAIMS",
+    "groups": ["CORE_ETHICS"],
+    "statement": "Evaluate a professional/product claim and explain an ethical recommendation or refusal",
+    "route": "C",
+    "criteria": [
+      "Evidence quality",
+      "lawful claims",
+      "conflicts",
+      "safety",
+      "confidentiality",
+      "uncertainty"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Professional conduct, product claims and applicable regulator requirements",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "TEAM_COORDINATE",
+    "groups": ["CORE_TEAMWORK"],
+    "statement": "Brief a team and delegate a task with clear responsibilities and escalation",
+    "route": "P",
+    "criteria": [
+      "Roles",
+      "handover",
+      "feedback",
+      "conflict handling",
+      "inclusive communication"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "TIME_EXECUTE",
+    "groups": ["CORE_TIME"],
+    "statement": "Prioritize competing tasks and demonstrate follow-through on an agreed plan",
+    "route": "M(C+W)",
+    "criteria": [
+      "Risk/urgency",
+      "scheduling",
+      "task log",
+      "deadline changes",
+      "accountable follow-up"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "FIELD_SAFE",
+    "groups": ["CORE_FIELD"],
+    "statement": "Demonstrate safe entry, movement and biosecurity behavior at a relevant site",
+    "route": "P",
+    "criteria": [
+      "PPE",
+      "induction",
+      "hazards",
+      "hygiene",
+      "emergency escalation",
+      "authorized task limits"
+    ],
+    "context": "SITE_CONTEXT",
+    "standard": "Occupational safety, welfare, biosecurity and lawful supervision",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "NEEDS_INTERVIEW",
+    "groups": ["CORE_CUSTOMER"],
+    "statement": "Conduct a structured interview that records the customer problem, objectives and constraints",
+    "route": "P",
+    "criteria": [
+      "History",
+      "stakeholder priorities",
+      "clarification",
+      "no premature product recommendation"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "NUTRITION_FOUNDATIONS",
+    "groups": ["DAIRY_NUTRITION", "POULTRY_NUTRITION", "PREMIX_NUTRITION"],
+    "statement": "Explain nutrient functions, nutrient basis and intake-performance relationships",
+    "route": "K",
+    "criteria": [
+      "Energy",
+      "protein",
+      "amino acids/digestibility",
+      "minerals/vitamins",
+      "Ca",
+      "total/available P",
+      "Na/Cl",
+      "fibre/fat",
+      "intake",
+      "nutrient density"
+    ],
+    "context": "NUTRITION_CONTEXT",
+    "standard": "Qualified nutritionist review; appropriate NRC/NASEM, species/stage and analytical references",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "SALES_PRESENT",
+    "groups": ["PHARMA_PRESENTATION", "PREMIX_PRESENTATION"],
+    "statement": "Deliver an evidence-supported product presentation and respond to technical questions",
+    "route": "P",
+    "criteria": [
+      "Need linkage",
+      "approved claims",
+      "limitations",
+      "competitor evidence",
+      "value",
+      "checking understanding"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Authorized medicine/feed-product documentation and claims rules",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "SALES_NEGOTIATE",
+    "groups": ["PHARMA_NEGOTIATION", "PREMIX_PRESENTATION", "PREMIX_TERRITORY"],
+    "statement": "Handle objections and negotiate without misleading claims or unsafe recommendations",
+    "route": "P",
+    "criteria": [
+      "Clarify objection",
+      "defend evidence",
+      "pricing/value",
+      "appropriate refusal",
+      "escalation"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Professional ethics and applicable product/advertising rules",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "SALES_TERRITORY",
+    "groups": ["PHARMA_TERRITORY", "PREMIX_TERRITORY"],
+    "statement": "Develop and defend a territory plan using segmentation, prospecting and customer priorities",
+    "route": "C",
+    "criteria": [
+      "Channels",
+      "prospects",
+      "priorities",
+      "visit plan",
+      "resource allocation",
+      "Nigerian distribution context"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "SALES_CRM",
+    "groups": ["PHARMA_PIPELINE", "PREMIX_TERRITORY"],
+    "statement": "Maintain an accurate CRM opportunity record and prepare a traceable sales forecast",
+    "route": "P",
+    "criteria": [
+      "CRM hygiene",
+      "pipeline stages",
+      "follow-up",
+      "assumptions",
+      "uncertainty",
+      "actual-versus-forecast"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "SALES_FOLLOWUP",
+    "groups": ["PHARMA_VISITS", "PREMIX_TERRITORY"],
+    "statement": "Document agreed customer actions and demonstrate purposeful follow-up",
+    "route": "M(P+W)",
+    "criteria": [
+      "Visit report",
+      "responsibilities",
+      "contact permission",
+      "next action",
+      "outcome review"
+    ],
+    "context": "ROLE_CONTEXT",
+    "standard": "Review rubric and local applicability",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_EXAM",
+    "groups": ["DAIRY_HERD"],
+    "statement": "Perform and document an individual bovine clinical assessment within authorized scope",
+    "route": "P",
+    "criteria": [
+      "History",
+      "examination",
+      "problem list",
+      "differential reasoning",
+      "safe handling",
+      "referral"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "VCN scope, supervised examination and reviewed clinical methods",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_HERD_PLAN",
+    "groups": ["DAIRY_HERD"],
+    "statement": "Investigate a herd-health pattern and justify a preventive-health plan",
+    "route": "C",
+    "criteria": [
+      "Population pattern",
+      "case definitions",
+      "vaccination",
+      "biosecurity",
+      "records",
+      "appropriate interventions"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Local disease context, approved products and herd-health references",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_COLOSTRUM",
+    "groups": ["DAIRY_YOUNGSTOCK"],
+    "statement": "Assess a calf-unit colostrum-management process and identify documented risks",
+    "route": "P",
+    "criteria": [
+      "Collection",
+      "quality-assessment method",
+      "handling",
+      "delivery records",
+      "passive-transfer concepts"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Validated colostrum methods and locally applicable calf-health references",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_CALF",
+    "groups": ["DAIRY_YOUNGSTOCK"],
+    "statement": "Examine calves and investigate health/growth concerns using calf-unit records",
+    "route": "P",
+    "criteria": [
+      "Clinical assessment",
+      "feeding/hygiene",
+      "growth monitoring",
+      "weaning evidence",
+      "disease risks"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Calf examination/safety, growth methods and reviewed management guidance",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_HEIFER",
+    "groups": ["DAIRY_YOUNGSTOCK"],
+    "statement": "Interpret heifer development records and justify breeding-readiness questions",
+    "route": "C",
+    "criteria": [
+      "Age/weight at breeding",
+      "growth",
+      "nutrition",
+      "health",
+      "breed/system context",
+      "no universal targets"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Validated breed/system-specific development references",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_TRANSITION_AUDIT",
+    "groups": ["DAIRY_TRANSITION"],
+    "statement": "Assess far-off/close-up management and identify transition risks",
+    "route": "P",
+    "criteria": [
+      "Grouping",
+      "feed/water",
+      "BCS records",
+      "environment",
+      "calving history",
+      "monitoring"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Reviewed transition-management methods",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_FRESH_REASON",
+    "groups": ["DAIRY_TRANSITION"],
+    "statement": "Investigate fresh-cow findings and prioritize diagnostic/escalation actions",
+    "route": "C",
+    "criteria": [
+      "Hypocalcaemia",
+      "ketosis",
+      "displaced-abomasum risk",
+      "retained placenta/metritis",
+      "intake",
+      "differential reasoning"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Reviewed clinical criteria, authorized protocols and supervision",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_FERTILITY",
+    "groups": ["DAIRY_REPRO"],
+    "statement": "Calculate and interpret fertility indicators from reproductive records",
+    "route": "C",
+    "criteria": [
+      "Heat detection records",
+      "breeding",
+      "pregnancy outcomes",
+      "denominators",
+      "periods",
+      "limitations"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Approved KPI definitions; no benchmark pass marks",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_REPRO_OBSERVE",
+    "groups": ["DAIRY_REPRO"],
+    "statement": "Assess heat-detection practice and reproductive records during a supervised farm review",
+    "route": "P",
+    "criteria": [
+      "Observation",
+      "recording",
+      "management contributors",
+      "referral boundaries"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Reproductive professional scope; invasive procedures not implied",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_UDDER_DATA",
+    "groups": ["DAIRY_MASTITIS"],
+    "statement": "Interpret SCC and mastitis records to construct an udder-health investigation",
+    "route": "C",
+    "criteria": [
+      "Cow/herd patterns",
+      "clinical history",
+      "sampling questions",
+      "pathogen evidence",
+      "confounding"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Reviewed SCC definitions, laboratory context and mastitis guidance",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_UDDER_AUDIT",
+    "groups": ["DAIRY_MASTITIS"],
+    "statement": "Assess udder health and milking hygiene and document investigation findings",
+    "route": "P",
+    "criteria": [
+      "Observations",
+      "safe sample-handling method",
+      "milking routine",
+      "stewardship",
+      "withdrawal awareness"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Approved sampling, medicine and milk-safety requirements",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_LOCOMOTION",
+    "groups": ["DAIRY_MOBILITY"],
+    "statement": "Perform and document locomotion scoring using the selected reviewed method",
+    "route": "P",
+    "criteria": [
+      "Safe observation",
+      "scoring anchors",
+      "consistency",
+      "recording",
+      "lameness escalation"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Validated scoring method and observer calibration",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_BCS",
+    "groups": ["DAIRY_MOBILITY"],
+    "statement": "Perform and document body-condition scoring using the selected reviewed method",
+    "route": "P",
+    "criteria": [
+      "Anchors",
+      "animal context",
+      "consistency",
+      "records",
+      "interpret limits"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Validated BCS method and calibration",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_FEED_AUDIT",
+    "groups": ["DAIRY_NUTRITION"],
+    "statement": "Assess forage/TMR, feed access, intake records, water and heat-stress risks",
+    "route": "P",
+    "criteria": [
+      "Forage",
+      "TMR",
+      "sorting",
+      "feed access",
+      "DMI basis",
+      "water",
+      "environment",
+      "referral"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Reviewed feeding-audit and forage methods; no formulation prescription",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_KPI",
+    "groups": ["DAIRY_PERFORMANCE"],
+    "statement": "Calculate and interpret milk-production performance from herd records",
+    "route": "C",
+    "criteria": [
+      "Yield",
+      "population/period",
+      "records quality",
+      "trend",
+      "missing data",
+      "fertility linkage"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Reviewed milk KPI definitions and context-specific references",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_ECONOMICS",
+    "groups": ["DAIRY_PERFORMANCE"],
+    "statement": "Compare herd-management options using farm costs and explicit assumptions",
+    "route": "C",
+    "criteria": [
+      "Costs",
+      "losses",
+      "expected benefit",
+      "sensitivity",
+      "alternatives",
+      "uncertainties"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Local cost data and reviewed economic methods",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "DAIRY_INTEGRATED",
+    "groups": ["DAIRY_PERFORMANCE"],
+    "statement": "Conduct a herd-performance investigation and defend a farm report",
+    "route": "M(C+P)",
+    "criteria": [
+      "Individual/herd findings",
+      "hypotheses",
+      "audit",
+      "data",
+      "prioritized actions",
+      "owner/worker communication",
+      "monitoring"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Reviewed integrated case and field rubric",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PHARMA_LABEL",
+    "groups": ["PHARMA_KNOWLEDGE"],
+    "statement": "Interpret approved medicine information and calculate a documented dose/withdrawal example",
+    "route": "C",
+    "criteria": [
+      "Pharmacology",
+      "antimicrobial classes",
+      "indication",
+      "units",
+      "dose principles",
+      "contraindications",
+      "route",
+      "withdrawal",
+      "storage"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Authorized label/dossier and current Nigerian medicine requirements; no invented dose",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PHARMA_STEWARD",
+    "groups": ["PHARMA_STEWARDSHIP"],
+    "statement": "Justify appropriate antimicrobial use, alternatives or referral in a customer case",
+    "route": "C",
+    "criteria": [
+      "Problem evidence",
+      "indication",
+      "class",
+      "prevention",
+      "prescribing limits",
+      "resistance",
+      "records"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Applicable stewardship guidance and professional rules",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PHARMA_REPORT_SAFETY",
+    "groups": ["PHARMA_SAFETY"],
+    "statement": "Complete and route a simulated suspected safety/product-quality report",
+    "route": "P",
+    "criteria": [
+      "Event facts",
+      "no assumed causality",
+      "batch details",
+      "confidentiality",
+      "reporting destination",
+      "follow-up"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Current authorized reporting route and regulator requirements",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PHARMA_VISIT_REASON",
+    "groups": ["PHARMA_VISITS"],
+    "statement": "Investigate a customer problem before recommending a veterinary medicine",
+    "route": "M(C+P)",
+    "criteria": [
+      "Needs interview",
+      "disease/history",
+      "observations",
+      "limitations",
+      "clinical escalation",
+      "justified recommendation or no-sale"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Professional scope and authorized product use",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_BROILER_PLAN",
+    "groups": ["POULTRY_PRODUCTION"],
+    "statement": "Evaluate a broiler production plan against flock records and operational constraints",
+    "route": "C",
+    "criteria": [
+      "Stage",
+      "feeding",
+      "density",
+      "weighing",
+      "uniformity",
+      "resources",
+      "scheduling"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Relevant current broiler guide and local system validation",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_PULLET_PLAN",
+    "groups": ["POULTRY_PRODUCTION"],
+    "statement": "Evaluate pullet development and transition to lay using growth and management records",
+    "route": "C",
+    "criteria": [
+      "Weighing",
+      "uniformity",
+      "feeding phases",
+      "lighting",
+      "age/stage",
+      "transition planning"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Relevant breeder guide; no generic weight/age targets",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_LAYER_PLAN",
+    "groups": ["POULTRY_PRODUCTION"],
+    "statement": "Evaluate a layer production plan using flock stage, environment and production history",
+    "route": "C",
+    "criteria": [
+      "Feeding",
+      "lighting",
+      "density",
+      "production planning",
+      "persistency",
+      "resources"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Relevant breeder guide and production context",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_WEIGH",
+    "groups": ["POULTRY_PRODUCTION"],
+    "statement": "Weigh birds and document a defensible flock weight/uniformity sample",
+    "route": "P",
+    "criteria": [
+      "Safe handling",
+      "sampling",
+      "equipment",
+      "records",
+      "method",
+      "representativeness"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Reviewed sampling/uniformity definition and welfare",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_HOUSE_AUDIT",
+    "groups": ["POULTRY_ENVIRONMENT"],
+    "statement": "Inspect a poultry house and document environmental/feed-water risks",
+    "route": "P",
+    "criteria": [
+      "Brooding",
+      "temperature",
+      "humidity",
+      "ventilation",
+      "lighting",
+      "litter",
+      "density",
+      "water",
+      "heat stress"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Reviewed house-audit methods and safety",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_FLOCK_INVESTIGATE",
+    "groups": ["POULTRY_HEALTH"],
+    "statement": "Investigate morbidity/mortality using flock observations, records and diagnostic questions",
+    "route": "M(C+P)",
+    "criteria": [
+      "History",
+      "observation",
+      "patterns",
+      "differential reasoning",
+      "samples/referral",
+      "data limitations"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Veterinary scope, disease context and diagnostics",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_NECROPSY",
+    "groups": ["POULTRY_HEALTH"],
+    "statement": "Perform and document a supervised poultry necropsy within authorized scope",
+    "route": "P",
+    "criteria": [
+      "Safety",
+      "systematic examination",
+      "lesion description",
+      "sampling/referral",
+      "disposal"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Reviewed necropsy, biosecurity, welfare and legal supervision",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_BIOSECURITY",
+    "groups": ["POULTRY_PREVENTION"],
+    "statement": "Conduct a poultry biosecurity audit and prioritize corrective actions",
+    "route": "P",
+    "criteria": [
+      "Movement",
+      "visitor controls",
+      "hygiene",
+      "site layout",
+      "records",
+      "compliance",
+      "reporting"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Current relevant biosecurity and disease-control guidance",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_PREVENT_PLAN",
+    "groups": ["POULTRY_PREVENTION"],
+    "statement": "Evaluate vaccination/medication plans and implementation records",
+    "route": "C",
+    "criteria": [
+      "Disease context",
+      "approved information",
+      "handling",
+      "schedules",
+      "stewardship",
+      "records",
+      "escalation"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Authorized products, veterinary scope and reviewed prevention guidance",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_FEED_REASON",
+    "groups": ["POULTRY_NUTRITION"],
+    "statement": "Investigate feed/nutrition concerns using specifications, intake and performance evidence",
+    "route": "C",
+    "criteria": [
+      "Energy",
+      "CP",
+      "digestible amino acids",
+      "Ca/available P",
+      "Na",
+      "fibre/fat",
+      "phases",
+      "quality",
+      "mycotoxins",
+      "enzymes",
+      "heat stress"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Qualified nutrition review and appropriate species/stage references",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_LAYER_DATA",
+    "groups": ["POULTRY_LAYER_KPI"],
+    "statement": "Calculate and interpret layer KPIs from a reviewed flock dataset",
+    "route": "C",
+    "criteria": [
+      "HDP/HHP",
+      "egg weight/mass",
+      "intake",
+      "egg-mass FCR",
+      "mortality/livability",
+      "weight/uniformity",
+      "cracks/dirt",
+      "persistency",
+      "feed cost/egg"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Approved numerator/denominator, units, period and flock accounting",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_BROILER_DATA",
+    "groups": ["POULTRY_BROILER_KPI"],
+    "statement": "Calculate and interpret broiler KPIs from a reviewed flock dataset",
+    "route": "C",
+    "criteria": [
+      "Weight",
+      "ADG",
+      "intake",
+      "FCR",
+      "mortality/livability",
+      "uniformity",
+      "efficiency",
+      "feed cost/kg gain",
+      "cost/kg live weight",
+      "water:feed"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Reviewed formulas including EPEF/equivalent and accounting conventions",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_STAFF_SOP",
+    "groups": ["POULTRY_OPERATIONS"],
+    "statement": "Brief staff and evaluate implementation of a poultry operating procedure",
+    "route": "P",
+    "criteria": [
+      "Responsibilities",
+      "safety",
+      "SOP steps",
+      "supervision",
+      "deviations",
+      "escalation"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Reviewed site SOP and personnel safety",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_STOCK",
+    "groups": ["POULTRY_OPERATIONS"],
+    "statement": "Reconcile feed/medicine inventory and propose a procurement action",
+    "route": "C",
+    "criteria": [
+      "Stock",
+      "usage",
+      "expiry",
+      "traceability",
+      "procurement",
+      "discrepancies",
+      "vaccination needs"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Applicable handling/medicine requirements and site controls",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_BUDGET",
+    "groups": ["POULTRY_OPERATIONS"],
+    "statement": "Prepare and explain a poultry budget and production forecast",
+    "route": "C",
+    "criteria": [
+      "Assumptions",
+      "costs",
+      "cash/resource constraints",
+      "sensitivity",
+      "forecast",
+      "controls"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Reviewed economic methods and current local data",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "POULTRY_INVESTIGATE",
+    "groups": ["POULTRY_ANALYTICS"],
+    "statement": "Investigate a production decline using a dashboard and defend an evidence-based action plan",
+    "route": "C",
+    "criteria": [
+      "What happened",
+      "why",
+      "supporting evidence",
+      "confounding",
+      "changes",
+      "confirmation KPI",
+      "professional report"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Reviewed case/data and KPI definitions",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_INGREDIENT_QA",
+    "groups": ["PREMIX_INGREDIENTS"],
+    "statement": "Assess ingredient receiving/sampling records and interpret quality/variability risks",
+    "route": "P",
+    "criteria": [
+      "Maize",
+      "soybean meal/cake",
+      "groundnut cake",
+      "offal/brans",
+      "PKC",
+      "limestone/DCP/bone meal",
+      "oils/salt",
+      "alternatives",
+      "analysis",
+      "sampling limits"
+    ],
+    "context": "MILL_CONTEXT",
+    "standard": "Ingredient legality/safety, analytical method and applicable nutrient references",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_INCLUSION",
+    "groups": ["PREMIX_HANDLING"],
+    "statement": "Calculate premix inclusion from an authenticated label and investigate an inclusion error",
+    "route": "C",
+    "criteria": [
+      "kg/ton",
+      "units",
+      "total batch",
+      "under/over inclusion",
+      "carriers",
+      "trace minerals/vitamins",
+      "corrective questions"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Verified current product label/specification",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_HANDLE",
+    "groups": ["PREMIX_HANDLING"],
+    "statement": "Audit premix storage, weighing and mixing records for handling/stability risks",
+    "route": "P",
+    "criteria": [
+      "Micro-ingredients",
+      "handling",
+      "stability",
+      "storage",
+      "weighing accuracy",
+      "mixing records"
+    ],
+    "context": "MILL_CONTEXT",
+    "standard": "Verified product handling specifications and reviewed process methods",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_ADDITIVE_EVIDENCE",
+    "groups": ["PREMIX_ADDITIVES"],
+    "statement": "Evaluate an additive claim and justify an application or refusal using reviewed evidence",
+    "route": "C",
+    "criteria": [
+      "Enzymes/phytase",
+      "mycotoxin products",
+      "acids",
+      "probiotics/prebiotics",
+      "antioxidants",
+      "emulsifiers",
+      "pigments",
+      "gut/liver/electrolyte products",
+      "limitations"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Product-specific lawful claims plus independent efficacy/context evidence",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_FORMULATION_READ",
+    "groups": ["PREMIX_FORMULATION"],
+    "statement": "Interpret a formulation/feed label and identify unit, nutrient and inclusion questions",
+    "route": "C",
+    "criteria": [
+      "kg/ton",
+      "nutrient basis",
+      "specs",
+      "cost/ton",
+      "substitutions",
+      "inclusion",
+      "energy/protein",
+      "amino-acid balance",
+      "Ca/P",
+      "referral limits"
+    ],
+    "context": "NUTRITION_CONTEXT",
+    "standard": "Qualified nutrition review and verified inputs; not advanced formulator certification",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_POULTRY_REASON",
+    "groups": ["PREMIX_PERFORMANCE"],
+    "statement": "Investigate poultry performance concerns before recommending a nutrition product",
+    "route": "C",
+    "criteria": [
+      "Age/history",
+      "intake",
+      "FCR",
+      "egg output/mass/shell",
+      "mortality",
+      "weights",
+      "feed cost",
+      "formulation",
+      "ingredients",
+      "mixing",
+      "disease",
+      "water",
+      "heat"
+    ],
+    "context": "POULTRY_CONTEXT",
+    "standard": "Reviewed poultry references and case evidence",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_DAIRY_REASON",
+    "groups": ["PREMIX_PERFORMANCE"],
+    "statement": "Investigate dairy performance concerns before recommending a nutrition product",
+    "route": "C",
+    "criteria": [
+      "Yield/components if available",
+      "DMI",
+      "BCS",
+      "fertility",
+      "transition/calf/metabolic indicators",
+      "management confounding"
+    ],
+    "context": "DAIRY_CONTEXT",
+    "standard": "Reviewed dairy/nutrition references and case evidence",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_FARM_AUDIT",
+    "groups": ["PREMIX_PERFORMANCE"],
+    "statement": "Conduct a supervised nutrition-focused farm/customer audit and defend next steps",
+    "route": "P",
+    "criteria": [
+      "Structured investigation",
+      "records",
+      "observations",
+      "sampling questions",
+      "clinical referral",
+      "no automatic product solution"
+    ],
+    "context": "SITE_CONTEXT",
+    "standard": "Species/system-specific technical audit and professional scope",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_MILL_AUDIT",
+    "groups": ["PREMIX_MILL"],
+    "statement": "Audit a feed-mill process and trace a batch through relevant records",
+    "route": "P",
+    "criteria": [
+      "Receiving",
+      "storage",
+      "weighing",
+      "grinding",
+      "mixing",
+      "sequencing",
+      "micro-addition",
+      "carryover",
+      "sampling",
+      "QA",
+      "traceability"
+    ],
+    "context": "MILL_CONTEXT",
+    "standard": "Applicable feed safety, process QA and site safety guidance",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_TRIAL_DESIGN",
+    "groups": ["PREMIX_TRIALS"],
+    "statement": "Develop and defend a safe product-trial protocol with interpretable outcomes",
+    "route": "C",
+    "criteria": [
+      "Objective",
+      "comparator",
+      "baseline",
+      "confounders",
+      "outcomes",
+      "permissions",
+      "monitoring",
+      "stop/escalation provisions"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Reviewed study design, welfare, lawful product use and trial permissions",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_TRIAL_ANALYZE",
+    "groups": ["PREMIX_TRIALS"],
+    "statement": "Interpret trial data and evaluate a value/ROI claim without overstating causality",
+    "route": "C",
+    "criteria": [
+      "Data quality",
+      "comparator",
+      "uncertainty",
+      "confounders",
+      "cost",
+      "sensitivity",
+      "limitations"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Reviewed statistical/economic method; product-specific evidence",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  },
+  {
+    "code": "PREMIX_TRIAL_MONITOR",
+    "groups": ["PREMIX_TRIALS"],
+    "statement": "Demonstrate workplace trial monitoring and trace deviations/results to the protocol",
+    "route": "M(P+W)",
+    "criteria": [
+      "Field records",
+      "adherence",
+      "deviations",
+      "safe escalation",
+      "outcome reporting"
+    ],
+    "context": "PRODUCT_CONTEXT",
+    "standard": "Approved protocol and observation; required only for trial-management scope",
+    "status": "PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION",
+    "sources": []
+  }
+]

@@ -42,7 +42,7 @@ Populate other approved pathways, mentorship scheduling, offline learning, payme
 
 Vitest pure domain tests: scores, eligibility, critical errors, missing data, versioning and expiry. Real PostgreSQL integration tests: constraints, FK ownership, transactional finalization, concurrency, authorization and audits. API tests: owner, unrelated candidate, unrelated employer organization, expired assessor and unauthorized staff. Playwright mobile/desktop: onboarding, diagnostic, case submission, sign-off, passport consent and recruiting. Security tests: stale shares, answer-key leakage, malicious uploads, exports, administrator actions and privilege escalation.
 
-CI includes type checks, relevant suites, migration validation, build and dependency/secret scanning. Confirm real tests ran; syntax checks alone do not establish readiness. No application tests are implemented or executed in this documentation-only phase.
+CI includes type checks, relevant suites, migration validation, build and dependency/secret scanning. Confirm real tests ran; syntax checks alone do not establish readiness. Implemented tests and results are recorded in the Phase 1 and Phase 2 validation documents; browser-device and operational checks remain future milestones.
 
 Use small feature branches, meaningful commits, reviewed PRs, SQL migrations, ADR updates and semantic pilot tags beginning 0.1.0 when implemented. Staging uses synthetic data. Deployment authorization is separate from architecture approval. Schedule follows confirmed team/budget/content capacity; no invented delivery dates.
 
@@ -51,3 +51,9 @@ Use small feature branches, meaningful commits, reviewed PRs, SQL migrations, AD
 Implemented foundation: monorepo, managed authentication adapter, database RBAC, private basic profiles, pending organizations, configurable draft pathways/competencies, evidence records, audit logging and migrations/tests. Live Auth0 tenant setup and production operational controls remain outstanding. Full candidate qualification/registration/experience editing and private file handling are not yet complete.
 
 Next milestone: validate the taxonomy, authors/reviewers and baseline assessment design; implement versioned diagnostic delivery, gap analysis and development plans without issuing competency credentials. Continue provider integration and private document infrastructure in parallel. No professional thresholds are introduced until validated.
+
+## Phase 2 outcome and proposed Phase 3
+
+Assessment, hierarchy, evidence-gap and development-plan foundations are implemented across the four tracks. Demo practice and human review work locally; approved production content and real observed performance capture remain unavailable. See [completion report](docs/PHASE2_COMPLETION.md).
+
+Phase 3 requires new authorization: validate four small blueprints/rubrics and assessor eligibility; configure Auth0; build private scanned storage and supervised evidence capture; map gaps to a small governed learning catalog; run an end-to-end pilot. Scores/readiness rules still require separate methodology approval.

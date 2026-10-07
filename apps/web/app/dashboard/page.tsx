@@ -128,6 +128,14 @@ export default async function Dashboard({
       <section>
         <h2>Career pathways</h2>
         <p>
+          <Link href="/development">
+            Open baseline assessment and development dashboard
+          </Link>
+        </p>
+        <p>
+          <Link href="/assessment-workspace">Assessment staff workspace</Link>
+        </p>
+        <p>
           These proposed frameworks require professional review. Selecting a
           pathway records interest, not qualification.
         </p>

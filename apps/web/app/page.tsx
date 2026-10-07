@@ -9,11 +9,12 @@ export default function Home() {
         Competence will be based on assessed evidence, with human verification.
       </p>
       <section>
-        <h2>The foundation is taking shape</h2>
+        <h2>Develop skills with traceable evidence</h2>
         <p>
-          Profile onboarding and a draft competency catalog are available once
-          managed sign-in is configured. Assessments, readiness decisions and
-          recruitment are upcoming milestones.
+          Private profiles, proposed career frameworks, demonstration
+          assessments and individual development plans are available once
+          managed sign-in is configured. Professional readiness and recruitment
+          remain subject to later validation.
         </p>
         <Link className="button" href="/auth/login">
           Sign in securely

@@ -52,3 +52,5 @@ export type CandidateProfileInput = z.infer<typeof candidateProfileSchema>;
 export type EmployerInput = z.infer<typeof employerSchema>;
 export type EvidenceInput = z.infer<typeof evidenceSchema>;
 export type RoleAssignmentInput = z.infer<typeof roleAssignmentSchema>;
+
+export * from './assessment';

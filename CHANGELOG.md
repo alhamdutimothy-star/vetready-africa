@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — Phase 2 assessment and development
+
+- Added versioned child competencies/criteria, normalized hierarchy and reusable pathway/role requirements.
+- Added mapped assessment/item versions, four labeled demo cases, frozen delivery, resumable attempts, objective outcomes and criterion-based human feedback.
+- Added assigned assessor access, independent moderation/appeals, evidence verification safeguards, revocation and question retirement.
+- Added explainable evidence gaps and immutable individual plan snapshots without readiness percentages.
+- Added candidate development/assessment screens, staff authoring/review foundations and regression tests.
+- Deferred Google Drive review; no material/source claims or final professional thresholds were added.
+
 ## 0.1.0 — Phase 1 foundation
 
 - Established strict TypeScript npm monorepo with Next.js, NestJS, contracts and domain packages.

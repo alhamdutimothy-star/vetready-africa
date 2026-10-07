@@ -145,6 +145,65 @@ it('executes PKCE authorization, session and server-rendered authenticated dashb
   expect(html).toContain('REQUIRES DOMAIN EXPERT VALIDATION');
   expect(html).not.toContain('accessToken');
   expect(dashboard.headers.get('cache-control')).toContain('no-store');
+  const accessToken = await identity.token('browser-candidate');
+  const apiOrigin = await app.getUrl();
+  const apiHeaders = {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  };
+  const savedProfile = await fetch(`${apiOrigin}/api/v1/candidates/me`, {
+    method: 'PUT',
+    headers: apiHeaders,
+    body: JSON.stringify({
+      fullName: 'Browser Test Candidate',
+      countryCode: 'NG',
+      state: 'Kano',
+      willingToRelocate: true,
+      drivingAbility: true,
+      professionalSummary: 'Synthetic browser test',
+    }),
+  });
+  expect(savedProfile.status).toBe(200);
+  const development = await fetch(`${origin}/development`, {
+    headers: { cookie: session },
+  });
+  expect(development.status).toBe(200);
+  const developmentHtml = await development.text();
+  expect(developmentHtml).toContain('My development');
+  expect(developmentHtml).toContain('DEMO CONTENT');
+  expect(developmentHtml).toContain('No assessment evidence recorded');
+  expect(developmentHtml).not.toContain('accessToken');
+  const catalogs = await fetch(`${apiOrigin}/api/v1/assessments`, {
+    headers: apiHeaders,
+  });
+  const assessments = (await catalogs.json()) as {
+    id: string;
+    pathway_id: string;
+  }[];
+  const started = await fetch(
+    `${apiOrigin}/api/v1/assessments/${assessments[0]!.id}/attempts`,
+    { method: 'POST', headers: apiHeaders },
+  );
+  const attempt = (await started.json()) as { id: string };
+  const assessmentPage = await fetch(`${origin}/assessments/${attempt.id}`, {
+    headers: { cookie: session },
+  });
+  expect(assessmentPage.status).toBe(200);
+  const assessmentHtml = await assessmentPage.text();
+  expect(assessmentHtml).toContain('Assessment criteria');
+  expect(assessmentHtml).toContain('Save response');
+  expect(assessmentHtml).not.toContain('answer_key');
+  const gapPage = await fetch(
+    `${origin}/development?pathway=${assessments[0]!.pathway_id}`,
+    { headers: { cookie: session } },
+  );
+  expect(gapPage.status).toBe(200);
+  expect(await gapPage.text()).toContain('Development gaps');
+  const staffPage = await fetch(`${origin}/assessment-workspace`, {
+    headers: { cookie: session },
+  });
+  expect(staffPage.status).toBe(200);
+  expect(await staffPage.text()).toContain('requires an assigned staff role');
   const csrf = await fetch(`${origin}/auth/logout`, {
     method: 'POST',
     redirect: 'manual',

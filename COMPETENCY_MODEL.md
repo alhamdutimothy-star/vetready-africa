@@ -42,8 +42,14 @@ Quiz scoring is deterministic under an explicit published marking rule. Case mar
 
 The founder-approved catalog is NOT ASSESSED, FOUNDATION, DEVELOPING, KNOWLEDGE VERIFIED, CASE VERIFIED, PRACTICALLY VERIFIED, JOB READY, FIELD READY and ADVANCED. Store codes as configurable reference data and evaluate approved rules independently per pathway/role. Evidence verification facets are not a universal ordinal ladder; an assessed knowledge score does not replace case or practical evidence. FIELD READY must satisfy all approved practical gates. Thresholds, weights, required levels, expiry and gate requirements remain NULL pending review. Mentor is a role rather than a pilot readiness classification.
 
-Phase 1 stores draft definitions, pathway interests and submitted evidence; it does not deliver assessments, approve evidence or compute professional readiness. [The four-pathway taxonomy](docs/COMPETENCY_TAXONOMY.md) is proposed for expert validation.
+Phase 1 stores draft definitions, pathway interests and submitted evidence. Phase 2 adds diagnostic delivery and scoped review below; professional readiness is still not computed. [The four-pathway taxonomy](docs/COMPETENCY_TAXONOMY.md) is proposed for expert validation.
 
 ## Professional validation register
 
 Before production, validate assessment thresholds and levels, clinical/production benchmarks, procedure permissions, assessor licensing and calibration, antimicrobial stewardship/product claims, local disease/biosecurity context, credential wording, appeal procedures and expiry rules. Candidate training must account for farm scale, season, heat stress, feed variability, water/power constraints, and regional disease context. References should be drawn from current VCN rules, Nigerian competent authorities, WOAH, FAO and appropriate peer-reviewed veterinary sources; applicability requires expert review, not an assumed universal standard.
+
+## Phase 2 implemented hierarchy and evidence boundaries
+
+The 47 groups and 69 proposed assessable children are now separate identities, with versioned child statements, proposed methods, context, standards-to-validate and criteria. Core and cross-track children reuse a single child version through many-to-many group links. Definitions live in database records/configuration, not in grading logic. Domains normalize pathway/group placement; role targets reuse child evidence.
+
+Seeded definitions are **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**, with no mandatory flags, scores or thresholds. Gaps and development activities are derived from evidence facets and stored with an evaluation snapshot when a plan is saved. Existing group-level documents/self-declarations do not silently become child proof. See [Phase 2 report](docs/PHASE2_COMPLETION.md) for the online versus observed-evidence limits.

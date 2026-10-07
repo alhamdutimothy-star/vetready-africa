@@ -51,4 +51,8 @@ Round only at presentation (one decimal or whole percent); retain calculation pr
 
 ## Phase 1 boundary
 
-Professional scoring, readiness and matching are not implemented or populated. Only the pure mandatory-eligibility foundation is tested. Numerical examples remain proposed test specifications, not validated professional thresholds or claims of candidate readiness.
+Professional scoring, readiness and matching are not implemented or populated. Mandatory-eligibility and Phase 2 objective/evidence-gap domain functions are tested. Numerical examples remain proposed test specifications, not validated professional thresholds or claims of candidate readiness.
+
+## Phase 2 diagnostic outcomes
+
+Implemented objective item outcomes are CORRECT/INCORRECT/REQUIRES_REVIEW. Human reviews preserve observations and comments per criterion, without professional numerical weights or pass marks. Gaps compare exact required evidence facets and expose source IDs, engine version and policy status. Missing evidence is UNVERIFIED. Knowledge cannot satisfy practical evidence; demo evidence is excluded entirely. No employability/readiness percentage is calculated. Approved numeric answer keys in isolated test fixtures verify software arithmetic, not veterinary standards.

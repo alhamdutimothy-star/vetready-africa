@@ -2,13 +2,15 @@
 
 Evidence-based veterinary talent development and recruitment for Nigeria, designed for future African expansion.
 
-## Phase 1 implemented
+## Phases 1–2 implemented
 
 Next.js mobile web shell and private onboarding; NestJS API; strict TypeScript workspaces; managed-provider OIDC/PKCE integration; database-backed platform/organization RBAC; users, candidates, pending employers, configurable pathways, reusable competencies and evidence-submission models; SQL migrations, draft seeds, audit events and automated tests.
 
 Initial reference pathways: Commercial Dairy Practice; Veterinary Pharmaceutical Technical Sales; Poultry Farm Management; Premix & Feed Additives Technical Sales. All professional definitions are **REQUIRES DOMAIN EXPERT VALIDATION**. No threshold, weight, mandatory professional gate or readiness credential has been assigned. Evidence submissions cannot confer verified competence.
 
-Not implemented: assessment delivery/marking, human verification workflow, scoring policies, real Skills Passports, search/matching, vacancy workflows, document upload/storage, payments or AI. The dashboard's readiness remains NOT ASSESSED.
+Phase 2 adds the 69 proposed assessable children, immutable assessment/item versions and blueprints, four demo cases, objective task grading, human criterion reviews/moderation/appeals, assessment-derived evidence, pathway/role gap analysis and saved development plans. Candidate development and staff assessment screens are available. See [Phase 2 completion](docs/PHASE2_COMPLETION.md).
+
+Not implemented: approved production examinations, real supervised simulation/practical/workplace capture, private document/image storage, final scoring/readiness policies, Skills Passport sharing, search/matching, vacancy workflows, payments or AI. Professional readiness remains NOT ASSESSED.
 
 ## Local development
 
@@ -48,4 +50,4 @@ These are separate terminal processes. API rebuild after edits: `npm run build:f
 
 `apps/web`, `apps/api`, `packages/contracts`, `packages/domain`, `db/migrations`, `db/seeds`, `scripts`, `tests`, `infra` and `docs/adr`. Keep domain decisions out of presentation and persistence. Use reviewed migrations and meaningful feature commits. No real candidate data or secrets in Git. Use the existing isolated cloud checkout; do not create a worktree unless explicitly requested.
 
-There are no approved professional standards, issued certificates or production deployments in this release. Phase 1 supports the platform foundation, not operational recruitment or certification.
+There are no approved professional standards, issued certificates or production deployments in this release. Phases 1–2 support identity, diagnostic and development foundations, not operational recruitment or certification.
