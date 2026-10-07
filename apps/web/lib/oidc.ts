@@ -51,6 +51,13 @@ export function webConfig(env: NodeJS.ProcessEnv): WebConfig {
     throw new Error('APP_ORIGIN must be an origin');
   if (result.data.OIDC_AUDIENCE === result.data.OIDC_CLIENT_ID)
     throw new Error('API and web audiences must differ');
+  if (
+    new URL(result.data.OIDC_ISSUER).hostname.endsWith('.auth0.com') &&
+    !result.data.OIDC_CLIENT_SECRET
+  )
+    throw new Error(
+      'Auth0 Regular Web Application requires OIDC_CLIENT_SECRET',
+    );
   result.data.APP_ORIGIN = new URL(result.data.APP_ORIGIN).origin;
   return result.data;
 }
@@ -167,7 +174,7 @@ export async function exchangeCode(
     {
       issuer: config.OIDC_ISSUER,
       audience: config.OIDC_CLIENT_ID,
-      algorithms: ['RS256', 'ES256'],
+      algorithms: ['RS256'],
       requiredClaims: ['exp', 'iat', 'sub'],
     },
   );
@@ -185,7 +192,7 @@ export async function exchangeCode(
     {
       issuer: config.OIDC_ISSUER,
       audience: config.OIDC_AUDIENCE,
-      algorithms: ['RS256', 'ES256'],
+      algorithms: ['RS256'],
       requiredClaims: ['exp', 'iat', 'sub'],
     },
   );
@@ -202,4 +209,25 @@ export async function exchangeCode(
       Math.max(1, (access.payload.exp ?? 0) - Math.floor(Date.now() / 1000)),
     ),
   };
+}
+
+export function authCookieOptions(nodeEnv: string, seconds: number) {
+  return {
+    httpOnly: true,
+    secure: nodeEnv === 'production',
+    sameSite: 'lax' as const,
+    path: '/',
+    maxAge: seconds,
+  };
+}
+
+// Auth0-specific SSO logout adapter; other OIDC providers retain local logout until configured.
+export function providerLogoutUrl(config: WebConfig): string | null {
+  if (!new URL(config.OIDC_ISSUER).hostname.endsWith('.auth0.com')) return null;
+  const url = new URL('/v2/logout', config.OIDC_ISSUER);
+  url.search = new URLSearchParams({
+    client_id: config.OIDC_CLIENT_ID,
+    returnTo: config.APP_ORIGIN + '/',
+  }).toString();
+  return url.toString();
 }

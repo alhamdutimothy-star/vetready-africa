@@ -55,3 +55,5 @@ These are separate terminal processes. API rebuild after edits: `npm run build:f
 `apps/web`, `apps/api`, `packages/contracts`, `packages/domain`, `db/migrations`, `db/seeds`, `scripts`, `tests`, `infra` and `docs/adr`. Keep domain decisions out of presentation and persistence. Use reviewed migrations and meaningful feature commits. No real candidate data or secrets in Git. Use the existing isolated cloud checkout; do not create a worktree unless explicitly requested.
 
 There are no approved professional standards, issued certificates or production deployments in this release. Phases 1–2 support identity, diagnostic and development foundations, not operational recruitment or certification.
+
+Current authentication status and private configuration steps: [Auth0 checkpoint](docs/AUTH0_CHECKPOINT.md). Public tenant metadata is verified; real browser login remains pending.

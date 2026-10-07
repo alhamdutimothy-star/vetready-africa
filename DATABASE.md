@@ -155,3 +155,7 @@ erDiagram
 Composite foreign keys bind responses and evidence to the correct candidate/attempt/item, and blueprint group/child mappings to the selected pathway. Delivered content, rubrics, mappings and referenced children freeze; submitted responses freeze. Question retirement is an append-only event. Evidence provenance is immutable; verification requires approved non-demo content, an assigned independent assessor and latest-review moderation. Online evidence cannot be verified as simulation/practical/workplace performance. Audit/review/observation/plan records are append-only; development-item completion is a tracking field and never modifies competence.
 
 Evidence context remains attached JSON because each assessment-derived record has one context; its parent attempt/version supplies provenance. Computed competency states/gaps remain projections. Saved plans contain a consistent requirement/evidence/gap snapshot and engine version rather than a mutable competing state table. Indices cover candidate attempts, evidence/child lookups and saved plans. See [ADR 0003](docs/adr/0003-baseline-evidence-and-development.md).
+
+## Auth0 checkpoint
+
+Migration 008 adds browser_sessions with unique SHA-256 handle hashes, user foreign keys, bounded expiry and audited revocation. No tokens or raw handles are stored in this table.

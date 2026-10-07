@@ -25,7 +25,8 @@
     "test:integration": "npm run build && node --env-file-if-exists=.local/database.env node_modules/vitest/vitest.mjs run tests/integration tests/e2e",
     "env:up": "node --import tsx scripts/env-up.ts",
     "admin:bootstrap": "node --env-file-if-exists=.local/database.env --import tsx scripts/bootstrap-admin.ts",
-    "api:docs": "npm run build:foundation && tsx scripts/openapi.ts"
+    "api:docs": "npm run build:foundation && tsx scripts/openapi.ts",
+    "auth:preflight": "node --use-env-proxy --env-file-if-exists=.local/api.env --env-file-if-exists=apps/web/.env.local --import tsx scripts/auth-preflight.ts"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

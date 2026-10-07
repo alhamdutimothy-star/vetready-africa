@@ -13,8 +13,13 @@ export async function session() {
       config.SESSION_SECRET,
       'session',
     );
-    return typeof payload.accessToken === 'string'
-      ? { accessToken: payload.accessToken }
+    return typeof payload.accessToken === 'string' &&
+      typeof payload.sessionHandle === 'string' &&
+      /^[A-Za-z0-9_-]{43}$/.test(payload.sessionHandle)
+      ? {
+          accessToken: payload.accessToken,
+          sessionHandle: payload.sessionHandle,
+        }
       : null;
   } catch {
     return null;
@@ -30,6 +35,7 @@ export async function api(path: string, options?: RequestInit) {
       ...options?.headers,
       'Content-Type': 'application/json',
       Authorization: `Bearer ${current.accessToken}`,
+      'X-VetReady-Session': current.sessionHandle,
     },
     cache: 'no-store',
     signal: AbortSignal.timeout(5000),

@@ -59,3 +59,7 @@ Uploads use a grant → quarantine → scan → accepted/rejected lifecycle. Pro
 Health/readiness, `/me`, candidate GET/PUT, pathway interests, pathway/competency catalogs, organization registration/owner read, evidence submission/owner reads, administrator summary and privileged role assignment are implemented. Remaining route groups above are design proposals. Evidence source is a candidate declaration; source `PRACTICAL` is not a verified practical assessment.
 
 `npm run api:docs` regenerates [OpenAPI](docs/openapi.json). Development API serves documentation at `/api/docs`; production documentation middleware is disabled. Error payloads omit tokens, database details and configuration values. Private responses use no-store. Catalog/evidence reads are bounded for the small pilot; cursor pagination will be introduced before larger recruitment datasets.
+
+## Auth0 checkpoint
+
+Browser-session endpoints: POST /api/v1/sessions and DELETE /api/v1/sessions/current require a valid access JWT and vetready:access. Revocation also requires the matching X-VetReady-Session handle. These endpoints grant no domain roles.

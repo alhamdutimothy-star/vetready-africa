@@ -1,3 +1,5 @@
+> Current tenant configuration and verification status: [Auth0 checkpoint](AUTH0_CHECKPOINT.md). This earlier guide is historical; the confirmed API audience is `https://api.vetready.africa`.
+
 # Auth0 pilot setup guide
 
 Recommended hosted provider for the pilot: Auth0. There is no existing tenant yet. Do not start production enrollment until provider, privacy and deployment settings have been reviewed. Plan limits and dashboard labels can change; check the provider's current documentation.

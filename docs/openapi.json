@@ -1551,6 +1551,42 @@
         ],
         "tags": ["assessment and development"]
       }
+    },
+    "/api/v1/sessions": {
+      "post": {
+        "operationId": "SessionController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Register a revocable browser session; no domain role is granted",
+        "tags": ["browser sessions"]
+      }
+    },
+    "/api/v1/sessions/current": {
+      "delete": {
+        "operationId": "SessionController_revoke",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Revoke the current browser session; valid bearer tokens still expire separately",
+        "tags": ["browser sessions"]
+      }
     }
   },
   "info": {

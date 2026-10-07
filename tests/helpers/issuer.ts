@@ -2,7 +2,14 @@ import { createServer, type Server } from 'node:http';
 import { once } from 'node:events';
 import { randomUUID, createHash } from 'node:crypto';
 import { generateKeyPair, exportJWK, SignJWT, type JWTPayload } from 'jose';
-export async function testIssuer() {
+export async function testIssuer(
+  options: {
+    audience?: string;
+    clientId?: string;
+    clientSecret?: string;
+    idTokenClaims?: JWTPayload;
+  } = {},
+) {
   const { privateKey, publicKey } = await generateKeyPair('RS256');
   const jwk = await exportJWK(publicKey);
   jwk.kid = 'test-key';
@@ -17,7 +24,7 @@ export async function testIssuer() {
     return new SignJWT({ scope: 'vetready:access', ...claims })
       .setProtectedHeader({ alg: 'RS256', kid: 'test-key' })
       .setIssuer(issuer)
-      .setAudience('vetready-api')
+      .setAudience(options.audience ?? 'vetready-api')
       .setSubject(subject)
       .setIssuedAt()
       .setExpirationTime('5m')
@@ -65,6 +72,8 @@ export async function testIssuer() {
       codes.delete(code);
       if (
         !flow ||
+        (options.clientSecret !== undefined &&
+          form.get('client_secret') !== options.clientSecret) ||
         form.get('redirect_uri') !== flow.redirectUri ||
         createHash('sha256')
           .update(form.get('code_verifier') ?? '')
@@ -74,10 +83,13 @@ export async function testIssuer() {
         response.end('{}');
         return;
       }
-      const id = await new SignJWT({ nonce: flow.nonce })
+      const id = await new SignJWT({
+        nonce: flow.nonce,
+        ...options.idTokenClaims,
+      })
         .setProtectedHeader({ alg: 'RS256', kid: 'test-key' })
         .setIssuer(issuer)
-        .setAudience('vetready-web')
+        .setAudience(options.clientId ?? 'vetready-web')
         .setSubject('browser-candidate')
         .setIssuedAt()
         .setExpirationTime('5m')

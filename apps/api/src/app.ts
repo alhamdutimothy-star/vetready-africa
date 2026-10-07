@@ -23,6 +23,7 @@ import { FoundationRepository } from './repository';
 import { AssessmentController } from './assessment/controller';
 import { AssessmentService } from './assessment/service';
 import { AssessmentRepository } from './assessment/repository';
+import { SessionController } from './sessions';
 @Catch()
 class SafeErrors implements ExceptionFilter {
   catch(error: unknown, host: ArgumentsHost) {
@@ -61,7 +62,11 @@ class SafeErrors implements ExceptionFilter {
 export async function createApp(config: ApiConfig): Promise<INestApplication> {
   @Module({
     imports: [ThrottlerModule.forRoot([{ ttl: 60000, limit: 120 }])],
-    controllers: [FoundationController, AssessmentController],
+    controllers: [
+      FoundationController,
+      AssessmentController,
+      SessionController,
+    ],
     providers: [
       { provide: API_CONFIG, useValue: config },
       Database,

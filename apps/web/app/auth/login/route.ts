@@ -4,6 +4,7 @@ import {
   discovery,
   newFlow,
   encryptCookie,
+  authCookieOptions,
 } from '../../../lib/oidc';
 import { FLOW_COOKIE } from '../../../lib/session';
 export async function GET() {
@@ -27,13 +28,7 @@ export async function GET() {
     response.cookies.set(
       FLOW_COOKIE,
       await encryptCookie(flow, config.SESSION_SECRET, 'flow', 600),
-      {
-        httpOnly: true,
-        secure: config.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 600,
-      },
+      authCookieOptions(config.NODE_ENV, 600),
     );
     response.headers.set('Cache-Control', 'no-store');
     return response;

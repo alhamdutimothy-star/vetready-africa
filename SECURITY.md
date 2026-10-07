@@ -52,7 +52,7 @@ Test object-ID tampering, organization crossover, consent revocation, answer-key
 
 Implemented: cryptographic access-token verification, PKCE/state/nonce browser flow, encrypted cookies, server-side database RBAC, organization ownership, private-profile defaults, owner-only evidence, Zod validation, rate limiting, Helmet API headers, structured redacted request logs and append-only write audit events.
 
-Pending before production: Auth0 tenant/live verification and MFA policy, dedicated runtime database role, private object storage/scanning, provider logout/revocation behavior, formal data retention/export/deletion, detailed assessor/moderation/appeal execution, additional privileged-operation protections, CSP hardening and operational backups/restore. No production-ready or regulatory compliance claim is made. The local database credential is randomly generated in ignored private files; no production identity credential is fabricated.
+Pending before production: Auth0 live verification and MFA policy, dedicated runtime database role, private object storage/scanning, live provider logout verification and independent JWT lifetime controls, formal data retention/export/deletion, detailed assessor/moderation/appeal execution, additional privileged-operation protections, CSP hardening and operational backups/restore. No production-ready or regulatory compliance claim is made. The local database credential is randomly generated in ignored private files; no production identity credential is fabricated.
 
 ## Implemented Phase 2 controls
 
@@ -61,3 +61,7 @@ Candidate assessment/evidence/plan endpoints require ownership. Assessor review 
 New capabilities: `assessment:author`, `assessment:assign`, `assessment:review`, `assessment:moderate`. ADMIN/SUPER_ADMIN receive author/assign/moderate; ASSESSOR receives review; candidates and employers receive no staff capability. Assignment to an ASSESSOR role is a software authorization foundation, not a professional eligibility check. Subject/method authorization, qualification validation and broader conflict declarations must precede production practical decisions.
 
 File/image schemas reserve a private asset identity, but asset acceptance is rejected until safe storage exists. No arbitrary URLs, public object links or unscanned uploads are accepted. Bounded lists currently lack cursor pagination and production abuse/load tuning. Existing authentication setup remains pending; test-only issuers are not a sign-in fallback.
+
+## Auth0 checkpoint
+
+Browser logout revokes the owned application session before clearing cookies. Independent JWTs expire separately. RS256 is pinned. Real tenant login remains unverified; see [Auth0 checkpoint](docs/AUTH0_CHECKPOINT.md).

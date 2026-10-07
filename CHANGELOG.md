@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Auth0 checkpoint
+
+- Retained OIDC/PKCE and domain RBAC; pinned RS256 and required the confidential Auth0 client secret.
+- Added audited server-side browser-session revocation and Auth0 logout redirect support.
+- Added tenant-specific public examples, credential-safe preflight and regression tests.
+- Public tenant metadata verified; live user authentication remains pending private configuration.
+
 ## Unreleased — Phase 2 assessment and development
 
 - Added versioned child competencies/criteria, normalized hierarchy and reusable pathway/role requirements.

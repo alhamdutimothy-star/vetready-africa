@@ -16,6 +16,7 @@ import { API_CONFIG, type ApiConfig } from './config';
 import { Database, audit } from './database';
 export interface Principal {
   userId: string;
+  tokenExpiresAt: number;
   grants: RoleGrant[];
 }
 export interface AuthRequest extends Request {
@@ -24,6 +25,8 @@ export interface AuthRequest extends Request {
 }
 const PUBLIC = 'public';
 const PERMISSION = 'permission';
+const REVOKE_SESSION = 'revoke-session';
+export const AllowRevokedSession = () => SetMetadata(REVOKE_SESSION, true);
 export const Public = () => SetMetadata(PUBLIC, true);
 export const RequirePermission = (permission: Permission) =>
   SetMetadata(PERMISSION, permission);
@@ -47,16 +50,22 @@ export class AuthGuard implements CanActivate {
       ])
     )
       return true;
+    const revokeSession =
+      this.reflector.getAllAndOverride<boolean>(REVOKE_SESSION, [
+        context.getHandler(),
+        context.getClass(),
+      ]) === true;
     const request = context.switchToHttp().getRequest<AuthRequest>();
     const authorization = request.headers.authorization;
     if (!authorization?.startsWith('Bearer ') || authorization.length > 16000)
       throw new UnauthorizedException('Valid access token required');
     let subject: string;
+    let tokenExpiresAt: number;
     try {
       const { payload } = await jwtVerify(authorization.slice(7), this.keys, {
         issuer: this.config.OIDC_ISSUER,
         audience: this.config.OIDC_AUDIENCE,
-        algorithms: ['RS256', 'ES256'],
+        algorithms: ['RS256'],
         requiredClaims: ['exp', 'iat', 'sub'],
         clockTolerance: 5,
       });
@@ -69,6 +78,7 @@ export class AuthGuard implements CanActivate {
       )
         throw new Error('Invalid access scope');
       subject = payload.sub;
+      tokenExpiresAt = payload.exp!;
     } catch {
       throw new UnauthorizedException('Invalid or expired access token');
     }
@@ -86,7 +96,7 @@ export class AuthGuard implements CanActivate {
           )
         ).rows[0];
       if (!user) throw new UnauthorizedException();
-      if ('status' in user && user.status !== 'ACTIVE')
+      if ('status' in user && user.status !== 'ACTIVE' && !revokeSession)
         throw new ForbiddenException('Account unavailable');
       if (inserted.rows[0]) {
         await client.query(
@@ -109,7 +119,28 @@ export class AuthGuard implements CanActivate {
         `SELECT rp.permission_code AS permission,ura.organization_id AS "organizationId" FROM user_role_assignments ura JOIN role_permissions rp ON rp.role_code=ura.role_code WHERE ura.user_id=$1 AND (ura.expires_at IS NULL OR ura.expires_at>now())`,
         [user.id],
       );
-      return { userId: user.id, grants: grants.rows };
+      const sessionHandle = request.headers['x-vetready-session'];
+      if (sessionHandle !== undefined) {
+        if (
+          typeof sessionHandle !== 'string' ||
+          !/^[A-Za-z0-9_-]{43}$/.test(sessionHandle)
+        )
+          throw new UnauthorizedException('Invalid browser session');
+        const hash = (await import('node:crypto'))
+          .createHash('sha256')
+          .update(sessionHandle)
+          .digest('hex');
+        if (
+          !(
+            await client.query(
+              `SELECT 1 FROM browser_sessions WHERE handle_hash=$1 AND user_id=$2 ${revokeSession ? '' : 'AND revoked_at IS NULL AND expires_at>now()'}`,
+              [hash, user.id],
+            )
+          ).rowCount
+        )
+          throw new UnauthorizedException('Browser session expired or revoked');
+      }
+      return { userId: user.id, grants: grants.rows, tokenExpiresAt };
     });
     return true;
   }

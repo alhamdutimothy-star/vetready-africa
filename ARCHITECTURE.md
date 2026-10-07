@@ -65,3 +65,7 @@ The modular monolith foundation is implemented. Managed-provider OIDC is wired a
 ## Implemented Phase 2 module
 
 The assessment controller/service/repository implements the delivery, review and development API. Pure domain functions grade objective responses, compare exact evidence facets against version-bound requirements, and generate gap-linked activities. Shared contracts validate all untrusted inputs. Versioned content and frozen blueprints preserve prior attempts; a repeatable-read evaluation snapshot preserves each saved plan. No scoring/readiness aggregation or AI decisions are present. See [ADR 0003](docs/adr/0003-baseline-evidence-and-development.md) and [completion boundaries](docs/PHASE2_COMPLETION.md).
+
+## Auth0 checkpoint
+
+Browser authentication retains OIDC/PKCE and database RBAC. Migration 008 adds hashed, revocable browser-session handles; see [Auth0 checkpoint](docs/AUTH0_CHECKPOINT.md).

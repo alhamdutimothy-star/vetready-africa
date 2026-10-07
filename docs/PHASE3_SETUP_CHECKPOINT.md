@@ -1,3 +1,5 @@
+> Current tenant configuration and verification status: [Auth0 checkpoint](AUTH0_CHECKPOINT.md). This earlier guide is historical; the confirmed API audience is `https://api.vetready.africa`.
+
 # Phase 3 setup checkpoint
 
 Phase 3 is authorized. Implementation is paused at the founder's explicit Auth0 intervention checkpoint in section 20 of the accepted Phase 3 request. This is not a claim that local LMS development technically needs live identity credentials; the pause follows the requested workflow.

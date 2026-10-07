@@ -27,12 +27,16 @@ async function port() {
 beforeAll(async () => {
   const db = await prepareTestDatabase();
   pool = db.pool;
-  identity = await testIssuer();
+  identity = await testIssuer({
+    audience: 'https://api.vetready.africa',
+    clientId: 'vetready-web',
+    clientSecret: 'synthetic-confidential-fixture',
+  });
   app = await createApp({
     DATABASE_URL: db.url,
     OIDC_ISSUER: identity.issuer,
     OIDC_JWKS_URI: `${identity.issuer}/jwks`,
-    OIDC_AUDIENCE: 'vetready-api',
+    OIDC_AUDIENCE: 'https://api.vetready.africa',
     NODE_ENV: 'test',
     PORT: 4000,
   });
@@ -56,8 +60,9 @@ beforeAll(async () => {
         ...process.env,
         NODE_ENV: 'development',
         OIDC_ISSUER: identity.issuer,
-        OIDC_AUDIENCE: 'vetready-api',
+        OIDC_AUDIENCE: 'https://api.vetready.africa',
         OIDC_CLIENT_ID: 'vetready-web',
+        OIDC_CLIENT_SECRET: 'synthetic-confidential-fixture',
         SESSION_SECRET: randomBytes(32).toString('hex'),
         APP_ORIGIN: origin,
         API_INTERNAL_URL: apiOrigin,
@@ -114,6 +119,12 @@ it('executes PKCE authorization, session and server-rendered authenticated dashb
   const authorization = login.headers.get('location')!;
   const authUrl = new URL(authorization);
   expect(authUrl.searchParams.get('code_challenge_method')).toBe('S256');
+  expect(authUrl.searchParams.get('audience')).toBe(
+    'https://api.vetready.africa',
+  );
+  expect(authUrl.searchParams.get('scope')?.split(' ')).toContain(
+    'vetready:access',
+  );
   const authorize = await fetch(authorization, { redirect: 'manual' });
   const callback = authorize.headers.get('location')!;
   const forged = new URL(callback);
@@ -221,9 +232,33 @@ it('executes PKCE authorization, session and server-rendered authenticated dashb
       .getSetCookie()
       .some((c) => c.startsWith('vetready_session=;')),
   ).toBe(true);
+  const copiedCookieReplay = await fetch(`${origin}/dashboard`, {
+    headers: { cookie: session },
+  });
+  const replayHtml = await copiedCookieReplay.text();
+  expect(replayHtml).not.toContain('Your professional foundation');
+  expect(replayHtml).not.toContain('Browser Test Candidate');
+  const retired = (
+    await pool.query(
+      'SELECT count(*) FROM browser_sessions WHERE revoked_at IS NOT NULL',
+    )
+  ).rows[0].count;
+  expect(retired).toBe('1');
   const replay = await fetch(callback, {
     redirect: 'manual',
     headers: { cookie },
   });
   expect(replay.status).toBe(401);
+});
+
+it('requires authentication for frontend data and rejects tampered browser sessions', async () => {
+  const response = await fetch(`${origin}/development`);
+  expect(response.status).toBe(200);
+  const html = await response.text();
+  expect(html).toContain('Sign in');
+  expect(html).not.toContain('Browser Test Candidate');
+  const tampered = await fetch(`${origin}/dashboard`, {
+    headers: { cookie: 'vetready_session=malformed' },
+  });
+  expect(await tampered.text()).not.toContain('Your professional foundation');
 });

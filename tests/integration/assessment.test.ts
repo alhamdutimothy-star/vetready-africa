@@ -489,7 +489,7 @@ it('database rejects evidence source inflation and seed/migration reruns preserv
   ).toBe(count);
   expect(
     (await pool.query('SELECT count(*) FROM schema_migrations')).rows[0].count,
-  ).toBe('7');
+  ).toBe('8');
 });
 it('role-specific requirements reuse child evidence and cannot reference another pathway', async () => {
   const p = (await get('/pathways')).body[0];
