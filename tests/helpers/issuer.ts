@@ -16,6 +16,8 @@ export async function testIssuer(
   jwk.alg = 'RS256';
   jwk.use = 'sig';
   let issuer = '';
+  let discoveryAvailable = true;
+  let discoveryRequests = 0;
   const codes = new Map<
     string,
     { nonce: string; challenge: string; redirectUri: string }
@@ -38,6 +40,12 @@ export async function testIssuer(
       return;
     }
     if (url.pathname === '/.well-known/openid-configuration') {
+      discoveryRequests++;
+      if (!discoveryAvailable) {
+        response.statusCode = 503;
+        response.end('{}');
+        return;
+      }
       response.end(
         JSON.stringify({
           issuer,
@@ -115,6 +123,10 @@ export async function testIssuer(
   issuer = `http://127.0.0.1:${address.port}`;
   return {
     issuer,
+    discoveryRequests: () => discoveryRequests,
+    setDiscoveryAvailable: (available: boolean) => {
+      discoveryAvailable = available;
+    },
     token,
     privateKey,
     close: () =>

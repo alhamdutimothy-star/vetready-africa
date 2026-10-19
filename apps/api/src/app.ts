@@ -1,3 +1,5 @@
+import { sessionRegistrationFailure } from './session-diagnostics';
+import type { AuthRequest } from './auth';
 import 'reflect-metadata';
 import { randomUUID } from 'node:crypto';
 import {
@@ -44,6 +46,21 @@ class SafeErrors implements ExceptionFilter {
     ) {
       status = 409;
       message = 'Duplicate record';
+    }
+    if (
+      request.method === 'POST' &&
+      request.path === '/api/v1/sessions' &&
+      status >= 500
+    ) {
+      console.error(
+        JSON.stringify({
+          ...sessionRegistrationFailure(
+            (request as AuthRequest).sessionRegistrationStage,
+            error,
+          ),
+          requestId: request.requestId,
+        }),
+      );
     }
     console.log(
       JSON.stringify({

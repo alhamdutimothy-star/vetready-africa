@@ -1,3 +1,4 @@
+import type { SessionRegistrationStage } from './session-diagnostics';
 import {
   CanActivate,
   ExecutionContext,
@@ -21,6 +22,7 @@ export interface Principal {
 }
 export interface AuthRequest extends Request {
   principal?: Principal;
+  sessionRegistrationStage?: SessionRegistrationStage;
   requestId: string;
 }
 const PUBLIC = 'public';
@@ -56,6 +58,12 @@ export class AuthGuard implements CanActivate {
         context.getClass(),
       ]) === true;
     const request = context.switchToHttp().getRequest<AuthRequest>();
+    const registering =
+      request.method === 'POST' && request.path === '/api/v1/sessions';
+    const mark = (stage: SessionRegistrationStage) => {
+      if (registering) request.sessionRegistrationStage = stage;
+    };
+    mark('jwt-validation');
     const authorization = request.headers.authorization;
     if (!authorization?.startsWith('Bearer ') || authorization.length > 16000)
       throw new UnauthorizedException('Valid access token required');
@@ -82,11 +90,14 @@ export class AuthGuard implements CanActivate {
     } catch {
       throw new UnauthorizedException('Invalid or expired access token');
     }
+    mark('identity-transaction');
     request.principal = await this.db.transaction(async (client) => {
+      mark('identity-provisioning');
       const inserted = await client.query<{ id: string }>(
         'INSERT INTO users(issuer,subject) VALUES($1,$2) ON CONFLICT DO NOTHING RETURNING id',
         [this.config.OIDC_ISSUER, subject],
       );
+      mark('identity-lookup');
       const user =
         inserted.rows[0] ??
         (
@@ -99,10 +110,12 @@ export class AuthGuard implements CanActivate {
       if ('status' in user && user.status !== 'ACTIVE' && !revokeSession)
         throw new ForbiddenException('Account unavailable');
       if (inserted.rows[0]) {
+        mark('default-role-assignment');
         await client.query(
           "INSERT INTO user_role_assignments(user_id,role_code,role_scope,reason) VALUES($1,'CANDIDATE','PLATFORM','Default candidate onboarding capability')",
           [user.id],
         );
+        mark('identity-audit');
         await audit(
           client,
           user.id,
@@ -112,6 +125,7 @@ export class AuthGuard implements CanActivate {
           request.requestId,
         );
       }
+      mark('role-lookup');
       const grants = await client.query<{
         permission: string;
         organizationId: string | null;
@@ -119,6 +133,7 @@ export class AuthGuard implements CanActivate {
         `SELECT rp.permission_code AS permission,ura.organization_id AS "organizationId" FROM user_role_assignments ura JOIN role_permissions rp ON rp.role_code=ura.role_code WHERE ura.user_id=$1 AND (ura.expires_at IS NULL OR ura.expires_at>now())`,
         [user.id],
       );
+      mark('browser-session-validation');
       const sessionHandle = request.headers['x-vetready-session'];
       if (sessionHandle !== undefined) {
         if (
@@ -140,6 +155,7 @@ export class AuthGuard implements CanActivate {
         )
           throw new UnauthorizedException('Browser session expired or revoked');
       }
+      mark('identity-commit');
       return { userId: user.id, grants: grants.rows, tokenExpiresAt };
     });
     return true;

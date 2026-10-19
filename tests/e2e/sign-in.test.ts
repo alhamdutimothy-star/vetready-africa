@@ -100,6 +100,7 @@ it('renders the mobile foundation without exposing tokens', async () => {
   expect(html).toContain('Build skills you can demonstrate');
   expect(html).toContain('width=device-width');
   expect(html).not.toContain('access_token');
+  expect(response.headers.get('referrer-policy')).toBe('same-origin');
 });
 it('rejects callback without a valid state cookie', async () => {
   const response = await fetch(
@@ -215,29 +216,65 @@ it('executes PKCE authorization, session and server-rendered authenticated dashb
   });
   expect(staffPage.status).toBe(200);
   expect(await staffPage.text()).toContain('requires an assigned staff role');
-  const csrf = await fetch(`${origin}/auth/logout`, {
-    method: 'POST',
+  // Missing, opaque and foreign origins must never revoke a session.
+  for (const rejectedOrigin of [
+    undefined,
+    'null',
+    'https://attacker.example',
+  ]) {
+    const csrf = await fetch(`${origin}/auth/logout`, {
+      method: 'POST',
+      redirect: 'manual',
+      headers: {
+        cookie: session,
+        ...(rejectedOrigin === undefined ? {} : { origin: rejectedOrigin }),
+      },
+    });
+    expect(csrf.status).toBe(403);
+    expect(csrf.headers.getSetCookie()).toHaveLength(0);
+    const stillAuthenticated = await fetch(`${origin}/dashboard`, {
+      headers: { cookie: session },
+    });
+    expect(await stillAuthenticated.text()).toContain(
+      'Your professional foundation',
+    );
+  }
+  const getLogout = await fetch(`${origin}/auth/logout`, {
     redirect: 'manual',
-    headers: { cookie: session, origin: 'https://attacker.example' },
+    headers: { cookie: session },
   });
-  expect(csrf.status).toBe(403);
+  expect(getLogout.status).toBe(405);
   const logout = await fetch(`${origin}/auth/logout`, {
     method: 'POST',
     redirect: 'manual',
     headers: { cookie: session, origin },
   });
   expect(logout.status).toBe(303);
+  expect(logout.headers.get('location')).toBe(`${origin}/`);
+  expect(logout.headers.get('cache-control')).toBe('no-store');
+  for (const name of ['vetready_session', 'vetready_flow']) {
+    const cleared = logout.headers
+      .getSetCookie()
+      .find((c) => c.startsWith(name + '=;'));
+    expect(cleared).toContain('Path=/');
+    expect(cleared).toContain('Expires=Thu, 01 Jan 1970');
+  }
   expect(
     logout.headers
       .getSetCookie()
       .some((c) => c.startsWith('vetready_session=;')),
   ).toBe(true);
-  const copiedCookieReplay = await fetch(`${origin}/dashboard`, {
-    headers: { cookie: session },
-  });
-  const replayHtml = await copiedCookieReplay.text();
-  expect(replayHtml).not.toContain('Your professional foundation');
-  expect(replayHtml).not.toContain('Browser Test Candidate');
+  for (const headers of [{ cookie: session }, {}]) {
+    const afterLogout = await fetch(`${origin}/dashboard`, {
+      redirect: 'manual',
+      headers,
+    });
+    expect(afterLogout.status).toBe(307);
+    expect(new URL(afterLogout.headers.get('location')!, origin).pathname).toBe(
+      '/auth/login',
+    );
+    expect(await afterLogout.text()).not.toContain('Browser Test Candidate');
+  }
   const retired = (
     await pool.query(
       'SELECT count(*) FROM browser_sessions WHERE revoked_at IS NOT NULL',
@@ -249,6 +286,70 @@ it('executes PKCE authorization, session and server-rendered authenticated dashb
     headers: { cookie },
   });
   expect(replay.status).toBe(401);
+  const requestsBefore = identity.discoveryRequests();
+  identity.setDiscoveryAvailable(false);
+  try {
+    const states = new Set<string>();
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const repeated = await fetch(`${origin}/auth/login`, {
+        redirect: 'manual',
+      });
+      expect(repeated.status).toBe(307);
+      expect(repeated.headers.get('cache-control')).toBe('no-store');
+      states.add(
+        new URL(repeated.headers.get('location')!).searchParams.get('state')!,
+      );
+      expect(
+        repeated.headers
+          .getSetCookie()
+          .some((c) => c.startsWith('vetready_flow=')),
+      ).toBe(true);
+    }
+    expect(states.size).toBe(3);
+    const secondLogin = await fetch(`${origin}/auth/login`, {
+      redirect: 'manual',
+    });
+    expect(secondLogin.status).toBe(307);
+    const secondFlow = secondLogin.headers
+      .getSetCookie()
+      .find((c) => c.startsWith('vetready_flow='))!
+      .split(';')[0]!;
+    const secondAuthorize = await fetch(secondLogin.headers.get('location')!, {
+      redirect: 'manual',
+    });
+    const secondCallback = await fetch(
+      secondAuthorize.headers.get('location')!,
+      {
+        redirect: 'manual',
+        headers: { cookie: secondFlow },
+      },
+    );
+    expect(secondCallback.status).toBe(307);
+    const secondSession = secondCallback.headers
+      .getSetCookie()
+      .find((c) => c.startsWith('vetready_session='))!
+      .split(';')[0]!;
+    const secondDashboard = await fetch(`${origin}/dashboard`, {
+      headers: { cookie: secondSession },
+    });
+    expect(await secondDashboard.text()).toContain(
+      'Your professional foundation',
+    );
+    const secondLogout = await fetch(`${origin}/auth/logout`, {
+      method: 'POST',
+      redirect: 'manual',
+      headers: { cookie: secondSession, origin },
+    });
+    expect(secondLogout.status).toBe(303);
+    const secondRevoked = await fetch(`${origin}/dashboard`, {
+      redirect: 'manual',
+      headers: { cookie: secondSession },
+    });
+    expect(secondRevoked.status).toBe(307);
+    expect(identity.discoveryRequests()).toBe(requestsBefore);
+  } finally {
+    identity.setDiscoveryAvailable(true);
+  }
 });
 
 it('requires authentication for frontend data and rejects tampered browser sessions', async () => {
@@ -258,7 +359,12 @@ it('requires authentication for frontend data and rejects tampered browser sessi
   expect(html).toContain('Sign in');
   expect(html).not.toContain('Browser Test Candidate');
   const tampered = await fetch(`${origin}/dashboard`, {
+    redirect: 'manual',
     headers: { cookie: 'vetready_session=malformed' },
   });
+  expect(tampered.status).toBe(307);
+  expect(new URL(tampered.headers.get('location')!, origin).pathname).toBe(
+    '/auth/login',
+  );
   expect(await tampered.text()).not.toContain('Your professional foundation');
 });
