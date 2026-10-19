@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, it, expect } from 'vitest';
+import { beforeAll, afterAll, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import { SignJWT } from 'jose';
 import { randomBytes } from 'node:crypto';
@@ -167,4 +167,127 @@ it('suspended users can terminate their own session without gaining domain acces
   await pool.query(
     "UPDATE users SET status='ACTIVE' WHERE subject='session-owner'",
   );
+});
+
+it('provisions a brand-new external identity once without a candidate profile, including concurrent first requests', async () => {
+  const fresh = await identity.token('new-auth0-first-login');
+  expect(
+    (
+      await pool.query(
+        "SELECT 1 FROM users WHERE subject='new-auth0-first-login'",
+      )
+    ).rowCount,
+  ).toBe(0);
+  const responses = await Promise.all(
+    Array.from({ length: 3 }, () =>
+      api().post('/api/v1/sessions').auth(fresh, { type: 'bearer' }),
+    ),
+  );
+  expect(responses.map((r) => r.status)).toEqual([201, 201, 201]);
+  const user = (
+    await pool.query(
+      "SELECT id FROM users WHERE issuer=$1 AND subject='new-auth0-first-login'",
+      [identity.issuer],
+    )
+  ).rows[0];
+  expect(
+    (
+      await pool.query('SELECT 1 FROM candidate_profiles WHERE user_id=$1', [
+        user.id,
+      ])
+    ).rowCount,
+  ).toBe(0);
+  expect(
+    (
+      await pool.query(
+        "SELECT 1 FROM user_role_assignments WHERE user_id=$1 AND role_code='CANDIDATE'",
+        [user.id],
+      )
+    ).rowCount,
+  ).toBe(1);
+  expect(
+    (
+      await pool.query(
+        "SELECT 1 FROM audit_events WHERE actor_id=$1 AND action='identity.provisioned'",
+        [user.id],
+      )
+    ).rowCount,
+  ).toBe(1);
+  expect(
+    (
+      await pool.query('SELECT 1 FROM browser_sessions WHERE user_id=$1', [
+        user.id,
+      ])
+    ).rowCount,
+  ).toBe(3);
+  await api()
+    .get('/api/v1/me')
+    .auth(fresh, { type: 'bearer' })
+    .set('X-VetReady-Session', responses[0]!.body.handle)
+    .expect(200);
+  await api()
+    .get('/api/v1/admin/summary')
+    .auth(fresh, { type: 'bearer' })
+    .expect(403);
+});
+it('identifies missing session migration at the insert without exposing SQL or identity data', async () => {
+  const logging = vi.spyOn(console, 'error').mockImplementation(() => {});
+  await pool.query(
+    'ALTER TABLE browser_sessions RENAME TO session_diagnostic_fixture',
+  );
+  try {
+    const response = await api()
+      .post('/api/v1/sessions')
+      .auth(await identity.token('missing-table-fixture'), { type: 'bearer' });
+    expect(response.status).toBe(500);
+    const event = JSON.parse(logging.mock.calls[0]![0]);
+    expect(event).toMatchObject({
+      event: 'auth.session.registration.failed',
+      stage: 'session-insert',
+      code: '42P01',
+    });
+    expect(JSON.stringify(logging.mock.calls)).not.toContain(
+      'missing-table-fixture',
+    );
+    expect(JSON.stringify(response.body)).not.toContain('browser_sessions');
+  } finally {
+    await pool.query(
+      'ALTER TABLE session_diagnostic_fixture RENAME TO browser_sessions',
+    );
+    logging.mockRestore();
+  }
+  await api()
+    .post('/api/v1/sessions')
+    .auth(await identity.token('missing-table-fixture'), { type: 'bearer' })
+    .expect(201);
+});
+it('rolls back session insertion if its audit fails, with an exact sanitized stage', async () => {
+  const logging = vi.spyOn(console, 'error').mockImplementation(() => {});
+  const known = await identity.token('audit-failure-fixture');
+  await api().get('/api/v1/me').auth(known, { type: 'bearer' }).expect(200);
+  await pool.query(
+    'ALTER TABLE audit_events RENAME TO audit_diagnostic_fixture',
+  );
+  try {
+    await api()
+      .post('/api/v1/sessions')
+      .auth(known, { type: 'bearer' })
+      .expect(500);
+    expect(JSON.parse(logging.mock.calls[0]![0])).toMatchObject({
+      stage: 'session-audit',
+      code: '42P01',
+    });
+    expect(
+      (
+        await pool.query(
+          "SELECT 1 FROM browser_sessions bs JOIN users u ON u.id=bs.user_id WHERE u.subject='audit-failure-fixture'",
+        )
+      ).rowCount,
+    ).toBe(0);
+  } finally {
+    await pool.query(
+      'ALTER TABLE audit_diagnostic_fixture RENAME TO audit_events',
+    );
+    logging.mockRestore();
+  }
 });

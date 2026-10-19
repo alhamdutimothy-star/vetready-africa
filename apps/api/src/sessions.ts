@@ -24,6 +24,7 @@ export class SessionController {
   @Post()
   create(@Req() r: AuthRequest) {
     const user = principal(r);
+    r.sessionRegistrationStage = 'session-transaction';
     return this.db.transaction(async (c) => {
       const handle = randomBytes(32).toString('base64url');
       const expiresAt = new Date(
@@ -31,12 +32,14 @@ export class SessionController {
       );
       if (expiresAt.getTime() <= Date.now())
         throw new UnauthorizedException('Access token expired');
+      r.sessionRegistrationStage = 'session-insert';
       const row = (
         await c.query<{ id: string }>(
           'INSERT INTO browser_sessions(handle_hash,user_id,expires_at) VALUES($1,$2,$3) RETURNING id',
           [sessionDigest(handle), user.userId, expiresAt],
         )
       ).rows[0]!;
+      r.sessionRegistrationStage = 'session-audit';
       await audit(
         c,
         user.userId,
@@ -45,7 +48,10 @@ export class SessionController {
         row.id,
         r.requestId,
       );
-      return { handle, expiresAt: expiresAt.toISOString() };
+      r.sessionRegistrationStage = 'session-response';
+      const response = { handle, expiresAt: expiresAt.toISOString() };
+      r.sessionRegistrationStage = 'session-commit';
+      return response;
     });
   }
   @ApiOperation({

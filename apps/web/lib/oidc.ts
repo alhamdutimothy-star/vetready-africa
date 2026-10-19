@@ -1,3 +1,6 @@
+import { CallbackHttpError, type CallbackStage } from './callback-diagnostics';
+import { discovery } from './oidc-discovery';
+export { discovery };
 import { randomBytes } from 'node:crypto';
 import { createHash } from 'node:crypto';
 import {
@@ -61,39 +64,6 @@ export function webConfig(env: NodeJS.ProcessEnv): WebConfig {
   result.data.APP_ORIGIN = new URL(result.data.APP_ORIGIN).origin;
   return result.data;
 }
-const discoverySchema = z.object({
-  issuer: z.url(),
-  authorization_endpoint: z.url(),
-  token_endpoint: z.url(),
-  jwks_uri: z.url(),
-});
-export async function discovery(config: WebConfig) {
-  const response = await fetch(
-    `${config.OIDC_ISSUER.replace(/\/$/, '')}/.well-known/openid-configuration`,
-    { signal: AbortSignal.timeout(5000), cache: 'no-store', redirect: 'error' },
-  );
-  if (!response.ok) throw new Error('Identity provider unavailable');
-  const data = discoverySchema.parse(await response.json());
-  if (data.issuer !== config.OIDC_ISSUER) throw new Error('Issuer mismatch');
-  for (const endpoint of [
-    data.authorization_endpoint,
-    data.token_endpoint,
-    data.jwks_uri,
-  ]) {
-    const u = new URL(endpoint);
-    if (
-      u.protocol !== 'https:' &&
-      !(
-        config.NODE_ENV !== 'production' &&
-        u.protocol === 'http:' &&
-        ['localhost', '127.0.0.1'].includes(u.hostname)
-      )
-    )
-      throw new Error('Insecure identity endpoint');
-    if (u.username || u.password) throw new Error('Invalid identity endpoint');
-  }
-  return data;
-}
 export function newFlow() {
   const verifier = randomBytes(32).toString('base64url');
   return {
@@ -138,9 +108,12 @@ export async function exchangeCode(
   config: WebConfig,
   code: string,
   flow: JWTPayload,
+  onStage: (stage: CallbackStage) => void = () => {},
 ) {
+  onStage('flow-validation');
   if (typeof flow.verifier !== 'string' || typeof flow.nonce !== 'string')
     throw new Error('Invalid login flow');
+  onStage('discovery');
   const provider = await discovery(config);
   const form = new URLSearchParams({
     grant_type: 'authorization_code',
@@ -151,6 +124,7 @@ export async function exchangeCode(
   });
   if (config.OIDC_CLIENT_SECRET)
     form.set('client_secret', config.OIDC_CLIENT_SECRET);
+  onStage('token-exchange');
   const response = await fetch(provider.token_endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -159,7 +133,15 @@ export async function exchangeCode(
     cache: 'no-store',
     redirect: 'error',
   });
-  if (!response.ok) throw new Error('Code exchange failed');
+  if (!response.ok) {
+    const failure: unknown = await response.json().catch(() => null);
+    const code =
+      failure && typeof failure === 'object' && 'error' in failure
+        ? failure.error
+        : undefined;
+    throw new CallbackHttpError('Code exchange failed', response.status, code);
+  }
+  onStage('token-response-validation');
   const tokens = z
     .object({
       access_token: z.string().min(1).max(16000),
@@ -168,6 +150,7 @@ export async function exchangeCode(
       token_type: z.string().refine((v) => v.toLowerCase() === 'bearer'),
     })
     .parse(await response.json());
+  onStage('id-token-validation');
   const { payload } = await jwtVerify(
     tokens.id_token,
     createRemoteJWKSet(new URL(provider.jwks_uri)),
@@ -186,6 +169,7 @@ export async function exchangeCode(
   )
     throw new Error('Authorized party mismatch');
   // Access JWT has a separate API audience; an ID token cannot be used at the API.
+  onStage('access-token-validation');
   const access = await jwtVerify(
     tokens.access_token,
     createRemoteJWKSet(new URL(provider.jwks_uri)),

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { api } from '../../lib/session';
 import { saveProfile, selectPathway, registerEmployer } from './actions';
@@ -35,7 +36,8 @@ export default async function Dashboard({
       </section>
     );
   }
-  if (!me || !me.ok)
+  if (!me || me.status === 401 || me.status === 403) redirect('/auth/login');
+  if (!me.ok)
     return (
       <section>
         <h1>Your private workspace</h1>
