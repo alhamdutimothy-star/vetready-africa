@@ -63,3 +63,5 @@ export type {
 } from './models';
 
 export * from './assessment';
+export * from './evidence';
+export * from './verification';

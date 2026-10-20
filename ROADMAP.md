@@ -1,5 +1,11 @@
 # Phased development roadmap
 
+## Current checkpoint
+
+The owner reports Windows end-to-end authentication verified and protected by `working-authentication-2026-10-20`; this milestone does not redesign authentication. **IMPLEMENTED — Phase 3A:** canonical evidence source extension, submission revision/state foundation, proposed assessor scopes, storage interface and integrity/regression tests. No operational review/award/upload/Passport capability is activated.
+
+**NEXT, subject to separate approval:** Phase 3B governed training/progress foundation, reusing Phase 2 assessment and evidence. See [staged Phase 3 plan](docs/PHASE3_ARCHITECTURE.md). Professional content and rules remain **REQUIRES DOMAIN EXPERT VALIDATION**. Stop after the 3A exit report.
+
 ## 0. Approval and domain validation
 
 Founder reviews this proposal and confirms PRODUCT.md assumptions, budget and pilot partners. Veterinary reviewers approve rubrics, gate policies, assessor eligibility and content. Nigerian counsel reviews professional/privacy obligations. Overall direction and Phase 1 implementation were approved with four pathways; detailed professional standards remain pending.

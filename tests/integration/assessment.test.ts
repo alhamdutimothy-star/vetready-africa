@@ -1,3 +1,5 @@
+import { readFileSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import request from 'supertest';
 import type { INestApplication } from '@nestjs/common';
@@ -487,9 +489,22 @@ it('database rejects evidence source inflation and seed/migration reruns preserv
     (await pool.query('SELECT count(*) FROM assessment_attempts')).rows[0]
       .count,
   ).toBe(count);
+  const manifest = readdirSync('db/migrations')
+    .filter((name) => name.endsWith('.sql'))
+    .sort()
+    .map((name) => ({
+      name,
+      checksum: createHash('sha256')
+        .update(readFileSync(`db/migrations/${name}`))
+        .digest('hex'),
+    }));
   expect(
-    (await pool.query('SELECT count(*) FROM schema_migrations')).rows[0].count,
-  ).toBe('8');
+    (
+      await pool.query(
+        'SELECT name,checksum FROM schema_migrations ORDER BY name',
+      )
+    ).rows,
+  ).toEqual(manifest);
 });
 it('role-specific requirements reuse child evidence and cannot reference another pathway', async () => {
   const p = (await get('/pathways')).body[0];

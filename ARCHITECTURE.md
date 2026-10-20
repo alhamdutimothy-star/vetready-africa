@@ -1,5 +1,11 @@
 # System architecture proposal
 
+## Current implementation — Phase 3A
+
+**IMPLEMENTED:** Migration 009 extends the canonical child-evidence ledger with source-specific external submission provenance, immutable submitted revisions and assessor proposal scaffolding. It introduces no new API endpoint or authentication change. Storage is an interface only; provider selection below remains a future recommendation. See [Phase 3 architecture](docs/PHASE3_ARCHITECTURE.md) and [ADR 0004](docs/adr/0004-phase-three-evidence-and-verification.md).
+
+**PROPOSED / REQUIRES DOMAIN EXPERT VALIDATION:** Professional review, claims, readiness rules and Passport remain later milestones.
+
 ## Recommended stack and trade-offs
 
 | Concern        | Recommendation                                                                      | Rationale and trade-off                                                                                                                                                                                                                |

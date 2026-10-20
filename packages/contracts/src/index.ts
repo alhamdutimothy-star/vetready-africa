@@ -54,3 +54,4 @@ export type EvidenceInput = z.infer<typeof evidenceSchema>;
 export type RoleAssignmentInput = z.infer<typeof roleAssignmentSchema>;
 
 export * from './assessment';
+export * from './evidence';

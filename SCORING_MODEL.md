@@ -1,5 +1,9 @@
 # Explainable scoring and matching
 
+## Phase 3A boundary — no new score
+
+**IMPLEMENTED:** Source integrity and lifecycle controls only. No scoring algorithm, readiness percentage, professional threshold or practical verification gate is added or activated. External receipt labels and draft targets are never competency awards; unverified/demo receipts cannot satisfy existing verified-evidence gaps. Numerical examples elsewhere in this document remain **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**, not seeded policy. See [Verification model](VERIFICATION_MODEL.md).
+
 All numerical examples below are proposed software policies, **not validated veterinary standards**. The approved policy must be versioned and frozen for each calculation. Scores describe evidence against a role specification, not inherent professional worth.
 
 ## Competency and employability score

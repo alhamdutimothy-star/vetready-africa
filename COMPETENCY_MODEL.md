@@ -1,5 +1,11 @@
 # Competency and assessment architecture
 
+## Phase 3A implementation boundary
+
+**IMPLEMENTED:** External submissions target exact reusable child versions and requested evidence facets through composite-FK-backed mappings. The 47 groups/69 children and four pathway seeds are unchanged. A requested practical facet is not a practical award. All new external receipts remain `UNVERIFIED`; existing gap semantics are unchanged.
+
+**PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION:** Context equivalence, professional verification, assessor eligibility and progression rules. No weights, pass marks, expiry periods or readiness gates are activated. See [Evidence model](EVIDENCE_MODEL.md).
+
 ## Framework
 
 Competency identity is stable; its definitions are immutable versions. A version includes code, title, category, description, knowledge outcomes, practical tasks, permitted assessment methods, level anchors, rubric, required evidence, critical-error rules, passing policy, reassessment/expiry policy and authoritative references with reviewer sign-off. Many pathways can reference the same competency with different required levels and weights.

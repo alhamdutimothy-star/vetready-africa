@@ -1,6 +1,12 @@
 # Relational database architecture
 
-This document distinguishes the target relational model from the implemented Phases 1–2 schema. UUID primary keys, `timestamptz` timestamps, explicit foreign keys and scoped authorization apply throughout. Monetary values use integer minor units with currency; no floating-point salaries.
+## IMPLEMENTED — migration 009 foundation
+
+Forward-only 009 adds `evidence_submissions`, `evidence_submission_versions`, `evidence_submission_competencies`, append-only `evidence_status_events`, and proposed-only `assessor_profiles`/`assessor_scope_grants`. Canonical `competency_evidence` gains `source_kind` (existing/default `ASSESSMENT`) and a nullable external version source, protected by XOR/composite FKs and per-source uniqueness. No migrations 001–008 change. No existing users, sessions, attempts, evidence, grants or audit history are rewritten.
+
+Submitted revisions and referenced child definitions are immutable; transitions require an active owner, valid prior state and atomic audit. External receipts are strictly unverified, with exact source context/demo and no invented expiry. Assessor proposals grant no authority. See [relational details/ERD](EVIDENCE_MODEL.md) and [verification boundary](VERIFICATION_MODEL.md). Review/award tables and public sharing remain **PROPOSED**, not active.
+
+This document distinguishes the target relational model from the implemented Phases 1–3A schema. UUID primary keys, `timestamptz` timestamps, explicit foreign keys and scoped authorization apply throughout. Monetary values use integer minor units with currency; no floating-point salaries.
 
 ## Core entities and relationships
 

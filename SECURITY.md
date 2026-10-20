@@ -1,5 +1,11 @@
 # Security, privacy and Nigerian operating review
 
+## Phase 3A security boundary
+
+**IMPLEMENTED:** Authentication/OIDC/session/logout, JWT audience/issuer/scope and database-managed RBAC remain unchanged from the protected baseline. No new HTTP route, public evidence access, storage adapter or upload acceptance is added. Submission ownership, immutable submitted snapshots, same-candidate source FKs and atomic audit triggers protect the new foundation. Assessor proposals cannot qualify an administrator or enable self-review. Audit metadata excludes report/context payloads.
+
+The shared database service account is trusted infrastructure, not per-user RLS; future services must derive actors from authenticated identity, check ownership/capabilities and restrict reads. Contracts reject client authority overrides. **PROPOSED:** Real evidence collection requires private storage/quarantine/scanning, farm-data consent/minimization, retention/deletion/correction controls, scoped professional review and legal/privacy review. See [Evidence model](EVIDENCE_MODEL.md) and [Verification model](VERIFICATION_MODEL.md).
+
 ## Permission model
 
 Authorization combines capability, resource ownership, organization membership, assessor assignment and candidate consent. Deny by default. A role name alone is never enough.

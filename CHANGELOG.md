@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — Phase 3A evidence foundation
+
+- Added forward-only 009 with immutable submitted versions, normalized child targets, typed canonical evidence sources, provenance/ownership constraints and atomic audit.
+- Added proposed-only assessor profiles/scopes, disabled verification prerequisites, strict foundation contracts and provider-free storage interface.
+- Preserved migrations 001–008 and authentication; added upgrade/lifecycle/source/privacy/compatibility tests.
+- External evidence remains unverified; no uploads, awards, thresholds, public Passport or Phase 3B functionality activated.
+- Owner-reported Windows live authentication is verified and protected by tag `working-authentication-2026-10-20`; the historical pending status below records the earlier checkpoint, not the current baseline.
+
 ## Unreleased — Auth0 checkpoint
 
 - Retained OIDC/PKCE and domain RBAC; pinned RS256 and required the confidential Auth0 client secret.
