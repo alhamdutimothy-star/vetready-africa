@@ -59,11 +59,23 @@ export const gapSchema = z.object({
   ),
 });
 export const attemptSchema = z.object({
+  pilot: z.boolean().optional(),
   caseBlueprint: z
     .object({
+      assessment_version_id: z.uuid().optional(),
       scenario: z.string(),
       validation_notice: z.string(),
-      steps: z.array(z.object({ itemVersionId: z.uuid(), title: z.string() })),
+      steps: z.array(
+        z.object({
+          itemVersionId: z.uuid(),
+          title: z.string(),
+          rubricDimensions: z
+            .array(
+              z.object({ rubricCriterionId: z.uuid(), dimension: z.string() }),
+            )
+            .optional(),
+        }),
+      ),
     })
     .nullable()
     .optional(),

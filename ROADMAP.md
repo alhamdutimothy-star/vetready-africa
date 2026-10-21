@@ -71,3 +71,7 @@ Phase 3 requires new authorization: validate four small blueprints/rubrics and a
 ## Phase 3C owner review
 
 Dairy-first case foundation: one controlled proposed Transition & Fresh Cow template; reusable version-bound case stages/dimensions; existing assessment workflow and owner-only evidence provenance. Expert production approval, supervised practical capture/verification and readiness activation remain intentionally unavailable. Phase 3D requires separate owner authorization; recommended scope is expert editorial governance and a reviewed supervised-capture pilot, not automated awards or employer matching.
+
+## Phase 3D — functional dairy pilot for review
+
+Candidate dairy workspace, controlled Phase 3C case preparation, structured reasoning/save/resume, submission, owner assignment, private review drafts, finalized feedback and explicit unverified evidence are implemented for owner review. Next, validate the pilot scenario, criteria and scope with accountable dairy experts and authorize any further governed editorial/supervised-evidence work separately. No readiness/certification, matching, payments, broader pathway implementation or deployment is implied.

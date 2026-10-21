@@ -65,3 +65,7 @@ Current authentication status and private configuration steps: [Auth0 checkpoint
 ## Phase 3C — dairy-first case foundation
 
 The proposed Transition & Fresh Cow case template, case authoring API and private evidence manifest extend the existing assessment system. Read [DAIRY_CASE_MODEL.md](DAIRY_CASE_MODEL.md) for the 27-area competency coverage map, versioning, API usage and deliberately inactive professional decisions. Demo delivery does not verify competence. Phase 3C remains uncommitted for owner review.
+
+## Phase 3D — functional dairy pilot
+
+The candidate entry is `/dairy`; authorized staff use `/dairy/review`. The existing Transition & Fresh Cow foundation now supports structured reasoning, save/resume, immutable submission, private assessor drafts and finalized development feedback. All content remains DEMO/DRAFT; no practical verification or readiness is awarded. See [DAIRY_PILOT_MODEL.md](DAIRY_PILOT_MODEL.md) for owner setup, local review and limitations. No new environment variables are required.

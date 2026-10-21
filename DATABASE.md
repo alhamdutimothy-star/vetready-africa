@@ -173,3 +173,7 @@ Migration 008 adds browser_sessions with unique SHA-256 handle hashes, user fore
 ## Migration 011 — governed case blueprints
 
 Adds `case_blueprints`, `case_reasoning_steps`, `case_rubric_dimensions` and a composite rubric identity constraint. Existing assessment versions remain the aggregate/rubric version. Composite FKs prevent cross-item/cross-assessment references; release guards require complete contiguous CASE/REPORT stages and rubric dimension coverage. Delivered metadata freezes and production case approval is blocked. Migrations 001–010 and all prior rows are preserved; the populated 010 upgrade test compares every pre-existing table, including sessions, assessment evidence, training progress and audit records. See [case model](DAIRY_CASE_MODEL.md).
+
+## Migration 012 — functional dairy pilot
+
+Adds `dairy_pilot_versions`, `dairy_pilot_stages`, `dairy_pilot_guidance`, `dairy_pilot_response_revisions`, `dairy_pilot_review_drafts` and `dairy_pilot_review_finalizations`. Composite references reuse exact case/item/rubric and canonical review identities. Version metadata freezes on release; generated concurrency clocks cannot be manually edited; review revisions/finalizations are append-only. A deferred canonical-review constraint requires matching saved-draft provenance. Existing columns and migrations 001–011 remain unchanged. Populated 011 upgrade tests compare every pre-existing table, including finalized legacy feedback and training/session history.

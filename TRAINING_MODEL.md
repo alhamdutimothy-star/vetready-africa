@@ -69,3 +69,7 @@ Production content approval, reviewer eligibility, content equivalence/credit tr
 ## Phase 3C case references
 
 A released case assessment version can be referenced through the existing training assessment links. The link remains pinned to that version. Completing its preparation lesson does not start/submit the case, create evidence or change readiness. The case integration suite asserts this boundary explicitly.
+
+## Phase 3D participation display
+
+The dairy dashboard reads existing version-bound learning enrollments/completed-lesson counts separately from case progress and evidence. It does not complete courses, create assessments from lesson completion, close evidence gaps or award skills. Candidate reasoning and assessor feedback use the existing assessment workflow, not a second training evaluation system.

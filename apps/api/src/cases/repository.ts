@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import type { PoolClient } from 'pg';
 import type { CaseBlueprintInput } from '@vetready/contracts';
 import { evidenceDisposition } from '@vetready/domain';
 import { Database, audit } from '../database';
@@ -12,8 +13,12 @@ export class CaseRepository {
     @Inject(AssessmentRepository)
     private readonly assessments: AssessmentRepository,
   ) {}
-  async create(ctx: OperationContext, input: CaseBlueprintInput) {
-    return this.db.transaction(async (c) => {
+  async create(
+    ctx: OperationContext,
+    input: CaseBlueprintInput,
+    client?: PoolClient,
+  ) {
+    const operation = async (c: PoolClient) => {
       const av = await this.assessments.create(
         ctx,
         {
@@ -88,7 +93,8 @@ export class CaseRepository {
         demo: true,
         notice: av.notice,
       };
-    });
+    };
+    return client ? operation(client) : this.db.transaction(operation);
   }
   async detail(id: string, author: boolean) {
     const result = (
@@ -105,6 +111,17 @@ export class CaseRepository {
       )
     ).rows[0];
     if (!result) throw new NotFoundException('Case blueprint unavailable');
+    if (
+      !author &&
+      (
+        await this.db.pool.query(
+          'SELECT 1 FROM dairy_pilot_versions WHERE assessment_version_id=$1',
+          [id],
+        )
+      ).rowCount
+    ) {
+      for (const step of result.steps) delete step.rubric;
+    }
     return result;
   }
   async manifest(ctx: OperationContext) {

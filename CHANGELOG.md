@@ -48,3 +48,11 @@ Live provider setup, assessment/verification/scoring/matching and production ope
 - Add one explicitly proposed DEMO/DRAFT dairy Transition & Fresh Cow template and owner-only evidence provenance view.
 - Add forward-only migration 011, populated 010 upgrade/regression tests and dairy competency coverage documentation.
 - Preserve authentication, four pathway definitions, training/competence separation and all inactive professional thresholds.
+
+## Unreleased — Phase 3D functional dairy pilot
+
+- Add candidate `/dairy` workflow and authorized dairy review/blueprint views using the existing Transition & Fresh Cow foundation.
+- Separate supplied facts from structured reasoning; preserve save/resume with stale-write protection and locked submissions.
+- Add private, immutable review drafts finalized through existing qualitative reviews with exact rubric/version/evidence provenance.
+- Protect staff material at API boundaries, including legacy routes; preserve authentication and all inactive professional awards/rules.
+- Add migration 012 and populated-upgrade, API, server-action recovery and built-web HTTP tests.

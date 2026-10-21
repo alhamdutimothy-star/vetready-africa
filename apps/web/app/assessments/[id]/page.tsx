@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { api } from '../../../lib/session';
 import { attemptSchema, uuidSchema } from '../../../lib/assessment';
 import { saveResponse, submitAttempt, appealAttempt } from './actions';
@@ -19,6 +19,7 @@ export default async function Assessment({
   if (r.status === 404) notFound();
   if (!r.ok) return <p>Assessment temporarily unavailable.</p>;
   const a = attemptSchema.parse(await r.json());
+  if (a.pilot) redirect(`/dairy/cases/${id}`);
   const editable = a.status === 'IN_PROGRESS';
   return (
     <>

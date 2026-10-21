@@ -83,3 +83,7 @@ Browser authentication retains OIDC/PKCE and database RBAC. Migration 008 adds h
 ## Dairy-first case overlay (Phase 3C)
 
 Case blueprints extend assessment versions rather than duplicating attempts, rubric observations or evidence. Ordered stages and rubric-dimension tags are relational, version-bound and frozen on delivery. One synthetic dairy template is isolated from software logic. An owner-only evidence manifest prepares provenance for a future passport without classifying readiness. See [DAIRY_CASE_MODEL.md](DAIRY_CASE_MODEL.md) and [ADR 0006](docs/adr/0006-dairy-first-case-blueprints.md).
+
+## Functional dairy workflow
+
+Phase 3D adds a dairy-only adapter around existing assessment/case identities, not another LMS, rubric-score or evidence engine. Candidate reasoning remains canonical response JSON; generated revision clocks reject stale edits. Private append-only review drafts finalize through existing reviews/observations with exact provenance and canonical audit transactions. Candidate/staff API projections enforce confidentiality even on older routes. See [pilot model](DAIRY_PILOT_MODEL.md) and [ADR 0007](docs/adr/0007-functional-dairy-pilot.md).

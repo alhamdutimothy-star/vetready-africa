@@ -58,3 +58,5 @@ export * from './evidence';
 export * from './training';
 
 export * from './cases';
+
+export * from './dairy-pilot';

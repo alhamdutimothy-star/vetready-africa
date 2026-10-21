@@ -100,3 +100,23 @@ All paths below use `/api/v1` and the existing bearer JWT/scope guards.
 | GET `/candidates/me/evidence-manifest`                     | candidate:own       | Private canonical provenance; no public passport or readiness claim  |
 
 Request schema is documented in OpenAPI. Fetch existing `/pathways/:id/hierarchy` to select exact group, child and criterion version IDs; bind the template's suggested child codes explicitly. The case factory never accepts an approval, score or verification flag. Existing release-demo, attempts, responses, assignment, human review, moderation, appeals and retirement endpoints remain the workflow. Attempt details now include `caseBlueprint` or null. The manifest returns at most 500 recent entries with `truncated`, `readinessRulesActive: false`, `professionalReadiness: null` and `reassessmentPolicy: NOT_CONFIGURED`. Demo entries are labelled DEMO_ONLY. Existing source references are not proof of supervised performance.
+
+## Phase 3D — functional dairy pilot
+
+All paths use `/api/v1` and existing JWT audience/scope plus application RBAC.
+
+| Method/path                                                   | Capability                                      | Behavior                                                                                         |
+| ------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| GET `/admin/dairy-pilot`                                      | assessment:author                               | Owner configuration and private guidance inspection                                              |
+| POST `/admin/dairy-pilot`                                     | assessment:author                               | Idempotently prepare/adopt a matching DRAFT; delivered source versions are preserved             |
+| GET `/candidates/me/dairy-pilot`                              | candidate:own                                   | Dairy-only progress, mapped targets and recent evidence, no readiness award                      |
+| POST `/dairy-pilot/attempts`                                  | candidate:own                                   | Start/resume the explicitly released demo                                                        |
+| GET `/candidates/me/dairy-pilot/attempts/:id`                 | candidate:own                                   | Owner-only public case/response/feedback projection                                              |
+| PUT `/candidates/me/dairy-pilot/attempts/:id/responses/:item` | candidate:own                                   | Structured `reasoning` plus `expectedRevision`; stale distinct edit 409, identical retry replays |
+| POST `/candidates/me/dairy-pilot/attempts/:id/submit`         | candidate:own                                   | Existing completeness, immutable submission and unverified evidence                              |
+| GET `/staff/dairy-pilot`                                      | platform assessment:assign OR assessment:review | Submitted queue; assigned-only for assessors                                                     |
+| GET `/staff/dairy-pilot/attempts/:id`                         | same, plus resource access                      | Owner inspection or assigned submitted-case review with private guidance                         |
+| PUT `/assessor/dairy-pilot/attempts/:id/review-draft`         | assessment:review plus active assignment        | Append private draft revision with qualitative judgments/comments                                |
+| POST `/assessor/dairy-pilot/attempts/:id/finalize`            | assessment:review plus active assignment        | Finalize exact latest complete draft into existing review history; no verification award         |
+
+The existing assignment, DEMO release, moderation and appeal APIs remain in use. Pilot work cannot bypass structured saves/finalization using old text-response/direct-review endpoints. Legacy candidate views also strip pilot protected material. Candidate JSON omits working drafts/private guidance; finalized public feedback is distinct from canonical verification status. Draft save/finalization retries are idempotent for the same content; returned moderation requires a fresh draft revision. OpenAPI contains strict request schemas. See [pilot model](DAIRY_PILOT_MODEL.md) for response categories, provenance, bounds and local review steps.

@@ -2752,6 +2752,400 @@
         ],
         "tags": ["governed case blueprints"]
       }
+    },
+    "/api/v1/admin/dairy-pilot": {
+      "post": {
+        "operationId": "DairyPilotController_setup",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      },
+      "get": {
+        "operationId": "DairyPilotController_configuration",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/candidates/me/dairy-pilot": {
+      "get": {
+        "operationId": "DairyPilotController_dashboard",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/dairy-pilot/attempts": {
+      "post": {
+        "operationId": "DairyPilotController_start",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/candidates/me/dairy-pilot/attempts/{id}": {
+      "get": {
+        "operationId": "DairyPilotController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/candidates/me/dairy-pilot/attempts/{id}/responses/{item}": {
+      "put": {
+        "operationId": "DairyPilotController_response",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expectedRevision": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483646
+                  },
+                  "reasoning": {
+                    "type": "object",
+                    "properties": {
+                      "observations": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "interpretation": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "assumptions": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "informationRequests": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "priorities": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "actions": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "monitoring": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "safety": {
+                        "type": "string",
+                        "maxLength": 2000
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["expectedRevision", "reasoning"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/candidates/me/dairy-pilot/attempts/{id}/submit": {
+      "post": {
+        "operationId": "DairyPilotController_submit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/staff/dairy-pilot": {
+      "get": {
+        "operationId": "DairyPilotController_queue",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/staff/dairy-pilot/attempts/{id}": {
+      "get": {
+        "operationId": "DairyPilotController_staffDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/assessor/dairy-pilot/attempts/{id}/review-draft": {
+      "put": {
+        "operationId": "DairyPilotController_draft",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expectedRevision": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483646
+                  },
+                  "decision": {
+                    "type": "string",
+                    "enum": ["DEVELOPMENT_FEEDBACK", "MORE_EVIDENCE_REQUIRED"]
+                  },
+                  "feedback": {
+                    "type": "string",
+                    "maxLength": 6000
+                  },
+                  "observations": {
+                    "maxItems": 200,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "rubricCriterionId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "observation": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "DEMONSTRATED",
+                                "NEEDS_DEVELOPMENT",
+                                "UNASSESSABLE"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "comment": {
+                          "type": "string",
+                          "maxLength": 2000
+                        }
+                      },
+                      "required": [
+                        "rubricCriterionId",
+                        "observation",
+                        "comment"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "expectedRevision",
+                  "decision",
+                  "feedback",
+                  "observations"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
+    },
+    "/api/v1/assessor/dairy-pilot/attempts/{id}/finalize": {
+      "post": {
+        "operationId": "DairyPilotController_finalize",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expectedRevision": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": ["expectedRevision"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["functional dairy pilot"]
+      }
     }
   },
   "info": {

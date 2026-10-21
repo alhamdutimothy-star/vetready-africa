@@ -68,3 +68,7 @@ Implemented objective item outcomes are CORRECT/INCORRECT/REQUIRES_REVIEW. Human
 ## Phase 3C case dimensions
 
 Thirteen qualitative rubric dimensions tag existing version-bound criteria. No case total, pass mark, weight, readiness percentage, practical gate or professional expiry is introduced. The owner-only provenance manifest describes existing evidence status and explicitly recorded validity; it performs no new verification. Nine readiness names remain reserved and inactive.
+
+## Phase 3D qualitative review
+
+Assessor drafts preserve nullable/unjudged criteria, comments and development decisions. Finalization requires a complete existing criterion set and feedback; it is not a pass mark or weighted score. DEMONSTRATED refers only to the submitted written response, while canonical evidence remains UNVERIFIED/DEMO. No professional threshold, target, dose, withdrawal rule, nutritional specification, expiry, certification or readiness percentage is activated. Text-length/revision bounds are technical transport/validation constraints only.

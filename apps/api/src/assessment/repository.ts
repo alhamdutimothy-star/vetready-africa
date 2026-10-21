@@ -11,6 +11,7 @@ import { randomInt } from 'node:crypto';
 import { z } from 'zod';
 import {
   gradeObjective,
+  hasPermission,
   competencyGaps,
   developmentActivities,
   GAP_ENGINE_VERSION,
@@ -344,11 +345,47 @@ export class AssessmentRepository {
       )
     ).rows;
   }
-  async details(ctx: OperationContext, id: string, assessor = false) {
+  private async isPilot(c: PoolClient, id: string) {
+    if (
+      !(await c.query("SELECT to_regclass('dairy_pilot_versions') AS relation"))
+        .rows[0].relation
+    )
+      return false;
+    return Boolean(
+      (
+        await c.query(
+          'SELECT 1 FROM dairy_pilot_versions WHERE assessment_version_id=$1',
+          [id],
+        )
+      ).rowCount,
+    );
+  }
+  async details(
+    ctx: OperationContext,
+    id: string,
+    assessor = false,
+    observer = false,
+  ) {
     return this.db.transaction(async (c) => {
-      const a = assessor
-        ? await this.assigned(c, ctx, id)
-        : await this.owned(c, ctx, id);
+      if (observer && !hasPermission(ctx.grants, 'assessment:assign'))
+        throw new ForbiddenException();
+      const observed = observer
+        ? (
+            await c.query(
+              "SELECT * FROM assessment_attempts WHERE id=$1 AND status<>'IN_PROGRESS'",
+              [id],
+            )
+          ).rows[0]
+        : null;
+      if (observer && !observed) throw new NotFoundException();
+      const a = observer
+        ? observed
+        : assessor
+          ? await this.assigned(c, ctx, id)
+          : await this.owned(c, ctx, id);
+      const pilot = await this.isPilot(c, a.assessment_version_id);
+      if (pilot && assessor && a.status === 'IN_PROGRESS')
+        throw new NotFoundException('Submitted pilot attempt required');
       const info = (
         await c.query(
           'SELECT title,version,demo,notice FROM assessment_versions WHERE id=$1',
@@ -383,7 +420,12 @@ export class AssessmentRepository {
             [a.assessment_version_id],
           )
         ).rows[0] ?? null;
-      return { ...a, ...info, items, reviews, evidence, caseBlueprint };
+      if (pilot && !assessor && !observer) {
+        for (const item of items) item.rubric = [];
+        for (const step of caseBlueprint?.steps ?? [])
+          delete step.rubricDimensions;
+      }
+      return { ...a, ...info, items, reviews, evidence, caseBlueprint, pilot };
     });
   }
   async response(
@@ -396,6 +438,10 @@ export class AssessmentRepository {
       const a = await this.owned(c, ctx, id, true);
       if (a.status !== 'IN_PROGRESS')
         throw new ConflictException('Attempt already submitted');
+      if (await this.isPilot(c, a.assessment_version_id))
+        throw new UnprocessableEntityException(
+          'Use the structured dairy pilot response endpoint',
+        );
       const i = (
         await c.query<{
           type: string;
@@ -581,9 +627,13 @@ export class AssessmentRepository {
     ctx: OperationContext,
     id: string,
     input: z.infer<typeof reviewSchema>,
+    client?: PoolClient,
+    pilotDraftId?: string,
   ) {
-    return this.db.transaction(async (c) => {
+    return this.withClient(client, async (c) => {
       const a = await this.assigned(c, ctx, id, true);
+      if ((await this.isPilot(c, a.assessment_version_id)) && !pilotDraftId)
+        throw new ConflictException('Finalize a saved dairy review draft');
       if (a.status !== 'SUBMITTED')
         throw new ConflictException('Submitted attempt required');
       const criteria = (

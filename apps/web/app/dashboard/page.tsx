@@ -63,6 +63,11 @@ export default async function Dashboard({
     <>
       <h1>Your professional foundation</h1>
       <p>
+        <Link className="button" href="/dairy">
+          Open the Commercial Dairy Practice pilot
+        </Link>
+      </p>
+      <p>
         Readiness: <strong>NOT ASSESSED</strong>. No competence has been
         certified in this foundation release.
       </p>

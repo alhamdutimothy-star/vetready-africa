@@ -382,7 +382,14 @@ export default async function Workspace({
           <p>No available attempts.</p>
         )}
       </section>
-      {attempt && (
+      {attempt?.pilot && (
+        <p>
+          <Link href={`/dairy/review?attempt=${attempt.id}`}>
+            Open the dairy review workflow to save drafts and finalize feedback
+          </Link>
+        </p>
+      )}
+      {attempt && !attempt.pilot && (
         <section>
           <h2>Review: {attempt.title}</h2>
           <p className="notice">{attempt.notice}</p>

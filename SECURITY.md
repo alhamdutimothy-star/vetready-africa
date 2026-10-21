@@ -79,3 +79,7 @@ Browser logout revokes the owned application session before clearing cookies. In
 ## Phase 3C boundaries
 
 Case authoring uses existing platform assessment-author capability. Candidate catalog access excludes drafts; historical attempt access still enforces owner/assigned-assessor identity. The evidence manifest is owner-only, bounded and not a public passport. Authentication, JWT audience/scope, session/CSRF implementation and role grants are unchanged. Case creation and canonical audit writes are atomic. Demo case review cannot produce professional verification; production approval is blocked in migration 011. Real farm records/images and supervised evidence require a later privacy/consent and storage milestone.
+
+## Functional dairy candidate/staff boundary
+
+Pilot candidate APIs, legacy candidate attempt access and public case-blueprint access exclude protected rubric/guidance and working review drafts. Assigned active assessors can inspect submitted cases and save/finalize private drafts; platform assignment staff may inspect submissions but cannot finalize without assessor authority/assignment. Self-review, foreign criteria, stale edits, frozen-answer mutation and the old direct-review bypass are rejected. Finalization and canonical audit writes roll back atomically. New pages remain dynamic/no-store; text is escaped and no tokens or clinical drafts enter persistent browser storage. Existing Auth0/OIDC/session/CSRF sources and role grants remain unchanged. Production supervised verification and professional eligibility rules remain inactive.

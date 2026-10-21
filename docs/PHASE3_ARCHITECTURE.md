@@ -37,3 +37,7 @@ Stop after Phase 3B validation and owner review. Phase 3C is not started or impl
 ## Phase 3C — dairy-first governed case overlay
 
 See [DAIRY_CASE_MODEL.md](../DAIRY_CASE_MODEL.md) for the implementation boundary and coverage matrix. Existing assessment versions, rubric observations, evidence and RBAC are reused; migration 011 adds case-specific metadata and ordered stage/dimension links only. One synthetic Transition & Fresh Cow case blueprint is available for author inspection and explicit demonstration release. No professional case approval, practical verification, production readiness, public passport or employer matching is activated.
+
+## Phase 3D functional dairy workflow
+
+The [functional pilot model](../DAIRY_PILOT_MODEL.md) describes the dairy-only adapter, structured candidate reasoning, private review drafts and bound canonical finalization. Existing Phase 3C content/version identities and Phase 2 assessment/evidence remain the core. New professional content stays DRAFT and no readiness/certification workflow is activated. No later phase is authorized by this implementation.

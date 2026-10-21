@@ -67,3 +67,7 @@ Seeded definitions are **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**, with 
 ## Dairy-first proposed coverage
 
 Phase 3C reuses the existing 47 groups and 69 children. [The 27-area dairy coverage matrix](DAIRY_CASE_MODEL.md) maps dairy topics to existing shared/pathway definitions; it adds no arbitrary mandatory gates or duplicate competencies. Case dimension tags classify qualitative criterion observations and do not create competency awards. Broad existing child definitions and task-specific anchors remain **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**.
+
+## Functional dairy assessment versus competence
+
+The pilot dashboard displays the actual existing child versions targeted by the Transition/Fresh Cow case. Broader dairy topics remain context unless explicitly mapped; written BCS/feeding/clinical reasoning does not prove observed performance. Training, knowledge evidence, case evidence, self-declaration and practical verification remain distinct. Human demo review records qualitative observations with UNVERIFIED evidence, never an official competency award. All new professional guidance and target interpretation remain **DRAFT — REQUIRES DOMAIN EXPERT VALIDATION**. See [dairy practice coverage](DAIRY_PILOT_MODEL.md).
