@@ -75,3 +75,7 @@ File/image schemas reserve a private asset identity, but asset acceptance is rej
 ## Auth0 checkpoint
 
 Browser logout revokes the owned application session before clearing cookies. Independent JWTs expire separately. RS256 is pinned. Real tenant login remains unverified; see [Auth0 checkpoint](docs/AUTH0_CHECKPOINT.md).
+
+## Phase 3C boundaries
+
+Case authoring uses existing platform assessment-author capability. Candidate catalog access excludes drafts; historical attempt access still enforces owner/assigned-assessor identity. The evidence manifest is owner-only, bounded and not a public passport. Authentication, JWT audience/scope, session/CSRF implementation and role grants are unchanged. Case creation and canonical audit writes are atomic. Demo case review cannot produce professional verification; production approval is blocked in migration 011. Real farm records/images and supervised evidence require a later privacy/consent and storage milestone.

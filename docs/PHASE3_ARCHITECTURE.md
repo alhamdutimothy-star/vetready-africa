@@ -33,3 +33,7 @@ Professional definitions, rubric anchors, biological/nutritional/clinical standa
 No real uploads/public URLs, public Passport, employer matching, payment, AI competence decision, official award, signed credential or production professional content approval is enabled. Future consent-limited sharing must be scoped/revocable/audited. Nigerian privacy/professional review and storage processor/transfer decisions remain necessary before production evidence collection.
 
 Stop after Phase 3B validation and owner review. Phase 3C is not started or implicitly authorized by this foundation.
+
+## Phase 3C — dairy-first governed case overlay
+
+See [DAIRY_CASE_MODEL.md](../DAIRY_CASE_MODEL.md) for the implementation boundary and coverage matrix. Existing assessment versions, rubric observations, evidence and RBAC are reused; migration 011 adds case-specific metadata and ordered stage/dimension links only. One synthetic Transition & Fresh Cow case blueprint is available for author inspection and explicit demonstration release. No professional case approval, practical verification, production readiness, public passport or employer matching is activated.

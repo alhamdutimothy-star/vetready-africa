@@ -68,3 +68,5 @@ export * from './assessment';
 export * from './evidence';
 export * from './verification';
 export * from './training';
+
+export * from './cases';

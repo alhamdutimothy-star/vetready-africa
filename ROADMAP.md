@@ -67,3 +67,7 @@ Next milestone: validate the taxonomy, authors/reviewers and baseline assessment
 Assessment, hierarchy, evidence-gap and development-plan foundations are implemented across the four tracks. Demo practice and human review work locally; approved production content and real observed performance capture remain unavailable. See [completion report](docs/PHASE2_COMPLETION.md).
 
 Phase 3 requires new authorization: validate four small blueprints/rubrics and assessor eligibility; configure Auth0; build private scanned storage and supervised evidence capture; map gaps to a small governed learning catalog; run an end-to-end pilot. Scores/readiness rules still require separate methodology approval.
+
+## Phase 3C owner review
+
+Dairy-first case foundation: one controlled proposed Transition & Fresh Cow template; reusable version-bound case stages/dimensions; existing assessment workflow and owner-only evidence provenance. Expert production approval, supervised practical capture/verification and readiness activation remain intentionally unavailable. Phase 3D requires separate owner authorization; recommended scope is expert editorial governance and a reviewed supervised-capture pilot, not automated awards or employer matching.

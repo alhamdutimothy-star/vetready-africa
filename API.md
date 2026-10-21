@@ -87,3 +87,16 @@ All paths below are under `/api/v1`, authenticated and `no-store`. Training part
 New progress begins with `expectedRevision:0`. Resume positions count Unicode code points in immutable plain text. Retries with the same command/payload return the original result; 409 means stale revision or conflicting command reuse. Refresh owner enrollment state to reconcile. Invalid hierarchy/reference/lifecycle input returns 422; foreign enrollment reads/writes return 404; missing capability returns 403. Database internals and content payloads are not logged. Existing server request-size limits remain unchanged.
 
 There is no production approval, certification, upload, automatic assessment attempt or evidence endpoint in this training module. See [TRAINING_MODEL.md](TRAINING_MODEL.md).
+
+## Phase 3C governed case blueprints
+
+All paths below use `/api/v1` and the existing bearer JWT/scope guards.
+
+| Method/path                                                | Existing capability | Behavior                                                             |
+| ---------------------------------------------------------- | ------------------- | -------------------------------------------------------------------- |
+| GET `/admin/case-blueprint-templates/transition-fresh-cow` | assessment:author   | Proposed DEMO/DRAFT professional template; no automatic seed/release |
+| POST `/admin/case-blueprints`                              | assessment:author   | Strict version-bound mappings; atomic DRAFT case authoring, 201      |
+| GET `/case-blueprints/:id`                                 | catalog:read        | Released case detail; authors may inspect drafts; unavailable 404    |
+| GET `/candidates/me/evidence-manifest`                     | candidate:own       | Private canonical provenance; no public passport or readiness claim  |
+
+Request schema is documented in OpenAPI. Fetch existing `/pathways/:id/hierarchy` to select exact group, child and criterion version IDs; bind the template's suggested child codes explicitly. The case factory never accepts an approval, score or verification flag. Existing release-demo, attempts, responses, assignment, human review, moderation, appeals and retirement endpoints remain the workflow. Attempt details now include `caseBlueprint` or null. The manifest returns at most 500 recent entries with `truncated`, `readinessRulesActive: false`, `professionalReadiness: null` and `reassessmentPolicy: NOT_CONFIGURED`. Demo entries are labelled DEMO_ONLY. Existing source references are not proof of supervised performance.

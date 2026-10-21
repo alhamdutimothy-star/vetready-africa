@@ -63,3 +63,7 @@ Before production, validate assessment thresholds and levels, clinical/productio
 The 47 groups and 69 proposed assessable children are now separate identities, with versioned child statements, proposed methods, context, standards-to-validate and criteria. Core and cross-track children reuse a single child version through many-to-many group links. Definitions live in database records/configuration, not in grading logic. Domains normalize pathway/group placement; role targets reuse child evidence.
 
 Seeded definitions are **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**, with no mandatory flags, scores or thresholds. Gaps and development activities are derived from evidence facets and stored with an evaluation snapshot when a plan is saved. Existing group-level documents/self-declarations do not silently become child proof. See [Phase 2 report](docs/PHASE2_COMPLETION.md) for the online versus observed-evidence limits.
+
+## Dairy-first proposed coverage
+
+Phase 3C reuses the existing 47 groups and 69 children. [The 27-area dairy coverage matrix](DAIRY_CASE_MODEL.md) maps dairy topics to existing shared/pathway definitions; it adds no arbitrary mandatory gates or duplicate competencies. Case dimension tags classify qualitative criterion observations and do not create competency awards. Broad existing child definitions and task-specific anchors remain **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**.

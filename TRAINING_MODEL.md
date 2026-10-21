@@ -65,3 +65,7 @@ Plain-text bodies are bounded; API details deliver one exact course snapshot and
 A later web/PWA client may queue owner/version/command IDs and revision-aware operations. It must handle 409 conflicts, re-authentication and retired content explicitly; private progress must not enter a public/shared cache. Cursor pagination, incremental lesson delivery, assignment notifications, command retention and cross-device conflict UX remain future work.
 
 Production content approval, reviewer eligibility, content equivalence/credit transfer, real professional objectives, safety withdrawal and retention require separate expert/privacy review. Professional thresholds, readiness rules, certificates and public claims remain out of scope.
+
+## Phase 3C case references
+
+A released case assessment version can be referenced through the existing training assessment links. The link remains pinned to that version. Completing its preparation lesson does not start/submit the case, create evidence or change readiness. The case integration suite asserts this boundary explicitly.

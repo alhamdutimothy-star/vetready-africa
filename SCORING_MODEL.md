@@ -64,3 +64,7 @@ Professional scoring, readiness and matching are not implemented or populated. M
 ## Phase 2 diagnostic outcomes
 
 Implemented objective item outcomes are CORRECT/INCORRECT/REQUIRES_REVIEW. Human reviews preserve observations and comments per criterion, without professional numerical weights or pass marks. Gaps compare exact required evidence facets and expose source IDs, engine version and policy status. Missing evidence is UNVERIFIED. Knowledge cannot satisfy practical evidence; demo evidence is excluded entirely. No employability/readiness percentage is calculated. Approved numeric answer keys in isolated test fixtures verify software arithmetic, not veterinary standards.
+
+## Phase 3C case dimensions
+
+Thirteen qualitative rubric dimensions tag existing version-bound criteria. No case total, pass mark, weight, readiness percentage, practical gate or professional expiry is introduced. The owner-only provenance manifest describes existing evidence status and explicitly recorded validity; it performs no new verification. Nine readiness names remain reserved and inactive.

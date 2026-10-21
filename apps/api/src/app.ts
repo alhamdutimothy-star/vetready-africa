@@ -26,6 +26,8 @@ import { AssessmentController } from './assessment/controller';
 import { AssessmentService } from './assessment/service';
 import { AssessmentRepository } from './assessment/repository';
 import { SessionController } from './sessions';
+import { CaseController } from './cases/controller';
+import { CaseRepository } from './cases/repository';
 import { TrainingController } from './training/controller';
 import { TrainingService } from './training/service';
 import { TrainingRepository } from './training/repository';
@@ -87,6 +89,7 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
       AssessmentController,
       SessionController,
       TrainingController,
+      CaseController,
     ],
     providers: [
       { provide: API_CONFIG, useValue: config },
@@ -96,6 +99,7 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
       AssessmentRepository,
       AssessmentService,
       TrainingRepository,
+      CaseRepository,
       TrainingService,
       { provide: APP_GUARD, useClass: ThrottlerGuard },
       { provide: APP_GUARD, useClass: AuthGuard },

@@ -169,3 +169,7 @@ Evidence context remains attached JSON because each assessment-derived record ha
 ## Auth0 checkpoint
 
 Migration 008 adds browser_sessions with unique SHA-256 handle hashes, user foreign keys, bounded expiry and audited revocation. No tokens or raw handles are stored in this table.
+
+## Migration 011 — governed case blueprints
+
+Adds `case_blueprints`, `case_reasoning_steps`, `case_rubric_dimensions` and a composite rubric identity constraint. Existing assessment versions remain the aggregate/rubric version. Composite FKs prevent cross-item/cross-assessment references; release guards require complete contiguous CASE/REPORT stages and rubric dimension coverage. Delivered metadata freezes and production case approval is blocked. Migrations 001–010 and all prior rows are preserved; the populated 010 upgrade test compares every pre-existing table, including sessions, assessment evidence, training progress and audit records. See [case model](DAIRY_CASE_MODEL.md).

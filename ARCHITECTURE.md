@@ -79,3 +79,7 @@ The assessment controller/service/repository implements the delivery, review and
 ## Auth0 checkpoint
 
 Browser authentication retains OIDC/PKCE and database RBAC. Migration 008 adds hashed, revocable browser-session handles; see [Auth0 checkpoint](docs/AUTH0_CHECKPOINT.md).
+
+## Dairy-first case overlay (Phase 3C)
+
+Case blueprints extend assessment versions rather than duplicating attempts, rubric observations or evidence. Ordered stages and rubric-dimension tags are relational, version-bound and frozen on delivery. One synthetic dairy template is isolated from software logic. An owner-only evidence manifest prepares provenance for a future passport without classifying readiness. See [DAIRY_CASE_MODEL.md](DAIRY_CASE_MODEL.md) and [ADR 0006](docs/adr/0006-dairy-first-case-blueprints.md).

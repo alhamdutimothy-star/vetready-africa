@@ -58,11 +58,18 @@ export class AssessmentRepository {
       )
     ).rows;
   }
+  private withClient<T>(
+    client: PoolClient | undefined,
+    operation: (c: PoolClient) => Promise<T>,
+  ): Promise<T> {
+    return client ? operation(client) : this.db.transaction(operation);
+  }
   async create(
     ctx: OperationContext,
     input: z.infer<typeof assessmentCreateSchema>,
+    client?: PoolClient,
   ) {
-    return this.db.transaction(async (c) => {
+    return this.withClient(client, async (c) => {
       if (
         !(
           await c.query('SELECT 1 FROM pathway_versions WHERE id=$1', [
@@ -109,8 +116,9 @@ export class AssessmentRepository {
     ctx: OperationContext,
     assessmentId: string,
     input: z.infer<typeof itemCreateSchema>,
+    client?: PoolClient,
   ) {
-    return this.db.transaction(async (c) => {
+    return this.withClient(client, async (c) => {
       const av = (
         await c.query<{
           id: string;
@@ -284,7 +292,7 @@ export class AssessmentRepository {
       ).rows[0]!;
       const items = (
         await c.query<{ item_version_id: string }>(
-          'SELECT item_version_id FROM assessment_blueprint WHERE assessment_version_id=$1 ORDER BY item_version_id',
+          `SELECT b.item_version_id FROM assessment_blueprint b LEFT JOIN case_reasoning_steps s ON s.assessment_version_id=b.assessment_version_id AND s.item_version_id=b.item_version_id WHERE b.assessment_version_id=$1 ORDER BY s.position NULLS LAST,b.item_version_id`,
           [id],
         )
       ).rows;
@@ -365,7 +373,17 @@ export class AssessmentRepository {
           [id],
         )
       ).rows;
-      return { ...a, ...info, items, reviews, evidence };
+      const caseBlueprint =
+        (
+          await c.query(
+            `SELECT b.assessment_version_id,b.scenario,b.template_reference,b.validation_notice,b.source_references,b.professional_status,b.effective_at,
+        COALESCE((SELECT jsonb_agg(jsonb_build_object('code',s.code,'title',s.title,'position',s.position,'itemVersionId',s.item_version_id,
+        'rubricDimensions',(SELECT jsonb_agg(jsonb_build_object('rubricCriterionId',d.rubric_criterion_id,'dimension',d.dimension) ORDER BY d.rubric_criterion_id,d.dimension) FROM case_rubric_dimensions d WHERE d.assessment_version_id=s.assessment_version_id AND d.item_version_id=s.item_version_id)) ORDER BY s.position) FROM case_reasoning_steps s WHERE s.assessment_version_id=b.assessment_version_id),'[]') AS steps
+        FROM case_blueprints b WHERE b.assessment_version_id=$1`,
+            [a.assessment_version_id],
+          )
+        ).rows[0] ?? null;
+      return { ...a, ...info, items, reviews, evidence, caseBlueprint };
     });
   }
   async response(

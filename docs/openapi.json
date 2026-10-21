@@ -2516,6 +2516,242 @@
         ],
         "tags": ["governed demo training — completion is not competence"]
       }
+    },
+    "/api/v1/admin/case-blueprint-templates/transition-fresh-cow": {
+      "get": {
+        "operationId": "CaseController_template",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed case blueprints"]
+      }
+    },
+    "/api/v1/admin/case-blueprints": {
+      "post": {
+        "operationId": "CaseController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[A-Z][A-Z0-9_]{2,59}$"
+                  },
+                  "pathwayVersionId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 200
+                  },
+                  "scenario": {
+                    "type": "string",
+                    "minLength": 50,
+                    "maxLength": 12000
+                  },
+                  "templateReference": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "sourceReferences": {
+                    "maxItems": 30,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "minLength": 3,
+                          "maxLength": 200
+                        },
+                        "url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "status": {
+                          "type": "string",
+                          "const": "UNREVIEWED"
+                        }
+                      },
+                      "required": ["title", "status"],
+                      "additionalProperties": false
+                    }
+                  },
+                  "steps": {
+                    "minItems": 1,
+                    "maxItems": 30,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "pattern": "^[A-Z][A-Z0-9_]{1,39}$"
+                        },
+                        "type": {
+                          "default": "CASE",
+                          "type": "string",
+                          "enum": ["CASE", "REPORT"]
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 3,
+                          "maxLength": 160
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 10,
+                          "maxLength": 12000
+                        },
+                        "groupVersionId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "childVersionId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "criteria": {
+                          "minItems": 1,
+                          "maxItems": 40,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "criterionId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "dimensions": {
+                                "minItems": 1,
+                                "maxItems": 13,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "CLINICAL_KNOWLEDGE",
+                                    "CLINICAL_REASONING",
+                                    "HERD_HEALTH_REASONING",
+                                    "DATA_INTERPRETATION",
+                                    "NUTRITIONAL_REASONING",
+                                    "RISK_IDENTIFICATION",
+                                    "INVESTIGATION_QUALITY",
+                                    "INTERVENTION_PLANNING",
+                                    "PREVENTIVE_THINKING",
+                                    "ECONOMIC_AWARENESS",
+                                    "COMMUNICATION",
+                                    "DOCUMENTATION",
+                                    "PROFESSIONAL_JUDGMENT"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": ["criterionId", "dimensions"],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "type",
+                        "title",
+                        "prompt",
+                        "groupVersionId",
+                        "childVersionId",
+                        "criteria"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "code",
+                  "pathwayVersionId",
+                  "title",
+                  "scenario",
+                  "templateReference",
+                  "sourceReferences",
+                  "steps"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed case blueprints"]
+      }
+    },
+    "/api/v1/case-blueprints/{id}": {
+      "get": {
+        "operationId": "CaseController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed case blueprints"]
+      }
+    },
+    "/api/v1/candidates/me/evidence-manifest": {
+      "get": {
+        "operationId": "CaseController_manifest",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed case blueprints"]
+      }
     }
   },
   "info": {

@@ -47,10 +47,23 @@ export default async function Assessment({
           )[status] ?? ''}
         </p>
       )}
+      {a.caseBlueprint && (
+        <section aria-labelledby="case-scenario-heading">
+          <h2 id="case-scenario-heading">Farm investigation case</h2>
+          <p className="notice">{a.caseBlueprint.validation_notice}</p>
+          <p>{a.caseBlueprint.scenario}</p>
+          <p>
+            This written case does not verify practical performance or job
+            readiness.
+          </p>
+        </section>
+      )}
       {a.items.map((i, n) => (
         <section key={i.id}>
           <h2>
-            Task {n + 1}: {i.child_code.replaceAll('_', ' ')}
+            Task {n + 1}:{' '}
+            {a.caseBlueprint?.steps.find((s) => s.itemVersionId === i.id)
+              ?.title ?? i.child_code.replaceAll('_', ' ')}
           </h2>
           <p>{i.prompt}</p>
           {i.retired && (

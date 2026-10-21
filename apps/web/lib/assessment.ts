@@ -59,6 +59,14 @@ export const gapSchema = z.object({
   ),
 });
 export const attemptSchema = z.object({
+  caseBlueprint: z
+    .object({
+      scenario: z.string(),
+      validation_notice: z.string(),
+      steps: z.array(z.object({ itemVersionId: z.uuid(), title: z.string() })),
+    })
+    .nullable()
+    .optional(),
   id: z.uuid(),
   title: z.string(),
   status: z.string(),

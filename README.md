@@ -61,3 +61,7 @@ These are separate terminal processes. API rebuild after edits: `npm run build:f
 There are no approved professional standards, issued certificates or production deployments in this release. Phases 1–2 support identity, diagnostic and development foundations, not operational recruitment or certification.
 
 Current authentication status and private configuration steps: [Auth0 checkpoint](docs/AUTH0_CHECKPOINT.md). Public tenant metadata is verified; real browser login remains pending.
+
+## Phase 3C — dairy-first case foundation
+
+The proposed Transition & Fresh Cow case template, case authoring API and private evidence manifest extend the existing assessment system. Read [DAIRY_CASE_MODEL.md](DAIRY_CASE_MODEL.md) for the 27-area competency coverage map, versioning, API usage and deliberately inactive professional decisions. Demo delivery does not verify competence. Phase 3C remains uncommitted for owner review.

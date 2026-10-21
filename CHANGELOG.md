@@ -41,3 +41,10 @@
 - Updated architecture, ERD, taxonomy, Auth0 setup guide and implementation roadmap.
 
 Live provider setup, assessment/verification/scoring/matching and production operational hardening remain outstanding. All professional definitions require expert validation.
+
+## Unreleased — Phase 3C dairy-first case foundation
+
+- Extend existing assessments with ordered case blueprints and version-bound qualitative rubric dimensions.
+- Add one explicitly proposed DEMO/DRAFT dairy Transition & Fresh Cow template and owner-only evidence provenance view.
+- Add forward-only migration 011, populated 010 upgrade/regression tests and dairy competency coverage documentation.
+- Preserve authentication, four pathway definitions, training/competence separation and all inactive professional thresholds.

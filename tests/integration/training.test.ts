@@ -58,13 +58,16 @@ async function id(sql: string, values: unknown[] = []) {
   if (!row) throw new Error('Missing fixture');
   return row.id;
 }
+let priorTableNames: string[] | undefined;
 async function snapshot() {
   const result: Record<string, unknown> = {};
-  for (const { tablename } of (
+  const tables = (
     await pool.query<{ tablename: string }>(
       "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename<>'schema_migrations' AND tablename NOT LIKE 'training_%' ORDER BY tablename",
     )
-  ).rows) {
+  ).rows.map((r) => r.tablename);
+  priorTableNames ??= tables;
+  for (const tablename of priorTableNames) {
     if (!/^[a-z_]+$/.test(tablename)) throw new Error('Unexpected table');
     const exclude =
       tablename === 'permissions'
