@@ -26,6 +26,9 @@ import { AssessmentController } from './assessment/controller';
 import { AssessmentService } from './assessment/service';
 import { AssessmentRepository } from './assessment/repository';
 import { SessionController } from './sessions';
+import { TrainingController } from './training/controller';
+import { TrainingService } from './training/service';
+import { TrainingRepository } from './training/repository';
 @Catch()
 class SafeErrors implements ExceptionFilter {
   catch(error: unknown, host: ArgumentsHost) {
@@ -83,6 +86,7 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
       FoundationController,
       AssessmentController,
       SessionController,
+      TrainingController,
     ],
     providers: [
       { provide: API_CONFIG, useValue: config },
@@ -91,6 +95,8 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
       FoundationService,
       AssessmentRepository,
       AssessmentService,
+      TrainingRepository,
+      TrainingService,
       { provide: APP_GUARD, useClass: ThrottlerGuard },
       { provide: APP_GUARD, useClass: AuthGuard },
       { provide: APP_GUARD, useClass: PermissionsGuard },

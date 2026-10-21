@@ -1,10 +1,14 @@
 # Phased development roadmap
 
-## Current checkpoint
+## Phase 3B checkpoint
+
+**IMPLEMENTED:** Governed text-only demo course snapshots, reusable competency/assessment references, explicit enrollment/assignment, owner-scoped learning progress and version-aware resume APIs. Completion never verifies competence. **NEXT, subject to separate approval:** Phase 3C synthetic layer-production investigation using the existing Phase 2 case/rubric engine. No Phase 3C implementation is included. See [TRAINING_MODEL.md](TRAINING_MODEL.md).
+
+## Earlier Phase 3A checkpoint (historical)
 
 The owner reports Windows end-to-end authentication verified and protected by `working-authentication-2026-10-20`; this milestone does not redesign authentication. **IMPLEMENTED — Phase 3A:** canonical evidence source extension, submission revision/state foundation, proposed assessor scopes, storage interface and integrity/regression tests. No operational review/award/upload/Passport capability is activated.
 
-**NEXT, subject to separate approval:** Phase 3B governed training/progress foundation, reusing Phase 2 assessment and evidence. See [staged Phase 3 plan](docs/PHASE3_ARCHITECTURE.md). Professional content and rules remain **REQUIRES DOMAIN EXPERT VALIDATION**. Stop after the 3A exit report.
+Phase 3B is now implemented as described above, reusing Phase 2 assessment and evidence. See [staged Phase 3 plan](docs/PHASE3_ARCHITECTURE.md). Professional content and rules remain **REQUIRES DOMAIN EXPERT VALIDATION**. The current exit gate is owner review before Phase 3C.
 
 ## 0. Approval and domain validation
 

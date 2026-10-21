@@ -1,5 +1,9 @@
 # Security, privacy and Nigerian operating review
 
+## Phase 3B additions
+
+Explicit `training:manage`/`training:assign` capabilities are granted only to ADMIN/SUPER_ADMIN; existing guards and authentication/session code are unchanged. Candidate progress is owner-scoped, revision-aware and idempotent, with composite FKs and atomic transition audits. Management authority does not qualify a professional assessor. Demo-only release is distinct from production approval, which remains disabled. No UI, upload/media provider, secret or public caching configuration is added. See [training security/resume boundaries](TRAINING_MODEL.md).
+
 ## Phase 3A security boundary
 
 **IMPLEMENTED:** Authentication/OIDC/session/logout, JWT audience/issuer/scope and database-managed RBAC remain unchanged from the protected baseline. No new HTTP route, public evidence access, storage adapter or upload acceptance is added. Submission ownership, immutable submitted snapshots, same-candidate source FKs and atomic audit triggers protect the new foundation. Assessor proposals cannot qualify an administrator or enable self-review. Audit metadata excludes report/context payloads.

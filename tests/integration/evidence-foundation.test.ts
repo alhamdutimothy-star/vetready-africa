@@ -135,6 +135,18 @@ beforeAll(async () => {
   beforeUpgrade = await snapshot(tables);
   run('scripts/migrate.ts');
   afterUpgrade = await snapshot(tables);
+  // Forward migrations may add these explicitly authorized capabilities. All
+  // pre-existing rows must still match the populated 008 snapshot exactly.
+  afterUpgrade.permissions = (
+    afterUpgrade.permissions as { code: string }[]
+  ).filter((row) => !['training:manage', 'training:assign'].includes(row.code));
+  afterUpgrade.role_permissions = (
+    afterUpgrade.role_permissions as { permission_code: string }[]
+  ).filter(
+    (row) =>
+      !['training:manage', 'training:assign'].includes(row.permission_code),
+  );
+
   const target = (
     await pool.query(
       "SELECT r.pathway_version_id,r.child_version_id FROM pathway_child_requirements r JOIN pathway_versions v ON v.id=r.pathway_version_id JOIN pathways p ON p.id=v.pathway_id JOIN child_competency_versions cv ON cv.id=r.child_version_id JOIN child_competencies c ON c.id=cv.child_id WHERE p.code='POULTRY_MANAGEMENT' AND c.code='POULTRY_INVESTIGATE'",

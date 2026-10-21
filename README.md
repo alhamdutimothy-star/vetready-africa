@@ -1,5 +1,9 @@
 # VetReady Africa
 
+## Current checkpoint — Phase 3B
+
+Governed demo training now has a Course → Module → Lesson snapshot hierarchy, existing-competency/assessment links, scoped enrollment/assignment and revision-aware resumable progress APIs. **Training completion is not competence verification.** No production content approval, automatic evidence/award, upload or public Passport is enabled. See [training model](TRAINING_MODEL.md), [API](API.md) and [ADR 0005](docs/adr/0005-governed-training-and-progress.md). No new environment variables or secrets are required.
+
 Evidence-based veterinary talent development and recruitment for Nigeria, designed for future African expansion.
 
 ## Phases 1–2 implemented
@@ -14,7 +18,7 @@ Not implemented: approved production examinations, real supervised simulation/pr
 
 ## Phase 3 setup checkpoint
 
-The validated Phase 1–2 history is preserved on GitHub `main`. Phase 3 is authorized and paused at the requested Auth0 tenant-configuration checkpoint. Follow the [exact setup and safe configuration guide](docs/PHASE3_SETUP_CHECKPOINT.md). Phase 3 functionality has not yet been implemented.
+The Windows-verified authentication baseline is protected by `working-authentication-2026-10-20`. Phase 3A was accepted at `df6c0ca`; Phase 3B training foundations are implemented for review. The [earlier setup guide](docs/PHASE3_SETUP_CHECKPOINT.md) is historical; no authentication redesign or new secret configuration is part of training.
 
 ## Local development
 

@@ -84,6 +84,19 @@ async function main() {
             [code, p],
           );
       }
+      // Add only new training capabilities when migration 010 is present; prior-schema
+      // upgrade fixtures remain representative of their original permission catalog.
+      if (
+        (
+          await client.query(
+            "SELECT to_regclass('training_courses') IS NOT NULL AS present",
+          )
+        ).rows[0].present
+      ) {
+        await client.query(
+          "INSERT INTO role_permissions(role_code,permission_code) SELECT r.code,p.code FROM roles r CROSS JOIN permissions p WHERE r.code IN ('ADMIN','SUPER_ADMIN') AND p.code IN ('training:manage','training:assign') ON CONFLICT DO NOTHING",
+        );
+      }
       for (const code of [
         'NOT_ASSESSED',
         'FOUNDATION',

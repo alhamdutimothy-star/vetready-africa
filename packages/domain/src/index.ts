@@ -9,7 +9,9 @@ export type Permission =
   | 'assessment:author'
   | 'assessment:assign'
   | 'assessment:review'
-  | 'assessment:moderate';
+  | 'assessment:moderate'
+  | 'training:manage'
+  | 'training:assign';
 export interface RoleGrant {
   permission: string;
   organizationId: string | null;
@@ -65,3 +67,4 @@ export type {
 export * from './assessment';
 export * from './evidence';
 export * from './verification';
+export * from './training';

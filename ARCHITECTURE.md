@@ -1,5 +1,9 @@
 # System architecture proposal
 
+## IMPLEMENTED — Phase 3B training foundation
+
+Course-version aggregates pin module/lesson snapshots; enrollments and progress reference exact versions. The new training controller/service/repository reuses existing JWT guards, database-managed permissions, PostgreSQL transactions and audit_events. Competency and assessment links reference existing authoritative definitions; no question, evidence, scoring or readiness subsystem is added. See [TRAINING_MODEL.md](TRAINING_MODEL.md) and [ADR 0005](docs/adr/0005-governed-training-and-progress.md). Professional content approval remains disabled.
+
 ## Current implementation — Phase 3A
 
 **IMPLEMENTED:** Migration 009 extends the canonical child-evidence ledger with source-specific external submission provenance, immutable submitted revisions and assessor proposal scaffolding. It introduces no new API endpoint or authentication change. Storage is an interface only; provider selection below remains a future recommendation. See [Phase 3 architecture](docs/PHASE3_ARCHITECTURE.md) and [ADR 0004](docs/adr/0004-phase-three-evidence-and-verification.md).

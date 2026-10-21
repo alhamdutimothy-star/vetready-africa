@@ -1,5 +1,9 @@
 # Explainable scoring and matching
 
+## Phase 3B — participation summaries only
+
+Course/module completion derives from completed lesson rows for the exact snapshot. Counts and timestamps describe participation, not mastery or employability. There is no training-to-evidence/verification write path and no score, pass mark, weight, readiness threshold or professional gate added. Existing Phase 2 assessment scoring and Phase 3A evidence safeguards remain authoritative and unchanged.
+
 ## Phase 3A boundary — no new score
 
 **IMPLEMENTED:** Source integrity and lifecycle controls only. No scoring algorithm, readiness percentage, professional threshold or practical verification gate is added or activated. External receipt labels and draft targets are never competency awards; unverified/demo receipts cannot satisfy existing verified-evidence gaps. Numerical examples elsewhere in this document remain **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**, not seeded policy. See [Verification model](VERIFICATION_MODEL.md).

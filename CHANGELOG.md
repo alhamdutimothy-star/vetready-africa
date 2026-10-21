@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Phase 3B governed training
+
+- Added forward-only 010: course/module/lesson snapshots, existing taxonomy/assessment links, enrollment/assignment and resumable revision-aware progress.
+- Added explicit training management/assignment capabilities and demo-only release/retirement APIs; retained protected authentication behavior.
+- Added idempotency, ownership, history, audit, upgrade and regression coverage.
+- Kept training completion separate from competence; no production approval, professional thresholds, awards, uploads or public Passport enabled.
+
 ## Unreleased — Phase 3A evidence foundation
 
 - Added forward-only 009 with immutable submitted versions, normalized child targets, typed canonical evidence sources, provenance/ownership constraints and atomic audit.

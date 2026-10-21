@@ -63,3 +63,27 @@ Health/readiness, `/me`, candidate GET/PUT, pathway interests, pathway/competenc
 ## Auth0 checkpoint
 
 Browser-session endpoints: POST /api/v1/sessions and DELETE /api/v1/sessions/current require a valid access JWT and vetready:access. Revocation also requires the matching X-VetReady-Session handle. These endpoints grant no domain roles.
+
+## Phase 3B training API (implemented)
+
+All paths below are under `/api/v1`, authenticated and `no-store`. Training participation never creates professional verification. Strict request schemas are in `packages/contracts/src/training.ts` and development OpenAPI includes the training routes.
+
+| Method/path                                                            | Capability            | Purpose                                                                |
+| ---------------------------------------------------------------------- | --------------------- | ---------------------------------------------------------------------- |
+| GET `/training/courses`                                                | catalog:read          | Released demo catalog                                                  |
+| GET `/training/versions/:id`                                           | catalog:read          | Exact released snapshot and supported competency/assessment references |
+| GET `/admin/training/courses`                                          | training:manage       | Draft/released/retired catalog                                         |
+| GET `/admin/training/versions/:id`                                     | training:manage       | Governed snapshot detail                                               |
+| POST `/admin/training/courses`                                         | training:manage       | Stable course and initial demo draft snapshot                          |
+| POST `/admin/training/courses/:id/versions`                            | training:manage       | Next complete snapshot; no inherited learning credit                   |
+| POST `/admin/training/versions/:id/release-demo`                       | training:manage       | Freeze demo; retain DRAFT status                                       |
+| POST `/admin/training/versions/:id/retire`                             | training:manage       | Retain read-only enrollment history                                    |
+| POST `/admin/training/assignments`                                     | training:assign       | Explicit candidate/version assignment                                  |
+| POST `/training/versions/:id/enrollments`                              | candidate:own         | Idempotent self-enrollment                                             |
+| GET `/candidates/me/training/enrollments`                              | candidate:own         | Owner enrollment list                                                  |
+| GET `/candidates/me/training/enrollments/:id`                          | candidate:own + owner | Exact snapshot, bookmarks and derived participation state              |
+| PUT `/candidates/me/training/enrollments/:id/lessons/:lesson/progress` | candidate:own + owner | Command UUID, expectedRevision, IN_PROGRESS/COMPLETED, resumePosition  |
+
+New progress begins with `expectedRevision:0`. Resume positions count Unicode code points in immutable plain text. Retries with the same command/payload return the original result; 409 means stale revision or conflicting command reuse. Refresh owner enrollment state to reconcile. Invalid hierarchy/reference/lifecycle input returns 422; foreign enrollment reads/writes return 404; missing capability returns 403. Database internals and content payloads are not logged. Existing server request-size limits remain unchanged.
+
+There is no production approval, certification, upload, automatic assessment attempt or evidence endpoint in this training module. See [TRAINING_MODEL.md](TRAINING_MODEL.md).

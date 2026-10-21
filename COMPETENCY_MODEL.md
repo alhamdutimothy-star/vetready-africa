@@ -1,5 +1,9 @@
 # Competency and assessment architecture
 
+## Phase 3B — learning support is not demonstrated competence
+
+Training maps many-to-many to existing exact group/child versions and pathway applicability. No taxonomy is duplicated. Completing a course/module/lesson writes learning progress only; it does not create knowledge/case/practical verification, readiness, official awards, certificates or Passport claims. Professional mappings/objectives remain **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**. See [training model](TRAINING_MODEL.md).
+
 ## Phase 3A implementation boundary
 
 **IMPLEMENTED:** External submissions target exact reusable child versions and requested evidence facets through composite-FK-backed mappings. The 47 groups/69 children and four pathway seeds are unchanged. A requested practical facet is not a practical award. All new external receipts remain `UNVERIFIED`; existing gap semantics are unchanged.
