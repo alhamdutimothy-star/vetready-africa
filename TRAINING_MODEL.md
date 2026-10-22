@@ -73,3 +73,9 @@ A released case assessment version can be referenced through the existing traini
 ## Phase 3D participation display
 
 The dairy dashboard reads existing version-bound learning enrollments/completed-lesson counts separately from case progress and evidence. It does not complete courses, create assessments from lesson completion, close evidence gaps or award skills. Candidate reasoning and assessor feedback use the existing assessment workflow, not a second training evaluation system.
+
+## Phase 3E — dairy learning overlays
+
+Curriculum and learning-unit snapshots extend existing course/lesson versions; they do not create a second training engine. See [DAIRY_COMPETENCY_MODEL.md](DAIRY_COMPETENCY_MODEL.md). Three original-text DRAFT units add staged objectives, contextual sections, reference governance, proposed prerequisites, supervised evidence requirements and unscored saved activities. Reading progress still uses Phase 3B commands. Exact linked assessment versions still use Phase 2/3C/3D.
+
+Unreleased DRAFT is owner-only. Explicit demo release remains DRAFT; production approval remains disabled. Existing enrollments retain retired snapshot access. New activity writes require active released content. Reading completion and saved reflections never become competency evidence. Prerequisites are evidence guidance, not invented professional gates. New versions require complete metadata through POST /admin/dairy-learning with courseId; no historical snapshot is edited.

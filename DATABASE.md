@@ -177,3 +177,15 @@ Adds `case_blueprints`, `case_reasoning_steps`, `case_rubric_dimensions` and a c
 ## Migration 012 — functional dairy pilot
 
 Adds `dairy_pilot_versions`, `dairy_pilot_stages`, `dairy_pilot_guidance`, `dairy_pilot_response_revisions`, `dairy_pilot_review_drafts` and `dairy_pilot_review_finalizations`. Composite references reuse exact case/item/rubric and canonical review identities. Version metadata freezes on release; generated concurrency clocks cannot be manually edited; review revisions/finalizations are append-only. A deferred canonical-review constraint requires matching saved-draft provenance. Existing columns and migrations 001–011 remain unchanged. Populated 011 upgrade tests compare every pre-existing table, including finalized legacy feedback and training/session history.
+
+## Migration 013 — dairy curriculum over training
+
+Forward-only; migrations 001–012 unchanged. Three new tables:
+
+- dairy_curricula: course-version primary/foreign key, bounded API-validated domain JSON, author and request provenance.
+- dairy_learning_units: lesson-version primary key, composite lesson/module/course foreign key, parent curriculum, domain and governed content snapshot.
+- dairy_learning_activities: enrollment, exact unit, actor, idempotency command, revision, response, request/date; unique enrollment/command and enrollment/unit/revision.
+
+Metadata insert guards lock the parent training snapshot, require an unreleased DRAFT and an active management-capable author, validate dairy pathway/domain/prerequisite mappings against existing training links. Metadata and activity history reject update/delete. Release requires every lesson to have unit metadata. Activity triggers enforce ownership, matching enrolled version, active release and sequential revisions. Enrollment locks serialize revisions/idempotency. Audit records omit response bodies. Existing training mappings freeze referenced child definitions. No old data rows are rewritten and no evidence/award tables are written by learning operations.
+
+Domains and detailed professional source descriptors are JSON snapshots rather than duplicate competency/reference entities; their current intended scope is exact-version curriculum provenance. Individual source reviewer identifiers are descriptive metadata, not new approval decisions; professional approval remains disabled.

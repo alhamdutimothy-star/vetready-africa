@@ -71,3 +71,7 @@ Phase 3C reuses the existing 47 groups and 69 children. [The 27-area dairy cover
 ## Functional dairy assessment versus competence
 
 The pilot dashboard displays the actual existing child versions targeted by the Transition/Fresh Cow case. Broader dairy topics remain context unless explicitly mapped; written BCS/feeding/clinical reasoning does not prove observed performance. Training, knowledge evidence, case evidence, self-declaration and practical verification remain distinct. Human demo review records qualitative observations with UNVERIFIED evidence, never an official competency award. All new professional guidance and target interpretation remain **DRAFT — REQUIRES DOMAIN EXPERT VALIDATION**. See [dairy practice coverage](DAIRY_PILOT_MODEL.md).
+
+## Phase 3E dairy curriculum
+
+Seventeen thematic teaching domains reference existing shared/dairy child versions, without replacing canonical competency groups or creating duplicate awards. See [DAIRY_COMPETENCY_MODEL.md](DAIRY_COMPETENCY_MODEL.md). Every professional outline, objective, practical requirement and prerequisite remains PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION. Missing evidence remains UNVERIFIED. Unscored learning activities and reading completion produce no assessed/verified facet.

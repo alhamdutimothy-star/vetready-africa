@@ -69,3 +69,7 @@ The proposed Transition & Fresh Cow case template, case authoring API and privat
 ## Phase 3D — functional dairy pilot
 
 The candidate entry is `/dairy`; authorized staff use `/dairy/review`. The existing Transition & Fresh Cow foundation now supports structured reasoning, save/resume, immutable submission, private assessor drafts and finalized development feedback. All content remains DEMO/DRAFT; no practical verification or readiness is awarded. See [DAIRY_PILOT_MODEL.md](DAIRY_PILOT_MODEL.md) for owner setup, local review and limitations. No new environment variables are required.
+
+## Dairy learning demonstration (Phase 3E)
+
+See [DAIRY_COMPETENCY_MODEL.md](DAIRY_COMPETENCY_MODEL.md) for domain scope, draft status, setup and the learning-to-case walkthrough. Owner prepares/releases the existing dairy case, then inspects/releases the DRAFT starter at /dairy/learning/manage. Candidates use /dairy/learning from the dairy dashboard. New content requires domain-expert validation; learning completion and unscored activities do not verify competence. Existing local environment and authentication configuration remain unchanged.

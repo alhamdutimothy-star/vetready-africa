@@ -62,6 +62,11 @@ export default async function Dairy({
           </form>
         )
       )}
+      <p>
+        <Link href="/dairy/learning">
+          Explore dairy domains and governed learning
+        </Link>
+      </p>
       <section>
         <h2>My progress and evidence</h2>
         <dl>

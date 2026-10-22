@@ -318,3 +318,54 @@ it('shows finalized structured feedback to the candidate while hiding assessor g
     'Synthetic finalized development feedback',
   );
 });
+it('renders governed dairy learning, source caveats and resumable unscored activities without assessor material or tokens', async () => {
+  const prepared = await http('/admin/dairy-learning/starter', admin, 'POST');
+  expect(prepared.status).toBe(201);
+  const { courseVersionId } = z
+    .object({ courseVersionId: z.uuid() })
+    .parse(await prepared.json());
+  const hidden = await fetch(origin + '/dairy/learning', {
+    headers: { cookie: candidateCookie },
+  });
+  expect(await hidden.text()).not.toContain(
+    'Investigating transition and fresh-cow concerns',
+  );
+  expect(
+    (
+      await http(
+        `/admin/training/versions/${courseVersionId}/release-demo`,
+        admin,
+        'POST',
+      )
+    ).status,
+  ).toBe(201);
+  const enrolled = await http(
+    `/training/versions/${courseVersionId}/enrollments`,
+    candidate,
+    'POST',
+  );
+  expect(enrolled.status).toBe(201);
+  const { id } = z.object({ id: z.uuid() }).parse(await enrolled.json());
+  const page = await fetch(`${origin}/dairy/learning/${id}`, {
+    headers: { cookie: candidateCookie },
+  });
+  expect(page.status).toBe(200);
+  const html = await page.text();
+  expect(html).toContain('Learning objectives');
+  expect(html).toContain('Unscored learning activity');
+  expect(html).toContain('Saving does not award');
+  expect(html).toContain('REQUIRES DOMAIN EXPERT VALIDATION');
+  expect(html).toContain('Start / resume linked dairy case');
+  expect(html).not.toContain('PRIVATE_DAIRY_SSR_SENTINEL');
+  expect(html).not.toContain(candidate);
+  expect(html).not.toContain('accessToken');
+  const anonymous = await fetch(`${origin}/dairy/learning/${id}`);
+  expect(await anonymous.text()).not.toContain('Candidate reasoning preserved');
+  expect(
+    await (
+      await fetch(origin + '/dairy/learning/manage', {
+        headers: { cookie: candidateCookie },
+      })
+    ).text(),
+  ).toContain('Authorized owner access');
+});

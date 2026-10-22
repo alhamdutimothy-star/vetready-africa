@@ -75,3 +75,7 @@ Dairy-first case foundation: one controlled proposed Transition & Fresh Cow temp
 ## Phase 3D — functional dairy pilot for review
 
 Candidate dairy workspace, controlled Phase 3C case preparation, structured reasoning/save/resume, submission, owner assignment, private review drafts, finalized feedback and explicit unverified evidence are implemented for owner review. Next, validate the pilot scenario, criteria and scope with accountable dairy experts and authorize any further governed editorial/supervised-evidence work separately. No readiness/certification, matching, payments, broader pathway implementation or deployment is implied.
+
+## Phase 3E implemented, pending owner review
+
+Governed dairy curriculum overlays, 17 proposed domain outlines, three DRAFT starter units, unscored saved learning activities, exact-version case links and owner inspection/demo release. Training completion remains separate from competence. Recommended Phase 3F: veterinary expert review of outcomes/source documents/practical requirements, moderated pilot usability and content revision workflows, and a small additional professionally reviewed dairy case. Do not activate certification/readiness/hiring before separately approved standards. No automatic progression into Phase 3F.

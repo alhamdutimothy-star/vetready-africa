@@ -87,3 +87,7 @@ Case blueprints extend assessment versions rather than duplicating attempts, rub
 ## Functional dairy workflow
 
 Phase 3D adds a dairy-only adapter around existing assessment/case identities, not another LMS, rubric-score or evidence engine. Candidate reasoning remains canonical response JSON; generated revision clocks reject stale edits. Private append-only review drafts finalize through existing reviews/observations with exact provenance and canonical audit transactions. Candidate/staff API projections enforce confidentiality even on older routes. See [pilot model](DAIRY_PILOT_MODEL.md) and [ADR 0007](docs/adr/0007-functional-dairy-pilot.md).
+
+## Phase 3E — governed dairy curriculum
+
+See ADR 0008 and DAIRY_COMPETENCY_MODEL.md. DairyLearningController/Repository compose existing TrainingRepository writes in a single transaction. Curriculum/unit snapshots organize existing versioned children and lessons; unscored activity history is separate from assessment/evidence. Next server pages/actions reuse the existing session/API boundary and RBAC. No dependencies, auth configuration, competing assessment system, approval activation or external pathway expansion are introduced.

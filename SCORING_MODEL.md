@@ -72,3 +72,7 @@ Thirteen qualitative rubric dimensions tag existing version-bound criteria. No c
 ## Phase 3D qualitative review
 
 Assessor drafts preserve nullable/unjudged criteria, comments and development decisions. Finalization requires a complete existing criterion set and feedback; it is not a pass mark or weighted score. DEMONSTRATED refers only to the submitted written response, while canonical evidence remains UNVERIFIED/DEMO. No professional threshold, target, dose, withdrawal rule, nutritional specification, expiry, certification or readiness percentage is activated. Text-length/revision bounds are technical transport/validation constraints only.
+
+## Phase 3E safeguard
+
+Dairy learning activities are unscored reflection/data tasks. Saved responses, reading completion and next-reading suggestions do not award knowledge/case/practical evidence, thresholds, readiness percentages, certificates or professional claims. Existing case rubrics and human review remain separate. Proposed prerequisites are guidance only. Non-demo VERIFIED, unexpired evidence can be displayed as present; no professional gate or readiness calculation is activated.

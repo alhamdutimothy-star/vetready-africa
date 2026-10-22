@@ -3146,6 +3146,855 @@
         ],
         "tags": ["functional dairy pilot"]
       }
+    },
+    "/api/v1/dairy-learning": {
+      "get": {
+        "operationId": "DairyLearningController_catalog",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      }
+    },
+    "/api/v1/admin/dairy-learning": {
+      "get": {
+        "operationId": "DairyLearningController_admin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      },
+      "post": {
+        "operationId": "DairyLearningController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courseId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "training": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "pattern": "^[A-Z][A-Z0-9_]{1,79}$"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 160
+                          },
+                          "description": {
+                            "default": "",
+                            "type": "string",
+                            "maxLength": 2000
+                          },
+                          "objectives": {
+                            "default": [],
+                            "maxItems": 12,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 2,
+                              "maxLength": 300
+                            }
+                          },
+                          "pathwayVersionIds": {
+                            "minItems": 1,
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          },
+                          "sourceReferences": {
+                            "default": [],
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 2,
+                                  "maxLength": 160
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                }
+                              },
+                              "required": ["title"],
+                              "additionalProperties": false
+                            }
+                          },
+                          "modules": {
+                            "minItems": 1,
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "code": {
+                                  "type": "string",
+                                  "pattern": "^[A-Z][A-Z0-9_]{1,79}$"
+                                },
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 2,
+                                  "maxLength": 160
+                                },
+                                "description": {
+                                  "default": "",
+                                  "type": "string",
+                                  "maxLength": 2000
+                                },
+                                "objectives": {
+                                  "default": [],
+                                  "maxItems": 12,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 300
+                                  }
+                                },
+                                "lessons": {
+                                  "minItems": 1,
+                                  "maxItems": 20,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "code": {
+                                        "type": "string",
+                                        "pattern": "^[A-Z][A-Z0-9_]{1,79}$"
+                                      },
+                                      "title": {
+                                        "type": "string",
+                                        "minLength": 2,
+                                        "maxLength": 160
+                                      },
+                                      "description": {
+                                        "default": "",
+                                        "type": "string",
+                                        "maxLength": 2000
+                                      },
+                                      "objectives": {
+                                        "default": [],
+                                        "maxItems": 12,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "minLength": 2,
+                                          "maxLength": 300
+                                        }
+                                      },
+                                      "body": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 5000
+                                      },
+                                      "competencyMappings": {
+                                        "default": [],
+                                        "maxItems": 40,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "pathwayVersionId": {
+                                              "type": "string",
+                                              "format": "uuid",
+                                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                            },
+                                            "childVersionId": {
+                                              "type": "string",
+                                              "format": "uuid",
+                                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                            },
+                                            "groupVersionId": {
+                                              "type": "string",
+                                              "format": "uuid",
+                                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                            }
+                                          },
+                                          "required": ["pathwayVersionId"],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "assessmentVersionIds": {
+                                        "default": [],
+                                        "maxItems": 10,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "format": "uuid",
+                                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                        }
+                                      }
+                                    },
+                                    "required": [
+                                      "code",
+                                      "title",
+                                      "description",
+                                      "objectives",
+                                      "body",
+                                      "competencyMappings",
+                                      "assessmentVersionIds"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "competencyMappings": {
+                                  "default": [],
+                                  "maxItems": 40,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "pathwayVersionId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                      },
+                                      "childVersionId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                      },
+                                      "groupVersionId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                      }
+                                    },
+                                    "required": ["pathwayVersionId"],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "assessmentVersionIds": {
+                                  "default": [],
+                                  "maxItems": 10,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "code",
+                                "title",
+                                "description",
+                                "objectives",
+                                "lessons",
+                                "competencyMappings",
+                                "assessmentVersionIds"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "competencyMappings": {
+                            "default": [],
+                            "maxItems": 40,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "pathwayVersionId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "childVersionId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "groupVersionId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                }
+                              },
+                              "required": ["pathwayVersionId"],
+                              "additionalProperties": false
+                            }
+                          },
+                          "assessmentVersionIds": {
+                            "default": [],
+                            "maxItems": 10,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "description",
+                          "objectives",
+                          "pathwayVersionIds",
+                          "sourceReferences",
+                          "modules",
+                          "competencyMappings",
+                          "assessmentVersionIds"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["code", "content"],
+                    "additionalProperties": false
+                  },
+                  "domains": {
+                    "minItems": 1,
+                    "maxItems": 30,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "pattern": "^[A-Z][A-Z0-9_]{1,79}$"
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 160
+                        },
+                        "topics": {
+                          "minItems": 1,
+                          "maxItems": 40,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 160
+                          }
+                        },
+                        "childVersionIds": {
+                          "minItems": 1,
+                          "maxItems": 30,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          }
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "title",
+                        "topics",
+                        "childVersionIds"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "units": {
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "lessonCode": {
+                          "type": "string",
+                          "pattern": "^[A-Z][A-Z0-9_]{1,79}$"
+                        },
+                        "domainCode": {
+                          "type": "string",
+                          "pattern": "^[A-Z][A-Z0-9_]{1,79}$"
+                        },
+                        "objectives": {
+                          "minItems": 1,
+                          "maxItems": 12,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "stage": {
+                                "type": "string",
+                                "enum": [
+                                  "KNOW",
+                                  "INTERPRET",
+                                  "INVESTIGATE",
+                                  "DECIDE",
+                                  "COMMUNICATE",
+                                  "DEMONSTRATE"
+                                ]
+                              },
+                              "statement": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              }
+                            },
+                            "required": ["stage", "statement"],
+                            "additionalProperties": false
+                          }
+                        },
+                        "prerequisites": {
+                          "maxItems": 20,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "childVersionId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "facet": {
+                                "type": "string",
+                                "enum": [
+                                  "KNOWLEDGE_ASSESSED",
+                                  "CASE_ASSESSED",
+                                  "PRACTICALLY_VERIFIED"
+                                ]
+                              }
+                            },
+                            "required": ["childVersionId", "facet"],
+                            "additionalProperties": false
+                          }
+                        },
+                        "sections": {
+                          "type": "object",
+                          "properties": {
+                            "introduction": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "coreConcepts": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "farmRelevance": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "africanContext": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "clinicalRelevance": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "herdRelevance": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "commercialRelevance": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "commonMistakes": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "redFlags": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            },
+                            "decisionPoints": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            }
+                          },
+                          "required": [
+                            "introduction",
+                            "coreConcepts",
+                            "farmRelevance",
+                            "africanContext",
+                            "clinicalRelevance",
+                            "herdRelevance",
+                            "commercialRelevance",
+                            "commonMistakes",
+                            "redFlags",
+                            "decisionPoints"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "sources": {
+                          "maxItems": 20,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              },
+                              "organization": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              },
+                              "publication": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              },
+                              "year": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 1800,
+                                    "maximum": 2200
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "identifier": {
+                                "type": "string",
+                                "maxLength": 500
+                              },
+                              "url": {
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              "evidenceType": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              },
+                              "geographicRelevance": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              },
+                              "reviewerId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "reviewDate": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "date",
+                                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "notes": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              },
+                              "superseded": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "title",
+                              "organization",
+                              "publication",
+                              "year",
+                              "identifier",
+                              "evidenceType",
+                              "geographicRelevance",
+                              "reviewerId",
+                              "reviewDate",
+                              "notes",
+                              "superseded"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "practicalRequirements": {
+                          "minItems": 1,
+                          "maxItems": 12,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2000
+                          }
+                        },
+                        "activity": {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "KNOWLEDGE_REFLECTION",
+                                "DATA_INTERPRETATION"
+                              ]
+                            },
+                            "prompt": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            }
+                          },
+                          "required": ["kind", "prompt"],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "lessonCode",
+                        "domainCode",
+                        "objectives",
+                        "prerequisites",
+                        "sections",
+                        "sources",
+                        "practicalRequirements",
+                        "activity"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": ["training", "domains", "units"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      }
+    },
+    "/api/v1/admin/dairy-learning/starter": {
+      "post": {
+        "operationId": "DairyLearningController_starter",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      }
+    },
+    "/api/v1/candidates/me/dairy-learning": {
+      "get": {
+        "operationId": "DairyLearningController_enrollments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      }
+    },
+    "/api/v1/dairy-learning/{id}": {
+      "get": {
+        "operationId": "DairyLearningController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      }
+    },
+    "/api/v1/admin/dairy-learning/{id}": {
+      "get": {
+        "operationId": "DairyLearningController_adminDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      }
+    },
+    "/api/v1/candidates/me/dairy-learning/{enrollment}": {
+      "get": {
+        "operationId": "DairyLearningController_enrollment",
+        "parameters": [
+          {
+            "name": "enrollment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      }
+    },
+    "/api/v1/candidates/me/dairy-learning/{enrollment}/units/{lesson}/activity": {
+      "put": {
+        "operationId": "DairyLearningController_activity",
+        "parameters": [
+          {
+            "name": "enrollment",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lesson",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commandId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "expectedRevision": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483646
+                  },
+                  "response": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  }
+                },
+                "required": ["commandId", "expectedRevision", "response"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["governed dairy learning — no competence awards"]
+      }
     }
   },
   "info": {

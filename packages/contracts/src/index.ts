@@ -60,3 +60,5 @@ export * from './training';
 export * from './cases';
 
 export * from './dairy-pilot';
+
+export * from './dairy-learning';

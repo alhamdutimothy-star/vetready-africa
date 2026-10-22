@@ -120,3 +120,21 @@ All paths use `/api/v1` and existing JWT audience/scope plus application RBAC.
 | POST `/assessor/dairy-pilot/attempts/:id/finalize`            | assessment:review plus active assignment        | Finalize exact latest complete draft into existing review history; no verification award         |
 
 The existing assignment, DEMO release, moderation and appeal APIs remain in use. Pilot work cannot bypass structured saves/finalization using old text-response/direct-review endpoints. Legacy candidate views also strip pilot protected material. Candidate JSON omits working drafts/private guidance; finalized public feedback is distinct from canonical verification status. Draft save/finalization retries are idempotent for the same content; returned moderation requires a fresh draft revision. OpenAPI contains strict request schemas. See [pilot model](DAIRY_PILOT_MODEL.md) for response categories, provenance, bounds and local review steps.
+
+## Phase 3E dairy learning
+
+Existing authentication, vetready:access scope and domain RBAC apply. Prefix /api/v1:
+
+| Method | Route                                                            | Permission / purpose                                                                   |
+| ------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| GET    | /dairy-learning                                                  | catalog:read; released DRAFT demo curricula                                            |
+| GET    | /dairy-learning/:id                                              | catalog:read; exact released snapshot                                                  |
+| GET    | /admin/dairy-learning                                            | training:manage; all curriculum snapshots                                              |
+| GET    | /admin/dairy-learning/:id                                        | training:manage; inspect unreleased metadata                                           |
+| POST   | /admin/dairy-learning                                            | training:manage; atomic course+metadata creation, optional courseId creates successor  |
+| POST   | /admin/dairy-learning/starter                                    | training:manage; prepare original DRAFT starter, requires existing released dairy case |
+| GET    | /candidates/me/dairy-learning                                    | candidate:own; own curriculum enrollments including retired history                    |
+| GET    | /candidates/me/dairy-learning/:enrollment                        | candidate:own plus owner; exact consumed snapshot/progress/activity                    |
+| PUT    | /candidates/me/dairy-learning/:enrollment/units/:lesson/activity | candidate:own plus owner; unscored response command                                    |
+
+Activity body: commandId UUID, expectedRevision nonnegative integer, response 1–4000 characters. Limits are technical payload bounds, not assessment standards. Replayed identical commands return the recorded revision; stale/changed commands return 409. Wrong-owner/wrong-version resources return 404; invalid schemas return 422. Responses never claim assessed competence. Existing training release/retire/enroll/progress APIs and assessment start/review/verification APIs are reused unchanged. Production approval remains disabled.

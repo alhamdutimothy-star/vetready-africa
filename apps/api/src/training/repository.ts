@@ -100,6 +100,14 @@ export class TrainingRepository {
               'Training competency mapping no longer valid',
               'Training group/pathway mismatch',
               'Training text size bound exceeded',
+              'Unreleased training draft required',
+              'Dairy pathway required',
+              'Domain competency mappings required',
+              'Domain competency outside training mappings',
+              'Unit domain mismatch',
+              'Prerequisite list required',
+              'Prerequisite outside training mappings',
+              'Every curriculum lesson requires a governed unit',
             ].includes(message)
           )
             throw new UnprocessableEntityException(
@@ -128,8 +136,12 @@ export class TrainingRepository {
       )
     ).rows;
   }
-  create(ctx: OperationContext, input: TrainingCreateInput) {
-    return this.transact(async (c) => {
+  create(
+    ctx: OperationContext,
+    input: TrainingCreateInput,
+    client?: PoolClient,
+  ) {
+    const operation = async (c: PoolClient) => {
       const course = (
         await c.query<{ id: string }>(
           'INSERT INTO training_courses(code,created_by) VALUES($1,$2) RETURNING id',
@@ -137,14 +149,16 @@ export class TrainingRepository {
         )
       ).rows[0]!;
       return this.insertVersion(c, ctx, course.id, input.content);
-    });
+    };
+    return client ? operation(client) : this.transact(operation);
   }
   version(
     ctx: OperationContext,
     courseId: string,
     content: TrainingVersionInput,
+    client?: PoolClient,
   ) {
-    return this.transact(async (c) => {
+    const operation = async (c: PoolClient) => {
       if (
         !(
           await c.query(
@@ -155,7 +169,8 @@ export class TrainingRepository {
       )
         throw new NotFoundException('Training course unavailable');
       return this.insertVersion(c, ctx, courseId, content);
-    });
+    };
+    return client ? operation(client) : this.transact(operation);
   }
   private async insertVersion(
     c: PoolClient,

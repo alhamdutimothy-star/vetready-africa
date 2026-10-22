@@ -56,3 +56,7 @@ Live provider setup, assessment/verification/scoring/matching and production ope
 - Add private, immutable review drafts finalized through existing qualitative reviews with exact rubric/version/evidence provenance.
 - Protect staff material at API boundaries, including legacy routes; preserve authentication and all inactive professional awards/rules.
 - Add migration 012 and populated-upgrade, API, server-action recovery and built-web HTTP tests.
+
+## Phase 3E — uncommitted for review
+
+Added dairy curriculum metadata and append-only unscored activities over existing governed training; 17 proposed domain outlines and three DRAFT starter units; existing transition case integration, candidate reading/resume and owner inspection. Added migration 013 and regression coverage. Protected authentication and migrations 001–012 preserved. No thresholds, production approval, certification, other pathways or hiring features activated.
