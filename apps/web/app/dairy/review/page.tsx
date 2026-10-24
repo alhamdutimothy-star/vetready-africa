@@ -82,6 +82,20 @@ export default async function Review({
     <>
       <Link href="/dairy">Dairy dashboard</Link>
       <h1>Dairy assessment and feedback</h1>
+      {has('assessment:review') && (
+        <p>
+          <Link href="/practical/review">
+            My assigned practical evidence reviews
+          </Link>
+        </p>
+      )}
+      {has('assessment:assign') && (
+        <p>
+          <Link href="/practical/admin">
+            Assign or revoke practical evidence reviews
+          </Link>
+        </p>
+      )}
       <p className="notice">
         DRAFT — REQUIRES DOMAIN EXPERT VALIDATION. No certification, pass mark
         or readiness threshold is active.

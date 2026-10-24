@@ -133,6 +133,8 @@ export class CaseRepository {
           `SELECT e.id,e.child_version_id,e.facet,e.status,e.demo,e.observation,e.observed_at,e.valid_until,
       e.attempt_id,e.item_version_id,e.source_kind,e.submission_version_id,
       a.assessment_version_id,av.version AS assessment_version,COALESCE(av.pathway_version_id,sv.pathway_version_id) AS pathway_version_id,
+      sv.version AS submission_version,sv.status AS submission_status,
+      CASE WHEN sv.practical THEN (SELECT jsonb_build_object('id',d.id,'outcome',d.outcome,'date',d.created_at,'competenceVerified',false) FROM practical_review_decisions d WHERE d.version_id=sv.id ORDER BY d.sequence DESC LIMIT 1) ELSE NULL END AS practical_demo_review,
       COALESCE((SELECT jsonb_agg(jsonb_build_object('id',r.id,'assessorId',r.assessor_id,'reviewedAt',r.created_at) ORDER BY r.created_at,r.id) FROM assessor_reviews r WHERE r.attempt_id=e.attempt_id),'[]') AS assessor_reviews,
       COALESCE((SELECT jsonb_agg(jsonb_build_object('id',r.id,'reviewerId',r.reviewer_id,'outcome',r.outcome,'date',r.created_at) ORDER BY r.created_at,r.id) FROM competency_evidence_reviews r WHERE r.evidence_id=e.id),'[]') AS verification_history,
       COALESCE((SELECT jsonb_agg(rc.id ORDER BY rc.id) FROM rubric_criteria rc WHERE rc.item_version_id=e.item_version_id),'[]') AS rubric_criterion_ids

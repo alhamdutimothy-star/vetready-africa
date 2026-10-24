@@ -8,6 +8,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { once } from 'node:events';
 import { createServer } from 'node:net';
 import { randomBytes } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import type { INestApplication } from '@nestjs/common';
 import type { Pool } from 'pg';
 import { createApp } from '../../apps/api/dist/app';
@@ -368,4 +369,103 @@ it('renders governed dairy learning, source caveats and resumable unscored activ
       })
     ).text(),
   ).toContain('Authorized owner access');
+});
+
+it('renders private practical drafts, declarations and proposed gaps without exposing tokens or evidence anonymously', async () => {
+  const options = z
+    .array(z.object({ pathwayVersionId: z.uuid(), childVersionId: z.uuid() }))
+    .parse(
+      await (await http('/candidates/me/practical/options', candidate)).json(),
+    );
+  const first = options[0];
+  if (!first) throw new Error('Practical mapping fixture required');
+  const created = await http('/candidates/me/practical', candidate, 'POST', {
+    pathwayVersionId: first.pathwayVersionId,
+    kind: 'SUPERVISED_TASK',
+  });
+  expect(created.status).toBe(201);
+  const id = z.object({ id: z.uuid() }).parse(await created.json()).id;
+  const saved = await http(`/candidates/me/practical/${id}`, candidate, 'PUT', {
+    commandId: randomUUID(),
+    expectedRevision: 0,
+    payload: {
+      summary: 'PRIVATE_PRACTICAL_SSR_ACTIVITY',
+      context: { task: 'Synthetic activity account' },
+      targets: [
+        {
+          childVersionId: first.childVersionId,
+          requestedFacet: 'PRACTICALLY_VERIFIED',
+        },
+      ],
+    },
+  });
+  expect(saved.status).toBe(200);
+  const page = await fetch(`${origin}/practical/${id}`, {
+    headers: { cookie: candidateCookie },
+  });
+  const html = await page.text();
+  expect(page.status).toBe(200);
+  expect(html).toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  expect(html).toContain('Save partial draft');
+  expect(html).toContain('Declare and submit');
+  expect(html).toContain('Explainable evidence gaps');
+  expect(html).not.toContain(candidate);
+  expect(html).not.toContain('accessToken');
+  expect(page.headers.get('cache-control')).toContain('no-store');
+  expect(await (await fetch(`${origin}/practical/${id}`)).text()).not.toContain(
+    'PRIVATE_PRACTICAL_SSR_ACTIVITY',
+  );
+  const staff = await fetch(`${origin}/practical/review/${id}`, {
+    headers: { cookie: assessorCookie },
+  });
+  expect(await staff.text()).not.toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  const submitted = await http(
+    `/candidates/me/practical/${id}/submit`,
+    candidate,
+    'POST',
+    { expectedRevision: 1, declaration: true },
+  );
+  expect(submitted.status).toBe(201);
+  const assessorId = z
+    .object({ id: z.uuid() })
+    .parse(await (await http('/me', assessor)).json()).id;
+  expect(
+    (
+      await http(`/admin/practical/${id}/assignments`, admin, 'POST', {
+        assessorId,
+        reason: 'Synthetic private practical assignment',
+      })
+    ).status,
+  ).toBe(201);
+  const reviewHtml = await (
+    await fetch(`${origin}/practical/review/${id}`, {
+      headers: { cookie: assessorCookie },
+    })
+  ).text();
+  expect(reviewHtml).toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  expect(reviewHtml).toContain('Finalize immutable decision');
+  const ownerHtml = await (
+    await fetch(`${origin}/practical/${id}`, {
+      headers: { cookie: candidateCookie },
+    })
+  ).text();
+  expect(ownerHtml).not.toContain('Finalize immutable decision');
+  expect(ownerHtml).toContain('Candidate declaration');
+  expect(
+    (
+      await http(`/assessor/practical/${id}/decisions`, assessor, 'POST', {
+        outcome: 'NEEDS_REVISION',
+        rationale: 'Synthetic practical development feedback',
+        conflictDeclaredClear: true,
+      })
+    ).status,
+  ).toBe(201);
+  const reviewedHtml = await (
+    await fetch(`${origin}/practical/${id}`, {
+      headers: { cookie: candidateCookie },
+    })
+  ).text();
+  expect(reviewedHtml).toContain('Synthetic practical development feedback');
+  expect(reviewedHtml).toContain('Create successor draft');
+  expect(reviewedHtml).toContain('No verified competence');
 });

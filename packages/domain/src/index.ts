@@ -70,3 +70,4 @@ export * from './verification';
 export * from './training';
 
 export * from './cases';
+export * from './practical';

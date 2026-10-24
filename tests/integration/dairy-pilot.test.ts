@@ -53,9 +53,14 @@ async function snapshot(tables: string[]) {
   const result: Record<string, unknown> = {};
   for (const table of tables) {
     if (!/^[a-z_]+$/.test(table)) throw new Error('Unexpected table');
+    // Compare every pre-existing field; 014 adds only these two version columns.
+    const projection =
+      table === 'evidence_submission_versions'
+        ? "(to_jsonb(t)-ARRAY['practical','draft_revision'])"
+        : 'to_jsonb(t)';
     result[table] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]') AS rows FROM ${table} t`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]') AS rows FROM ${table} t`,
       )
     ).rows[0].rows;
   }
@@ -778,7 +783,7 @@ it('keeps migration/seed reruns checksummed and preserves all finalized feedback
   expect(
     (await pool.query('SELECT * FROM schema_migrations ORDER BY name')).rows,
   ).toEqual(migrations);
-  expect(migrations).toHaveLength(13);
+  expect(migrations).toHaveLength(14);
   expect(
     (
       await pool.query(

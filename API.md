@@ -138,3 +138,34 @@ Existing authentication, vetready:access scope and domain RBAC apply. Prefix /ap
 | PUT    | /candidates/me/dairy-learning/:enrollment/units/:lesson/activity | candidate:own plus owner; unscored response command                                    |
 
 Activity body: commandId UUID, expectedRevision nonnegative integer, response 1–4000 characters. Limits are technical payload bounds, not assessment standards. Replayed identical commands return the recorded revision; stale/changed commands return 409. Wrong-owner/wrong-version resources return 404; invalid schemas return 422. Responses never claim assessed competence. Existing training release/retire/enroll/progress APIs and assessment start/review/verification APIs are reused unchanged. Production approval remains disabled.
+
+## Phase 3F private practical evidence (DRAFT demonstration)
+
+All routes are under `/api/v1`, require the existing bearer/session and scoped RBAC
+checks, and use no-store responses. Professional practical verification, readiness
+and certification remain inactive. See docs/PHASE3F_COMPLETION.md and ADR 0009.
+
+| Method    | Path                                     | Capability / resource boundary                                           |
+| --------- | ---------------------------------------- | ------------------------------------------------------------------------ |
+| GET       | `/candidates/me/practical/options`       | candidate:own; version-bound pathway/child options                       |
+| GET, POST | `/candidates/me/practical`               | candidate:own; owner list or new partial draft                           |
+| GET, PUT  | `/candidates/me/practical/:id`           | candidate:own + exact owner; snapshot or revision-checked save           |
+| POST      | `/candidates/me/practical/:id/submit`    | owner; complete saved revision + explicit declaration                    |
+| POST      | `/candidates/me/practical/:id/withdraw`  | owner; eligible lifecycle + reason                                       |
+| POST      | `/candidates/me/practical/:id/revisions` | owner; latest eligible predecessor + reason                              |
+| GET       | `/candidates/me/practical/gaps/:pathway` | owner evidence only; existing proposed facets                            |
+| GET       | `/assessor/practical`                    | assessment:review; current assignments only                              |
+| GET       | `/assessor/practical/:id`                | assessment:review + current exact-version assignment                     |
+| POST      | `/assessor/practical/:id/decisions`      | assigned independent reviewer; immutable decision or explicit correction |
+| GET       | `/admin/practical`                       | assessment:assign; audited administrative queue                          |
+| GET       | `/admin/practical/:id`                   | assessment:assign; audited private inspection                            |
+| POST      | `/admin/practical/:id/assignments`       | assessment:assign; active independent reviewer                           |
+| POST      | `/admin/practical/:id/revoke`            | assessment:assign; eligible source + reason                              |
+
+Submitted practical receipts remain UNVERIFIED/demo. Source-version state qualifies
+superseded/revoked receipts in the owner manifest and gap explanations. Decision
+outcomes are DEMONSTRATED_IN_DEMO, NEEDS_REVISION or REJECTED; no VERIFIED outcome
+is accepted. Corrections reference the latest immutable decision. Lists return
+`truncated` when more than 100 versions exist. Validation errors use 422, stale
+commands/revisions use 409, and unavailable private resources use 404. Canonical
+audit failures roll back writes and remain safe 500 errors.

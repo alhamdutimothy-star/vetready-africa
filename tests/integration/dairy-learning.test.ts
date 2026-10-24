@@ -25,6 +25,7 @@ let pool: Pool,
   pilot: string;
 let original: ReturnType<typeof dairyCurriculumSchema.parse>;
 let beforeUpgrade: unknown;
+let priorTables: { tablename: string }[] | undefined;
 const get = (p: string, t = owner) =>
   request(app.getHttpServer())
     .get('/api/v1' + p)
@@ -47,12 +48,18 @@ const snapshot = async () => {
       "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename NOT IN('schema_migrations','dairy_curricula','dairy_learning_units','dairy_learning_activities') ORDER BY tablename",
     )
   ).rows;
+  priorTables ??= tables;
   const data: Record<string, unknown> = {};
-  for (const t of tables) {
+  for (const t of priorTables) {
     if (!/^[a-z_]+$/.test(t.tablename)) throw Error('Unsafe table');
+    // Compare every pre-existing field; 014 adds only these two version columns.
+    const projection =
+      t.tablename === 'evidence_submission_versions'
+        ? "(to_jsonb(t)-ARRAY['practical','draft_revision'])"
+        : 'to_jsonb(t)';
     data[t.tablename] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]') AS rows FROM ${t.tablename} t`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]') AS rows FROM ${t.tablename} t`,
       )
     ).rows[0].rows;
   }
@@ -209,7 +216,7 @@ it('upgrades populated 012 without rewriting sessions, cases, learning or audit 
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(13);
+  expect(rows).toHaveLength(14);
   for (const r of rows)
     expect(r.checksum).toBe(
       createHash('sha256')

@@ -69,6 +69,11 @@ export default async function Dairy({
       </p>
       <section>
         <h2>My progress and evidence</h2>
+        <p>
+          <Link href="/practical">
+            My private practical evidence and explainable gaps
+          </Link>
+        </p>
         <dl>
           <dt>Dairy pilot assessment</dt>
           <dd>
@@ -93,8 +98,9 @@ export default async function Dairy({
           </dd>
           <dt>Practical verification</dt>
           <dd>
-            Pending a separate supervised process. This pilot cannot practically
-            verify a candidate.
+            Private practical evidence can be saved and reviewed in the
+            practical workspace. Reviews remain demonstrations pending expert
+            configuration; this pilot cannot award practical verification.
           </dd>
           <dt>Practically verified</dt>
           <dd>

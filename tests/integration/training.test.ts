@@ -75,9 +75,14 @@ async function snapshot() {
         : tablename === 'role_permissions'
           ? "WHERE permission_code NOT IN ('training:manage','training:assign')"
           : '';
+    // Compare every pre-existing field; 014 adds only these two version columns.
+    const projection =
+      tablename === 'evidence_submission_versions'
+        ? "(to_jsonb(t)-ARRAY['practical','draft_revision'])"
+        : 'to_jsonb(t)';
     result[tablename] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]'::jsonb) AS rows FROM ${tablename} t ${exclude}`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]'::jsonb) AS rows FROM ${tablename} t ${exclude}`,
       )
     ).rows[0].rows;
   }
