@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { competencyProfileResponseSchema } from '../../apps/web/lib/competency-profile';
 import {
   pilotAttemptSchema,
   staffPilotSchema,
@@ -468,4 +469,52 @@ it('renders private practical drafts, declarations and proposed gaps without exp
   expect(reviewedHtml).toContain('Synthetic practical development feedback');
   expect(reviewedHtml).toContain('Create successor draft');
   expect(reviewedHtml).toContain('No verified competence');
+});
+
+it('renders private competency and passport views without practical narratives, review notes or tokens', async () => {
+  for (const path of ['/competencies', '/skills-passport']) {
+    const response = await fetch(origin + path, {
+      headers: { cookie: candidateCookie },
+    });
+    const html = await response.text();
+    expect(response.status).toBe(200);
+    expect(html).toContain('Readiness: unavailable');
+    expect(html).toContain('Professional');
+    expect(html).toContain('unconfigured');
+    expect(html).not.toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+    expect(html).not.toContain('Synthetic practical development feedback');
+    expect(html).not.toContain(candidate);
+    expect(html).not.toContain('accessToken');
+    expect(response.headers.get('cache-control')).toContain('no-store');
+    expect(await (await fetch(origin + path)).text()).toContain('Sign in');
+  }
+  const p = competencyProfileResponseSchema.parse(
+    await (await http('/candidates/me/competency-profile', candidate)).json(),
+  );
+  const child = p.competencies[0]!;
+  const detail = await (
+    await fetch(`${origin}/competencies/${child.id}`, {
+      headers: { cookie: candidateCookie },
+    })
+  ).text();
+  expect(detail).toContain(child.code);
+  expect(detail).not.toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  const saved = await http(
+    '/candidates/me/competency-profile/snapshots',
+    candidate,
+    'POST',
+    { commandId: randomUUID() },
+  );
+  expect(saved.status).toBe(201);
+  const receipt = z.object({ id: z.uuid() }).parse(await saved.json());
+  const path = `${origin}/competencies/snapshots/${receipt.id}`;
+  const historical = await (
+    await fetch(path, { headers: { cookie: candidateCookie } })
+  ).text();
+  expect(historical).toContain('Historical');
+  expect(historical).toContain('Input SHA-256');
+  expect(historical).not.toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  expect(
+    await (await fetch(path, { headers: { cookie: assessorCookie } })).text(),
+  ).not.toContain('Input SHA-256');
 });

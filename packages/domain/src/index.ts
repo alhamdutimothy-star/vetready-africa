@@ -71,3 +71,4 @@ export * from './training';
 
 export * from './cases';
 export * from './practical';
+export * from './competency-profile';

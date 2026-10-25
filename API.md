@@ -1,5 +1,20 @@
 # API specification
 
+## Phase 3G private derived competency profile
+
+All six routes require authenticated `candidate:own` and resolve the candidate from the current principal. No caller-supplied candidate identity, professional configuration or snapshot facts are accepted. Responses are private/no-store; there are no employer/public sharing routes.
+
+| Method | Path                                                  | Purpose                                                          |
+| ------ | ----------------------------------------------------- | ---------------------------------------------------------------- |
+| GET    | `/candidates/me/competency-profile`                   | Fresh consistent owner projection                                |
+| GET    | `/candidates/me/skills-passport`                      | Explicit sanitized metadata allowlist                            |
+| GET    | `/candidates/me/competency-profile/competencies/:id`  | Exact child-version evidence explanation                         |
+| GET    | `/candidates/me/competency-profile/pathways/:id/gaps` | Version-bound unconfigured pathway gaps                          |
+| POST   | `/candidates/me/competency-profile/snapshots`         | Save immutable historical receipt; body `{commandId: UUID}` only |
+| GET    | `/candidates/me/competency-profile/snapshots/:id`     | Owner-only replay and integrity verification                     |
+
+Snapshots are idempotent by owner and command UUID, including concurrent duplicate requests. Historical receipts are never used as the current passport source. Current aggregation preserves lifecycle exclusions and source provenance; training and demo completion never establish practical verification. Professional determination, certification and licensing are unavailable. See [model and limitations](docs/COMPETENCY_PROFILE.md) and [ADR 0010](docs/adr/0010-derived-competency-profile.md).
+
 The Phase 2 routes below are implemented. The later table records the long-term API proposal and must not be interpreted as implemented functionality. [OpenAPI](docs/openapi.json) is regenerated from the current Nest controllers.
 
 ## Implemented Phase 2 routes

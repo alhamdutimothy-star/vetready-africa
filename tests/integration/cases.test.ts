@@ -666,7 +666,7 @@ it('audits case construction atomically and keeps migrations repeatable with sta
   expect(
     (await pool.query('SELECT * FROM schema_migrations ORDER BY name')).rows,
   ).toEqual(before);
-  expect(before).toHaveLength(14);
+  expect(before).toHaveLength(15);
 });
 
 it('rolls back all case content and audit records if the canonical audit write fails', async () => {

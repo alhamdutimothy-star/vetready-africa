@@ -63,6 +63,10 @@ export default async function Dashboard({
     <>
       <h1>Your professional foundation</h1>
       <p>
+        <Link href="/competencies">My competency evidence</Link> ·{' '}
+        <Link href="/skills-passport">My private Skills Passport</Link>
+      </p>
+      <p>
         <Link className="button" href="/dairy">
           Open the Commercial Dairy Practice pilot
         </Link>

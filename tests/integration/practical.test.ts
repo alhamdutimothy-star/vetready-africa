@@ -215,7 +215,7 @@ it('preserves populated 013 records and validates all migration checksums and re
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(14);
+  expect(rows).toHaveLength(15);
   for (const r of rows)
     expect(r.checksum).toBe(
       createHash('sha256')

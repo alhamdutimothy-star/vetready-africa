@@ -4600,6 +4600,154 @@
         ],
         "tags": ["private practical evidence — DRAFT demonstration"]
       }
+    },
+    "/api/v1/candidates/me/competency-profile": {
+      "get": {
+        "operationId": "CompetencyProfileController_current",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["private derived competency profile — no readiness awards"]
+      }
+    },
+    "/api/v1/candidates/me/skills-passport": {
+      "get": {
+        "operationId": "CompetencyProfileController_passport",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["private derived competency profile — no readiness awards"]
+      }
+    },
+    "/api/v1/candidates/me/competency-profile/competencies/{id}": {
+      "get": {
+        "operationId": "CompetencyProfileController_competency",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["private derived competency profile — no readiness awards"]
+      }
+    },
+    "/api/v1/candidates/me/competency-profile/pathways/{id}/gaps": {
+      "get": {
+        "operationId": "CompetencyProfileController_gaps",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["private derived competency profile — no readiness awards"]
+      }
+    },
+    "/api/v1/candidates/me/competency-profile/snapshots": {
+      "post": {
+        "operationId": "CompetencyProfileController_snapshot",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commandId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  }
+                },
+                "required": ["commandId"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["private derived competency profile — no readiness awards"]
+      }
+    },
+    "/api/v1/candidates/me/competency-profile/snapshots/{id}": {
+      "get": {
+        "operationId": "CompetencyProfileController_saved",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "tags": ["private derived competency profile — no readiness awards"]
+      }
     }
   },
   "info": {

@@ -1,6 +1,8 @@
 import { DairyLearningController } from './dairy-learning/controller';
 import { PracticalController } from './practical/controller';
 import { PracticalRepository } from './practical/repository';
+import { CompetencyProfileController } from './competency-profile/controller';
+import { CompetencyProfileRepository } from './competency-profile/repository';
 import { DairyLearningRepository } from './dairy-learning/repository';
 import { sessionRegistrationFailure } from './session-diagnostics';
 import type { AuthRequest } from './auth';
@@ -99,6 +101,7 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
       DairyPilotController,
       DairyLearningController,
       PracticalController,
+      CompetencyProfileController,
     ],
     providers: [
       { provide: API_CONFIG, useValue: config },
@@ -112,6 +115,7 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
       DairyPilotRepository,
       DairyLearningRepository,
       PracticalRepository,
+      CompetencyProfileRepository,
       TrainingService,
       { provide: APP_GUARD, useClass: ThrottlerGuard },
       { provide: APP_GUARD, useClass: AuthGuard },

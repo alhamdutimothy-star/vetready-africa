@@ -63,6 +63,10 @@ export default async function Development({
       </p>
       <h1>My development</h1>
       <p>
+        <Link href="/competencies">My competency evidence and gaps</Link> ·{' '}
+        <Link href="/skills-passport">My private Skills Passport</Link>
+      </p>
+      <p>
         Missing evidence means unverified, not incompetent. Demo tasks provide
         practice and feedback; they do not award professional readiness.
       </p>
