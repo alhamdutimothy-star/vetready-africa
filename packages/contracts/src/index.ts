@@ -64,3 +64,4 @@ export * from './dairy-pilot';
 export * from './dairy-learning';
 export * from './practical';
 export * from './competency-profile';
+export * from './recruitment';

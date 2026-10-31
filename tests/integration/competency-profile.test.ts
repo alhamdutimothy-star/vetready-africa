@@ -362,7 +362,7 @@ it('preserves populated 014 data, sessions, evidence, training, private reviews 
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(15);
+  expect(rows).toHaveLength(16);
   for (const row of rows)
     expect(row.checksum).toBe(
       createHash('sha256')

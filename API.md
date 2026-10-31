@@ -1,5 +1,24 @@
 # API specification
 
+## Phase 3H controlled technical pilot
+
+All routes below are under `/api/v1/pilot`, require bearer authentication, return no-store responses and enforce current database authorization. Only one independently admitted organisation and one stable opportunity are supported. No professional policy, numerical score, public discovery, placement, automatic hiring or rejection is activated. See [architecture](docs/PHASE3H_ARCHITECTURE.md).
+
+| Boundary  | Routes                                                                                                                                     | Authorization / behavior                                                                                                      |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| Reference | `GET /reference-options`                                                                                                                   | Current catalog capability; versioned definitions only                                                                        |
+| Internal  | `GET /admin/governance`, `POST /admin/organizations/:org/verification`, `POST /admin/organizations/:org/members/:user/access`              | Current platform ADMIN/SUPER_ADMIN plus administrative capability; independent organisation review                            |
+| Employer  | `GET /employer/organizations`, `GET/POST /organizations/:org/opportunities`                                                                | Exact current membership and organisation-scoped capability; active verified pilot employer                                   |
+| Employer  | `POST /organizations/:org/opportunities/:job/versions`, `POST /organizations/:org/opportunities/:job/transitions`                          | Version-checked append or publish/close; locked historical content remains immutable                                          |
+| Candidate | `GET /opportunities`, `GET /opportunities/:job`                                                                                            | Current candidate capability/profile; published admitted pilot only                                                           |
+| Candidate | `POST /opportunities/:job/applications`                                                                                                    | Owner snapshot, exact job version, explicit `pilot-share-1` consent; strict command input                                     |
+| Candidate | `GET /candidates/me/applications`, `POST /candidates/me/applications/:app/revoke-access`, `POST /candidates/me/applications/:app/withdraw` | Exact owner; revocation and withdrawal remain separate                                                                        |
+| Employer  | `GET /organizations/:org/opportunities/:job/applications`                                                                                  | Exact job owner and current candidate grants; no broad talent discovery                                                       |
+| Employer  | `POST /organizations/:org/applications/:app/evaluations`, `GET /organizations/:org/applications/:app/evaluations/:evaluation`              | Current organisation authority, candidate consent, source validity and exact version provenance; employer-safe allowlist only |
+| Employer  | `POST /organizations/:org/applications/:app/shortlist`                                                                                     | Current consent/facts, exact evaluation and optimistic revision; manual REVIEW/SHORTLIST/REMOVE only                          |
+
+Write commands require UUID command identifiers; replay requires unchanged scope/payload and current authorization. Invalid input is 422, concealed resources 404, stale versions/facts/commands 409 and transactional audit failures safe 500 responses. Mandatory professional requirements return UNCONFIGURED / REQUIRES DOMAIN EXPERT VALIDATION. Technical eligibility never represents Job Ready, Field Ready or a certification decision. Employer response schemas exclude full snapshot inputs, source IDs, reviewer identities, narratives, documents, moderation, audit and authentication data.
+
 ## Phase 3G private derived competency profile
 
 All six routes require authenticated `candidate:own` and resolve the candidate from the current principal. No caller-supplied candidate identity, professional configuration or snapshot facts are accepted. Responses are private/no-store; there are no employer/public sharing routes.

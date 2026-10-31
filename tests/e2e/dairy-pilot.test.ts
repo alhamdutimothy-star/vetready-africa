@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { employerExplanationSchema } from '../../apps/web/lib/recruitment';
 import { competencyProfileResponseSchema } from '../../apps/web/lib/competency-profile';
 import {
   pilotAttemptSchema,
@@ -517,4 +518,201 @@ it('renders private competency and passport views without practical narratives, 
   expect(
     await (await fetch(path, { headers: { cookie: assessorCookie } })).text(),
   ).not.toContain('Input SHA-256');
+});
+
+it('runs a consented candidate-to-employer technical shortlist and immediately blocks revoked access', async () => {
+  const org = z.object({ id: z.uuid() }).parse(
+    await (
+      await http('/organizations', assessor, 'POST', {
+        displayName: 'Synthetic SSR Pilot Employer',
+        sector: 'Technical protocol testing',
+        countryCode: 'NG',
+      })
+    ).json(),
+  ).id;
+  expect(
+    (
+      await http(
+        `/pilot/admin/organizations/${org}/verification`,
+        admin,
+        'POST',
+        {
+          commandId: randomUUID(),
+          status: 'VERIFIED',
+          reason: 'Independent synthetic employer protocol review',
+        },
+      )
+    ).status,
+  ).toBe(201);
+  const p = (
+    await pool.query(
+      'SELECT id,pathway_id FROM pathway_versions ORDER BY id LIMIT 1',
+    )
+  ).rows[0];
+  expect(
+    (await http(`/candidates/me/pathways/${p.pathway_id}`, candidate, 'POST'))
+      .status,
+  ).toBe(201);
+  const created = await http(
+    `/pilot/organizations/${org}/opportunities`,
+    assessor,
+    'POST',
+    {
+      commandId: randomUUID(),
+      content: {
+        title: 'Controlled SSR technical opportunity',
+        description:
+          'Technical testing only; no professional standards or hiring decisions.',
+        pathwayVersionId: p.id,
+        requirements: [
+          { id: randomUUID(), kind: 'PATHWAY_INTEREST', mandatory: true },
+        ],
+      },
+    },
+  );
+  expect(created.status).toBe(201);
+  const job = z
+    .object({ id: z.uuid(), versionId: z.uuid() })
+    .parse(await created.json());
+  expect(
+    (
+      await http(
+        `/pilot/organizations/${org}/opportunities/${job.id}/transitions`,
+        assessor,
+        'POST',
+        { commandId: randomUUID(), expectedVersion: 1, action: 'PUBLISH' },
+      )
+    ).status,
+  ).toBe(201);
+  const candidatePage = await fetch(origin + '/opportunities', {
+      headers: { cookie: candidateCookie },
+    }),
+    html = await candidatePage.text();
+  expect(candidatePage.status).toBe(200);
+  expect(html).toContain('Controlled SSR technical opportunity');
+  expect(html).toContain('pilot-share-1');
+  expect(html).toContain('No public candidate search');
+  expect(html).not.toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  expect(html).not.toContain(candidate);
+  expect(candidatePage.headers.get('cache-control')).toContain('no-store');
+  expect(await (await fetch(origin + '/opportunities')).text()).toContain(
+    'Sign in',
+  );
+  const snapshot = z
+    .object({ id: z.uuid() })
+    .parse(
+      await (
+        await http(
+          '/candidates/me/competency-profile/snapshots',
+          candidate,
+          'POST',
+          { commandId: randomUUID() },
+        )
+      ).json(),
+    ).id;
+  const applied = await http(
+    `/pilot/opportunities/${job.id}/applications`,
+    candidate,
+    'POST',
+    {
+      commandId: randomUUID(),
+      jobVersionId: job.versionId,
+      snapshotId: snapshot,
+      consent: true,
+      consentVersion: 'pilot-share-1',
+    },
+  );
+  expect(applied.status).toBe(201);
+  const a = z.object({ id: z.uuid() }).parse(await applied.json()).id;
+  const list = await fetch(`${origin}/employer-pilot?org=${org}`, {
+    headers: { cookie: assessorCookie },
+  });
+  const listHtml = await list.text();
+  expect(list.status).toBe(200);
+  expect(listHtml).toContain('Candidate alias');
+  expect(listHtml).not.toContain('Synthetic Web Candidate');
+  expect(listHtml).not.toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  expect(listHtml).not.toContain('Synthetic practical development feedback');
+  expect(listHtml).not.toContain(candidate);
+  const calculated = await http(
+    `/pilot/organizations/${org}/applications/${a}/evaluations`,
+    assessor,
+    'POST',
+    { commandId: randomUUID() },
+  );
+  expect(calculated.status).toBe(201);
+  const evaluation = z
+    .object({ id: z.uuid() })
+    .parse(await calculated.json()).id;
+  const explanation = employerExplanationSchema.parse(
+    await (
+      await http(
+        `/pilot/organizations/${org}/applications/${a}/evaluations/${evaluation}`,
+        assessor,
+      )
+    ).json(),
+  );
+  expect(explanation.projection.eligibility).toBe('ELIGIBLE');
+  expect(explanation.projection.fit.score).toBeNull();
+  const url = `${origin}/employer-pilot?org=${org}&application=${a}&evaluation=${evaluation}`;
+  const detail = await (
+    await fetch(url, { headers: { cookie: assessorCookie } })
+  ).text();
+  expect(detail).toContain('Explainable technical evaluation');
+  expect(detail).toContain('Record human shortlist');
+  expect(detail).not.toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  expect(detail).not.toContain('Synthetic Web Candidate');
+  expect(
+    (
+      await http(
+        `/pilot/organizations/${org}/applications/${a}/shortlist`,
+        assessor,
+        'POST',
+        {
+          commandId: randomUUID(),
+          evaluationId: evaluation,
+          expectedRevision: 0,
+          action: 'SHORTLIST',
+        },
+      )
+    ).status,
+  ).toBe(201);
+  expect(
+    await (
+      await fetch(`${origin}/employer-pilot?org=${org}`, {
+        headers: { cookie: assessorCookie },
+      })
+    ).text(),
+  ).toContain('SHORTLIST');
+  expect(
+    (
+      await http(
+        `/pilot/candidates/me/applications/${a}/revoke-access`,
+        candidate,
+        'POST',
+        { commandId: randomUUID() },
+      )
+    ).status,
+  ).toBe(201);
+  expect(
+    (
+      await http(
+        `/pilot/organizations/${org}/applications/${a}/evaluations/${evaluation}`,
+        assessor,
+      )
+    ).status,
+  ).toBe(404);
+  const revoked = await (
+    await fetch(url, { headers: { cookie: assessorCookie } })
+  ).text();
+  expect(revoked).not.toContain(explanation.projection.candidateAlias);
+  expect(revoked).not.toContain('Explainable technical evaluation');
+  expect(revoked).toContain('unavailable or stale');
+  const own = await (
+    await fetch(origin + '/opportunities', {
+      headers: { cookie: candidateCookie },
+    })
+  ).text();
+  expect(own).toContain('revoked');
+  expect(own).toContain('Withdraw application');
 });
