@@ -1,5 +1,8 @@
 # Phase 3H.1 — Audit Remediation and Documentation Reconciliation
 
+Historical Phase 3H.1 checkpoint: subsequently committed at `abdfe9d555028fd45c384cff9bf99904be787aa6`, tagged `phase-3h1-audit-remediation`. The pre-commit status and Phase 3I scope recommendation below describe that earlier checkpoint. Current implementation/validation is recorded in [Phase 3I completion](PHASE3I_COMPLETION.md).
+
+
 ## Starting checkpoint
 
 Repository: `C:\Users\HP\Projects\vetready-africa`; branch/tracking branch: `feat/phase-3-training-verification` / `origin/feat/phase-3-training-verification`; HEAD: `a14c2cd552406bca28e5317b0d9bd75b1244b3d1`; tag: `phase-3h-employer-matching-pilot`. Starting tree clean; ahead/behind 0/0. Configured database ledger could not be read (`ECONNREFUSED`); no development database was changed. Migration validation uses an isolated disposable database.

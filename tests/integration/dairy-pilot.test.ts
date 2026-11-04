@@ -783,7 +783,7 @@ it('keeps migration/seed reruns checksummed and preserves all finalized feedback
   expect(
     (await pool.query('SELECT * FROM schema_migrations ORDER BY name')).rows,
   ).toEqual(migrations);
-  expect(migrations).toHaveLength(16);
+  expect(migrations).toHaveLength(17);
   expect(
     (
       await pool.query(

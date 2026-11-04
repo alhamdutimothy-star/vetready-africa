@@ -5,6 +5,8 @@ import { CompetencyProfileController } from './competency-profile/controller';
 import { CompetencyProfileRepository } from './competency-profile/repository';
 import { RecruitmentController } from './recruitment/controller';
 import { RecruitmentRepository } from './recruitment/repository';
+import { DevelopmentController } from './development/controller';
+import { DevelopmentRepository } from './development/repository';
 import { DairyLearningRepository } from './dairy-learning/repository';
 import { sessionRegistrationFailure } from './session-diagnostics';
 import type { AuthRequest } from './auth';
@@ -105,6 +107,7 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
       PracticalController,
       CompetencyProfileController,
       RecruitmentController,
+      DevelopmentController,
     ],
     providers: [
       { provide: API_CONFIG, useValue: config },
@@ -120,6 +123,7 @@ export async function createApp(config: ApiConfig): Promise<INestApplication> {
       PracticalRepository,
       CompetencyProfileRepository,
       RecruitmentRepository,
+      DevelopmentRepository,
       TrainingService,
       { provide: APP_GUARD, useClass: ThrottlerGuard },
       { provide: APP_GUARD, useClass: AuthGuard },

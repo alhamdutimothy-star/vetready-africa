@@ -1,8 +1,10 @@
 # VetReady Africa
 
-## Current checkpoint — Phase 3H / Phase 3H.1 remediation
+## Current implementation — Phase 3I (uncommitted for review)
 
-Phase 3H is committed at `a14c2cd552406bca28e5317b0d9bd75b1244b3d1`, tagged `phase-3h-employer-matching-pilot`. Phase 3H.1 reconciles documentation and hardens empty eligibility input. See [current completeness and production gates](docs/PHASE3H1_AUDIT_REMEDIATION.md). This is a bounded technical pilot, not production recruitment or professional verification. Phase 3I is not implemented.
+Protected baseline: `abdfe9d555028fd45c384cff9bf99904be787aa6`, tag `phase-3h1-audit-remediation`. [Phase 3I](docs/PHASE3I_COMPLETION.md) connects owner-only competency gaps to immutable development plans, explicitly mapped governed demo learning, real training progress and separate case follow-up. Use `/development/next-steps` from the development dashboard. No mapping means no activity is fabricated. Unknown/unconfigured requirements remain explicit; completion never awards competence or professional status. Dairy reuses existing pilot content; no new veterinary standards or pathway 2–4 content are supplied. This remains a bounded technical pilot, not production recruitment or professional verification.
+
+Earlier baseline: [Phase 3H.1 remediation](docs/PHASE3H1_AUDIT_REMEDIATION.md).
 
 ## Implemented training foundation (Phase 3B)
 

@@ -1,6 +1,13 @@
 # Changelog
 
-## Unreleased — Phase 3H.1 audit remediation
+## Unreleased — Phase 3I development next steps
+
+- Added immutable profile-backed development plans and audited explicit enrollment links with migration 017.
+- Connected exact child/group training mappings, unavailable states, current gap visibility and learning progress without professional verification.
+- Added private next-step pages, reusable reading delivery and separately governed assessment follow-up.
+- Preserved authentication, employer consent boundaries and unconfigured professional policies. See [completion report](docs/PHASE3I_COMPLETION.md) for executed validation.
+
+## Committed Phase 3H.1 — historical audit remediation
 
 - Reconciled documentation with committed Phase 3H (`a14c2cd`); earlier checkpoint entries below are historical.
 - Empty mandatory eligibility returns `UNCONFIGURED`; existing nonempty technical gate behavior is retained.

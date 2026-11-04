@@ -203,3 +203,14 @@ is accepted. Corrections reference the latest immutable decision. Lists return
 `truncated` when more than 100 versions exist. Validation errors use 422, stale
 commands/revisions use 409, and unavailable private resources use 404. Canonical
 audit failures roll back writes and remain safe 500 errors.
+
+## Phase 3I — private development workflow
+
+Existing bearer/browser-session authentication and `candidate:own` authorization apply. No employer routes or sharing grants are added.
+
+- `POST /api/v1/candidates/me/development-workflows`: strict `{commandId, pathwayVersionId}` UUID body; captures an immutable owned profile receipt and explicit currently demo-released training mappings. Same owner/command replays the same plan; changed pathway conflicts.
+- `GET /api/v1/candidates/me/development-workflows`: latest 50 own receipts.
+- `GET /api/v1/candidates/me/development-workflows/:id`: historical plan/receipt digest plus current gap and canonical learning progress. No mapped content or retired content is explicit; professional policy stays UNCONFIGURED.
+- `POST /api/v1/candidates/me/development-workflows/:id/courses/:course/start`: owner-confirmed recommendation only; canonical enrollment and immutable audited plan/enrollment link are created atomically. Existing enrollments are reused.
+
+Learning updates and separate follow-up attempts use the existing training-progress and assessment endpoints. The detail response preserves immutable `items` and exposes current `competencyFollowUps` by exact child/course/mapping references. Module-specific follow-ups require matching module references; lesson-specific follow-ups require an exact lesson reference. Shared course membership or a course-only competency link never implies scoped assessment applicability. Missing/ambiguous relationships produce no competency-specific follow-up. Explicit unscoped assessment links appear separately as `courses[].courseLevelFollowUps` with `scope=COURSE`, displayed once per course; an assessment with a course-wide association is not duplicated beneath competencies. Both response categories retain source assessment-link IDs. Learning completion does not verify competency, close a gap or configure professional policy.

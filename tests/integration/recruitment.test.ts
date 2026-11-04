@@ -218,7 +218,7 @@ it('adds 016 without rewriting populated 001–015 data and validates every chec
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(16);
+  expect(rows).toHaveLength(17);
   for (const r of rows)
     expect(r.checksum).toBe(
       createHash('sha256')

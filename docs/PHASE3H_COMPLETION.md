@@ -2,7 +2,7 @@
 
 ## Current checkpoint and historical-report scope
 
-Phase 3H was subsequently committed as `a14c2cd552406bca28e5317b0d9bd75b1244b3d1` and tagged `phase-3h-employer-matching-pilot`. The narrative and Git inventory below preserve the historical pre-commit report. References to uncommitted changes, Phase 3G HEAD and commit authorization describe that earlier state, not current Git status. See [Phase 3H.1 remediation](PHASE3H1_AUDIT_REMEDIATION.md) for current validation and blockers.
+Phase 3H was subsequently committed as `a14c2cd552406bca28e5317b0d9bd75b1244b3d1` and tagged `phase-3h-employer-matching-pilot`. The narrative and Git inventory below preserve the historical pre-commit report. References to uncommitted changes, Phase 3G HEAD and commit authorization describe that earlier state, not current Git status. See [Phase 3H.1 remediation](PHASE3H1_AUDIT_REMEDIATION.md) for that checkpoint and [Phase 3I completion](PHASE3I_COMPLETION.md) for the current uncommitted implementation and validation.
 
 ## Implementation summary (historical)
 

@@ -1,8 +1,10 @@
 # System architecture proposal
 
-## Current status — Phase 3H / bounded Phase 3H.1 remediation
+## Current implementation — Phase 3I bounded development workflow
 
-The committed checkpoint is `a14c2cd` / `phase-3h-employer-matching-pilot`. See [current architecture, completeness and readiness register](docs/PHASE3H1_AUDIT_REMEDIATION.md). Phases 3C–3H are implemented as bounded foundations/pilots. Phase 3I is not implemented or authorized. Professional practical verification, readiness, certification and professional weighted matching remain blocked/unconfigured.
+Starting protected checkpoint: `abdfe9d555028fd45c384cff9bf99904be787aa6`, tag `phase-3h1-audit-remediation`. Phase 3I changes are uncommitted for review. See [Phase 3I implementation and validation](docs/PHASE3I_COMPLETION.md). Immutable owner plans reference existing competency-profile receipts; explicit released training mappings connect needs to existing enrollments, live progress and separate assessment follow-up. Dairy uses its existing governed demo delivery; a generic reading view supports other existing course snapshots without adding pathway content. Unknown evidence and unconfigured requirements remain explicit. Learning completion cannot close a competency gap or grant readiness. No professional policy, authentication change or employer-access expansion is included.
+
+The next scope remains subject to independent review; professional governance, private storage, privacy/legal and production operations are outstanding.
 
 ## Historical design and milestone records
 

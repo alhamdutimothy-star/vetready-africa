@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { developmentDetailSchema } from '@vetready/contracts';
 import { employerExplanationSchema } from '../../apps/web/lib/recruitment';
 import { competencyProfileResponseSchema } from '../../apps/web/lib/competency-profile';
 import {
@@ -715,4 +716,110 @@ it('runs a consented candidate-to-employer technical shortlist and immediately b
   ).text();
   expect(own).toContain('revoked');
   expect(own).toContain('Withdraw application');
+});
+
+it('connects private dairy gaps to explicitly mapped demo learning and separate case follow-up without qualification', async () => {
+  const path = (
+    await pool.query(
+      "SELECT v.id FROM pathway_versions v JOIN pathways p ON p.id=v.pathway_id WHERE p.code='DAIRY' ORDER BY v.version DESC LIMIT 1",
+    )
+  ).rows[0].id;
+  const created = await http(
+    '/candidates/me/development-workflows',
+    candidate,
+    'POST',
+    { commandId: randomUUID(), pathwayVersionId: path },
+  );
+  expect(created.status).toBe(201);
+  const plan = z.object({ id: z.uuid() }).parse(await created.json()).id;
+  const endpoint = `/candidates/me/development-workflows/${plan}`;
+  const first = developmentDetailSchema.parse(
+    await (await http(endpoint, candidate)).json(),
+  );
+  expect(
+    first.items.some(
+      (i: { recommendations: unknown[] }) => i.recommendations.length,
+    ),
+  ).toBe(true);
+  const navigation = await (
+    await fetch(origin + '/development/next-steps', {
+      headers: { cookie: candidateCookie },
+    })
+  ).text();
+  expect(navigation).toContain('My next steps');
+  const url = origin + `/development/next-steps/${plan}`;
+  const initial = await (
+    await fetch(url, { headers: { cookie: candidateCookie } })
+  ).text();
+  expect(initial).toContain('My development plan');
+  expect(initial).toContain('Open or resume learning');
+  expect(initial).toContain('professional requirements are unconfigured');
+  expect(initial).not.toContain(candidate);
+  expect(initial).not.toContain('PRIVATE_DAIRY_SSR_SENTINEL');
+  const c = first.courses[0]!;
+  const start = await http(
+    `${endpoint}/courses/${c.id}/start`,
+    candidate,
+    'POST',
+  );
+  expect(start.status).toBe(201);
+  const enrollment = z.object({ id: z.uuid() }).parse(await start.json()).id;
+  const learning = z
+    .object({
+      course: z.object({
+        modules: z.array(
+          z.object({
+            lessons: z.array(z.object({ id: z.uuid(), revision: z.number() })),
+          }),
+        ),
+      }),
+    })
+    .parse(
+      await (
+        await http(
+          '/candidates/me/training/enrollments/' + enrollment,
+          candidate,
+        )
+      ).json(),
+    );
+  for (const m of learning.course.modules)
+    for (const l of m.lessons) {
+      const result = await http(
+        `/candidates/me/training/enrollments/${enrollment}/lessons/${l.id}/progress`,
+        candidate,
+        'PUT',
+        {
+          commandId: randomUUID(),
+          expectedRevision: l.revision,
+          state: 'COMPLETED',
+          resumePosition: 0,
+        },
+      );
+      expect(result.status).toBe(200);
+    }
+  const updated = await (
+    await fetch(url, { headers: { cookie: candidateCookie } })
+  ).text();
+  expect(updated).toContain(
+    'competency gap has not been automatically resolved',
+  );
+  expect(updated).toContain('demo case follow-up');
+  const final = developmentDetailSchema.parse(
+    await (await http(endpoint, candidate)).json(),
+  );
+  expect(final.itemsDigest).toBe(first.itemsDigest);
+  expect(final.professionalDetermination).toBeNull();
+  expect(final.policyStatus).toBe('UNCONFIGURED');
+  expect(final.courses[0]!.courseLevelFollowUps).toEqual([]);
+  const follow = final.competencyFollowUps
+    .filter((f) => f.courseVersionId === final.courses[0]!.id)
+    .flatMap((f) => f.followUps)[0]!;
+  expect(follow.scope).toBe('COMPETENCY_MAPPING');
+  expect(follow.mappingIds.length).toBeGreaterThan(0);
+  expect(
+    (await http(`/assessments/${follow.id}/attempts`, candidate, 'POST'))
+      .status,
+  ).toBe(201);
+  const anonymous = await (await fetch(url)).text();
+  expect(anonymous).not.toContain('My development plan');
 });
