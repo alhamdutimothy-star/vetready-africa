@@ -1,5 +1,8 @@
 # Phase 3C completion report — Dairy-first governed case foundation
 
+Historical checkpoint report: Phase 3C was subsequently committed at `4e69d66`; later phases through Phase 3H are committed at `a14c2cd`. Pre-commit status, validation counts and next-phase restrictions below describe that earlier checkpoint, not current Git status or current scope authorization. See [current remediation and readiness register](PHASE3H1_AUDIT_REMEDIATION.md).
+
+
 Status: implementation complete for owner review; changes are uncommitted. No Phase 3D work is authorized or started.
 
 ## Starting checkpoint and preservation

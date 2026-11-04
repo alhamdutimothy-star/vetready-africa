@@ -1,6 +1,10 @@
 # VetReady Africa
 
-## Current checkpoint — Phase 3B
+## Current checkpoint — Phase 3H / Phase 3H.1 remediation
+
+Phase 3H is committed at `a14c2cd552406bca28e5317b0d9bd75b1244b3d1`, tagged `phase-3h-employer-matching-pilot`. Phase 3H.1 reconciles documentation and hardens empty eligibility input. See [current completeness and production gates](docs/PHASE3H1_AUDIT_REMEDIATION.md). This is a bounded technical pilot, not production recruitment or professional verification. Phase 3I is not implemented.
+
+## Implemented training foundation (Phase 3B)
 
 Governed demo training now has a Course → Module → Lesson snapshot hierarchy, existing-competency/assessment links, scoped enrollment/assignment and revision-aware resumable progress APIs. **Training completion is not competence verification.** No production content approval, automatic evidence/award, upload or public Passport is enabled. See [training model](TRAINING_MODEL.md), [API](API.md) and [ADR 0005](docs/adr/0005-governed-training-and-progress.md). No new environment variables or secrets are required.
 
@@ -14,11 +18,11 @@ Initial reference pathways: Commercial Dairy Practice; Veterinary Pharmaceutical
 
 Phase 2 adds the 69 proposed assessable children, immutable assessment/item versions and blueprints, four demo cases, objective task grading, human criterion reviews/moderation/appeals, assessment-derived evidence, pathway/role gap analysis and saved development plans. Candidate development and staff assessment screens are available. See [Phase 2 completion](docs/PHASE2_COMPLETION.md).
 
-Not implemented: approved production examinations, real supervised simulation/practical/workplace capture, private document/image storage, final scoring/readiness policies, Skills Passport sharing, search/matching, vacancy workflows, payments or AI. Professional readiness remains NOT ASSESSED.
+Not implemented: approved production examinations, real supervised simulation/practical/workplace capture, private document/image storage, final scoring/readiness policies, public Skills Passport sharing, public candidate search, production recruitment, payments or AI. A private owner Passport and consented one-organisation/one-opportunity technical matching/manual shortlist pilot are implemented. Professional readiness remains NOT ASSESSED.
 
 ## Phase 3 setup checkpoint
 
-The Windows-verified authentication baseline is protected by `working-authentication-2026-10-20`. Phase 3A was accepted at `df6c0ca`; Phase 3B training foundations are implemented for review. The [earlier setup guide](docs/PHASE3_SETUP_CHECKPOINT.md) is historical; no authentication redesign or new secret configuration is part of training.
+The Windows-verified authentication baseline is protected by `working-authentication-2026-10-20`. Phase 3A was accepted at `df6c0ca`; Phases 3B–3H are committed; Phase 3H.1 is bounded remediation. The [earlier setup guide](docs/PHASE3_SETUP_CHECKPOINT.md) is historical; no authentication redesign or new secret configuration is part of training.
 
 ## Local development
 
@@ -39,7 +43,7 @@ npm test
 
 ## Managed authentication
 
-The owner clarified that no provider exists yet. Auth0 is recommended for the pilot; follow [the setup guide](docs/AUTH0_SETUP.md) and [authentication contract](docs/AUTHENTICATION.md). No insecure development sign-in fallback exists. Tests use an isolated synthetic issuer and signing key, never production credentials.
+The owner-reported Windows-verified Auth0 baseline is protected by `working-authentication-2026-10-20`. Historical setup records describe earlier checkpoints; follow [the setup guide](docs/AUTH0_SETUP.md) and [authentication contract](docs/AUTHENTICATION.md). No insecure development sign-in fallback exists. Tests use an isolated synthetic issuer and signing key, never production credentials.
 
 After placing configured API variables in ignored `.local/api.env` and web variables in ignored `apps/web/.env.local`:
 
@@ -60,11 +64,11 @@ These are separate terminal processes. API rebuild after edits: `npm run build:f
 
 There are no approved professional standards, issued certificates or production deployments in this release. Phases 1–2 support identity, diagnostic and development foundations, not operational recruitment or certification.
 
-Current authentication status and private configuration steps: [Auth0 checkpoint](docs/AUTH0_CHECKPOINT.md). Public tenant metadata is verified; real browser login remains pending.
+Current authentication status and private configuration steps: [Auth0 checkpoint](docs/AUTH0_CHECKPOINT.md). The Windows-verified baseline remains protected. The pre-3I audit passed synthetic regressions; it did not repeat live provider/browser verification.
 
 ## Phase 3C — dairy-first case foundation
 
-The proposed Transition & Fresh Cow case template, case authoring API and private evidence manifest extend the existing assessment system. Read [DAIRY_CASE_MODEL.md](DAIRY_CASE_MODEL.md) for the 27-area competency coverage map, versioning, API usage and deliberately inactive professional decisions. Demo delivery does not verify competence. Phase 3C remains uncommitted for owner review.
+The proposed Transition & Fresh Cow case template, case authoring API and private evidence manifest extend the existing assessment system. Read [DAIRY_CASE_MODEL.md](DAIRY_CASE_MODEL.md) for the 27-area competency coverage map, versioning, API usage and deliberately inactive professional decisions. Demo delivery does not verify competence. Phase 3C is committed at `4e69d66`; later bounded phases through 3H are also committed.
 
 ## Phase 3D — functional dairy pilot
 

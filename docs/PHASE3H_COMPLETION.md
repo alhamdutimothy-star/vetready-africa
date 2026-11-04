@@ -1,6 +1,10 @@
 # Phase 3H implementation and validation report
 
-## Implementation summary
+## Current checkpoint and historical-report scope
+
+Phase 3H was subsequently committed as `a14c2cd552406bca28e5317b0d9bd75b1244b3d1` and tagged `phase-3h-employer-matching-pilot`. The narrative and Git inventory below preserve the historical pre-commit report. References to uncommitted changes, Phase 3G HEAD and commit authorization describe that earlier state, not current Git status. See [Phase 3H.1 remediation](PHASE3H1_AUDIT_REMEDIATION.md) for current validation and blockers.
+
+## Implementation summary (historical)
 
 Implemented the authorized bounded technical pilot: one existing employer organisation, one opportunity with immutable requirement versions, declared technical eligibility, explainable immutable match receipts, candidate-controlled consent and a separate employer-safe projection, human shortlist events and atomic audit/provenance records. See [architecture and boundaries](PHASE3H_ARCHITECTURE.md).
 

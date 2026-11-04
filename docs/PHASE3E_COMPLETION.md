@@ -1,5 +1,8 @@
 # Phase 3E completion report
 
+Historical checkpoint report: Phase 3E was subsequently committed at `33ef819`; later phases through Phase 3H are committed at `a14c2cd`. Pre-commit status, validation counts and next-phase restrictions below describe that earlier checkpoint, not current Git status or current scope authorization. See [current remediation and readiness register](PHASE3H1_AUDIT_REMEDIATION.md).
+
+
 ## Checkpoint and scope
 
 Starting HEAD: `f7c26c232d7c2e27cf739b63533f4120f763d554`.

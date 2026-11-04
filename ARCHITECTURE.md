@@ -1,5 +1,14 @@
 # System architecture proposal
 
+## Current status — Phase 3H / bounded Phase 3H.1 remediation
+
+The committed checkpoint is `a14c2cd` / `phase-3h-employer-matching-pilot`. See [current architecture, completeness and readiness register](docs/PHASE3H1_AUDIT_REMEDIATION.md). Phases 3C–3H are implemented as bounded foundations/pilots. Phase 3I is not implemented or authorized. Professional practical verification, readiness, certification and professional weighted matching remain blocked/unconfigured.
+
+## Historical design and milestone records
+
+The sections below preserve earlier proposals and checkpoint-specific status, including superseded phase numbering and provider setup statements. They are historical, not current delivery or production-readiness claims. Private storage, workers/outbox and public search in proposed designs are not implemented production services. Existing end-to-end tests use Vitest and HTTP against built services; Playwright browser testing remains proposed.
+
+
 ## IMPLEMENTED — Phase 3B training foundation
 
 Course-version aggregates pin module/lesson snapshots; enrollments and progress reference exact versions. The new training controller/service/repository reuses existing JWT guards, database-managed permissions, PostgreSQL transactions and audit_events. Competency and assessment links reference existing authoritative definitions; no question, evidence, scoring or readiness subsystem is added. See [TRAINING_MODEL.md](TRAINING_MODEL.md) and [ADR 0005](docs/adr/0005-governed-training-and-progress.md). Professional content approval remains disabled.

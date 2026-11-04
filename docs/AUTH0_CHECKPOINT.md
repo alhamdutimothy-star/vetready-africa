@@ -1,5 +1,8 @@
 # Auth0 integration checkpoint
 
+Current baseline: owner-reported Windows authentication is protected by `working-authentication-2026-10-20`. The pre-3I audit confirmed the protected implementation unchanged and 59 dedicated synthetic authentication/session/OIDC/diagnostic checks passed. Earlier provider/exchange pending statements record historical setup status and do not supersede the Windows checkpoint. No fresh live-provider exercise is claimed. Phase 3H.1 changes no authentication code, configuration or tenant settings.
+
+
 The configured development tenant is `vetreadyafrica-dev.eu.auth0.com`. Authentication remains the existing OIDC authorization-code/S256-PKCE adapter, not Auth0 Quickstart boilerplate. API scope authorization and database-managed VetReady roles remain separate. Auth0 role claims grant no VetReady permissions.
 
 ## Configuration and private setup

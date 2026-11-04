@@ -1,5 +1,8 @@
 # Phase 3D completion — Functional Dairy Competency Pilot
 
+Historical checkpoint report: Phase 3D was subsequently committed at `f7c26c2`; later phases through Phase 3H are committed at `a14c2cd`. Pre-commit status, validation counts and next-phase restrictions below describe that earlier checkpoint, not current Git status or current scope authorization. See [current remediation and readiness register](PHASE3H1_AUDIT_REMEDIATION.md).
+
+
 Status: implemented and validated for owner review. All Phase 3D changes remain uncommitted. No feature push, merge, tag, deployment or subsequent-phase work was performed.
 
 ## Starting checkpoint

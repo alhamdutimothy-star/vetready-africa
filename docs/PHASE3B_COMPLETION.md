@@ -1,5 +1,8 @@
 # Phase 3B exit report — governed training and learning progress
 
+Historical checkpoint report: Phase 3B was subsequently committed at `6d8cc7b`; later phases through Phase 3H are committed at `a14c2cd`. Pre-commit status, validation counts and next-phase restrictions below describe that earlier checkpoint, not current Git status or current scope authorization. See [current remediation and readiness register](PHASE3H1_AUDIT_REMEDIATION.md).
+
+
 **IMPLEMENTED and validated; uncommitted for owner review. STOP before Phase 3C.**
 
 ## Starting checkpoint

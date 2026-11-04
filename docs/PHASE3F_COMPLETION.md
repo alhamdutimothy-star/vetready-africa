@@ -1,5 +1,8 @@
 # Phase 3F — Practical Competency Verification reconstruction
 
+Historical checkpoint report: Phase 3F was subsequently committed at `87f214e`; later phases through Phase 3H are committed at `a14c2cd`. Pre-commit status, validation counts and next-phase restrictions below describe that earlier checkpoint, not current Git status or current scope authorization. See [current remediation and readiness register](PHASE3H1_AUDIT_REMEDIATION.md).
+
+
 Baseline: `33ef819dd7c23631eb5d10d6d98cbb81779086f5`.
 Branch: `feat/phase-3-training-verification`.
 

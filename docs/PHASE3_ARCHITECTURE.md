@@ -1,5 +1,14 @@
 # Phase 3 architecture and implementation boundary
 
+## Current status — Phase 3H / bounded Phase 3H.1 remediation
+
+The committed checkpoint is `a14c2cd` / `phase-3h-employer-matching-pilot`. See [current architecture, completeness and readiness register](PHASE3H1_AUDIT_REMEDIATION.md). Phases 3C–3H are implemented as bounded foundations/pilots. Phase 3I is not implemented or authorized. Professional practical verification, readiness, certification and professional weighted matching remain blocked/unconfigured.
+
+## Historical design and milestone records
+
+The sections below preserve earlier proposals and checkpoint-specific status, including superseded phase numbering and provider setup statements. They are historical, not current delivery or production-readiness claims. Private storage, workers/outbox and public search in proposed designs are not implemented production services. Existing end-to-end tests use Vitest and HTTP against built services; Playwright browser testing remains proposed.
+
+
 ## IMPLEMENTED: Phase 3B governed training
 
 Migration 010 and training API/domain/contracts add immutable demo course snapshots, reusable competency/assessment references and candidate-owned, resumable learning participation. Production approval and competence awards remain disabled. The accepted Phase 3A checkpoint was `df6c0ca`; authentication and migrations 001–009 are protected. See [training model](../TRAINING_MODEL.md) and [ADR 0005](adr/0005-governed-training-and-progress.md). Phase 3C remains deferred.

@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — Phase 3H.1 audit remediation
+
+- Reconciled documentation with committed Phase 3H (`a14c2cd`); earlier checkpoint entries below are historical.
+- Empty mandatory eligibility returns `UNCONFIGURED`; existing nonempty technical gate behavior is retained.
+- Recorded completeness, governance and production blockers in [the remediation report](docs/PHASE3H1_AUDIT_REMEDIATION.md). Phase 3I is not implemented.
+
+## Committed Phase 3H checkpoint
+
+- One-organisation/one-opportunity consent-bound matching/manual shortlisting and migration 016.
+- Prior Phase 3F demo review and Phase 3G private profiles/Passport remain bounded, without professional awards or production recruitment.
+
 ## Unreleased — Phase 3B governed training
 
 - Added forward-only 010: course/module/lesson snapshots, existing taxonomy/assessment links, enrollment/assignment and resumable revision-aware progress.

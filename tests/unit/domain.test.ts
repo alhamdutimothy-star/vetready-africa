@@ -43,6 +43,8 @@ describe('evidence and eligibility safeguards', () => {
   ] as const)('submission of %s is never verification', (source) =>
     expect(initialEvidenceStatus(source)).toBe('SUBMITTED'),
   );
+  it('empty mandatory requirements are unconfigured, never eligible', () =>
+    expect(mandatoryEligibility([])).toBe('UNCONFIGURED'));
   it('mandatory fail defeats unrelated strengths', () =>
     expect(mandatoryEligibility(['PASS', 'FAIL', 'PASS'])).toBe('INELIGIBLE'));
   it('unknown is review, not eligibility', () =>

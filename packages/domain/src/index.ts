@@ -44,10 +44,16 @@ export function initialEvidenceStatus(_source: EvidenceSource): 'SUBMITTED' {
   void _source;
   return 'SUBMITTED';
 }
-export type Eligibility = 'ELIGIBLE' | 'INELIGIBLE' | 'NEEDS_REVIEW';
+// Technical gates only: no result grants professional qualification.
+export type Eligibility =
+  | 'ELIGIBLE'
+  | 'INELIGIBLE'
+  | 'NEEDS_REVIEW'
+  | 'UNCONFIGURED';
 export function mandatoryEligibility(
   results: readonly ('PASS' | 'FAIL' | 'UNKNOWN')[],
 ): Eligibility {
+  if (results.length === 0) return 'UNCONFIGURED';
   if (results.includes('FAIL')) return 'INELIGIBLE';
   if (results.includes('UNKNOWN')) return 'NEEDS_REVIEW';
   return 'ELIGIBLE';
