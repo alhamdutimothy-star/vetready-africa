@@ -2,7 +2,6 @@
 
 Current baseline: owner-reported Windows authentication is protected by `working-authentication-2026-10-20`. The pre-3I audit confirmed the protected implementation unchanged and 59 dedicated synthetic authentication/session/OIDC/diagnostic checks passed. Earlier provider/exchange pending statements record historical setup status and do not supersede the Windows checkpoint. No fresh live-provider exercise is claimed. Phase 3H.1 changes no authentication code, configuration or tenant settings.
 
-
 ## Provider contract
 
 Use Auth0 for the pilot, or a compatible managed OpenID Connect provider supporting authorization code + S256 PKCE, discovery, JWKS, signed JWT access tokens, separate web-client and API audiences, and the `vetready:access` scope. RS256 is required. Configure refresh-token/long-lived sessions later; this phase deliberately uses short sessions without retaining refresh tokens.

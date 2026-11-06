@@ -46,10 +46,7 @@ export function initialEvidenceStatus(_source: EvidenceSource): 'SUBMITTED' {
 }
 // Technical gates only: no result grants professional qualification.
 export type Eligibility =
-  | 'ELIGIBLE'
-  | 'INELIGIBLE'
-  | 'NEEDS_REVIEW'
-  | 'UNCONFIGURED';
+  'ELIGIBLE' | 'INELIGIBLE' | 'NEEDS_REVIEW' | 'UNCONFIGURED';
 export function mandatoryEligibility(
   results: readonly ('PASS' | 'FAIL' | 'UNKNOWN')[],
 ): Eligibility {
@@ -80,3 +77,4 @@ export * from './practical';
 export * from './competency-profile';
 export * from './recruitment';
 export * from './development';
+export * from './governed-verification';

@@ -1,7 +1,9 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { transitionFreshCowTemplate as originalTemplate } from '../../apps/api/src/cases/transition-fresh-cow.content';
 import { readFileSync, readdirSync } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { Agent } from 'node:http';
 import { Pool } from 'pg';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import request from 'supertest';
@@ -28,18 +30,22 @@ let candidateUser: string,
   attemptId: string;
 let before: Record<string, unknown>, after: Record<string, unknown>;
 let reviewRevision = 0;
+const transport = new Agent({ keepAlive: true });
 const api = () => request(app.getHttpServer());
 const get = (p: string, t = candidate) =>
   api()
     .get('/api/v1' + p)
+    .agent(transport)
     .auth(t, { type: 'bearer' });
 const post = (p: string, t = candidate) =>
   api()
     .post('/api/v1' + p)
+    .agent(transport)
     .auth(t, { type: 'bearer' });
 const put = (p: string, t = candidate) =>
   api()
     .put('/api/v1' + p)
+    .agent(transport)
     .auth(t, { type: 'bearer' });
 const detail = async () =>
   (await get(`/candidates/me/dairy-pilot/attempts/${attemptId}`).expect(200))
@@ -60,7 +66,7 @@ async function snapshot(tables: string[]) {
         : 'to_jsonb(t)';
     result[table] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]') AS rows FROM ${table} t`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]') AS rows FROM ${table} t WHERE ${verificationLegacyCatalogPredicate(table)}`,
       )
     ).rows[0].rows;
   }
@@ -101,6 +107,7 @@ beforeAll(async () => {
     NODE_ENV: 'test',
     PORT: 4000,
   });
+  await app.listen(0, '127.0.0.1');
   candidate = await issuer.token('pilot-candidate');
   other = await issuer.token('pilot-other');
   admin = await issuer.token('pilot-admin');
@@ -222,9 +229,31 @@ beforeAll(async () => {
   after = await snapshot(tables);
 }, 120000);
 afterAll(async () => {
+  transport.destroy();
   await app?.close();
+  if (app) expect(app.getHttpServer().listening).toBe(false);
   await pool?.end();
   await issuer?.close();
+});
+it('reuses its owned loopback listener and pooled sockets without serializing concurrent requests', async () => {
+  const server = app.getHttpServer(),
+    address = server.address();
+  expect(address).not.toBeNull();
+  let opened = 0;
+  const connected = () => {
+    opened++;
+  };
+  server.on('connection', connected);
+  try {
+    for (let n = 0; n < 12; n++) await get('/me').expect(200);
+    expect(opened).toBeLessThanOrEqual(1);
+    expect(transport.maxSockets).toBe(Infinity);
+    const responses = await Promise.all([get('/me'), get('/me')]);
+    expect(responses.map((r) => r.status)).toEqual([200, 200]);
+    expect(server.address()).toEqual(address);
+  } finally {
+    server.off('connection', connected);
+  }
 });
 it('upgrades populated 011 without modifying any prior user, browser session, assessment, review, evidence, learning or audit row', () => {
   expect(after).toEqual(before);
@@ -783,7 +812,7 @@ it('keeps migration/seed reruns checksummed and preserves all finalized feedback
   expect(
     (await pool.query('SELECT * FROM schema_migrations ORDER BY name')).rows,
   ).toEqual(migrations);
-  expect(migrations).toHaveLength(17);
+  expect(migrations).toHaveLength(18);
   expect(
     (
       await pool.query(

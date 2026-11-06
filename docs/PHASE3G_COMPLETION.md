@@ -2,7 +2,6 @@
 
 Historical checkpoint report: Phase 3G was subsequently committed at `321948f`; later phases through Phase 3H are committed at `a14c2cd`. Pre-commit status, validation counts and next-phase restrictions below describe that earlier checkpoint, not current Git status or current scope authorization. See [current remediation and readiness register](PHASE3H1_AUDIT_REMEDIATION.md).
 
-
 Validation date: 25 October 2026. Implementation remains unstaged and uncommitted.
 
 ## A. Implementation summary

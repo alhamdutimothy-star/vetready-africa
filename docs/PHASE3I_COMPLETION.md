@@ -51,19 +51,19 @@ Initial validation issues were resolved before the final runs: a fixture table-n
 
 ### Added coverage
 
-| Requirement | Coverage |
-| --- | --- |
-| A — plan creation | Current profile receipt → immutable owner plan; fresh server receipt IDs prevent selecting an older standalone snapshot |
-| B — explicit mapping | Exact child/group/pathway relationships, governed release, no title inference |
-| C — no mapping | Unmapped needs retained with no fabricated recommendation |
-| D/E — unconfigured/unknown | Explicit UNCONFIGURED policy and UNKNOWN evidence; no affirmative professional decision |
-| F — isolation | Anonymous and cross-owner reads/starts denied; request/SQL ownership overrides rejected |
-| G — completion | Canonical progress completion with gapResolved=false; no evidence upgrade |
-| H — follow-up | Exact governed assessment links, existing start/resume, explicit absence when no link exists |
-| I — history | Original plan digest/items and populated assessment/evidence preserved |
-| J — provenance | Immutable receipts, request/actor references, idempotency, and plan/enrollment audit-failure rollback |
-| K — dairy journey | Built private web: gaps → plan → existing dairy learning → progress → separate case follow-up; no anonymous data or tokens |
-| L — regression | Complete Phase 1–3I suite, authentication and professional/privacy boundaries |
+| Requirement                | Coverage                                                                                                                   |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| A — plan creation          | Current profile receipt → immutable owner plan; fresh server receipt IDs prevent selecting an older standalone snapshot    |
+| B — explicit mapping       | Exact child/group/pathway relationships, governed release, no title inference                                              |
+| C — no mapping             | Unmapped needs retained with no fabricated recommendation                                                                  |
+| D/E — unconfigured/unknown | Explicit UNCONFIGURED policy and UNKNOWN evidence; no affirmative professional decision                                    |
+| F — isolation              | Anonymous and cross-owner reads/starts denied; request/SQL ownership overrides rejected                                    |
+| G — completion             | Canonical progress completion with gapResolved=false; no evidence upgrade                                                  |
+| H — follow-up              | Exact governed assessment links, existing start/resume, explicit absence when no link exists                               |
+| I — history                | Original plan digest/items and populated assessment/evidence preserved                                                     |
+| J — provenance             | Immutable receipts, request/actor references, idempotency, and plan/enrollment audit-failure rollback                      |
+| K — dairy journey          | Built private web: gaps → plan → existing dairy learning → progress → separate case follow-up; no anonymous data or tokens |
+| L — regression             | Complete Phase 1–3I suite, authentication and professional/privacy boundaries                                              |
 
 ## Remaining limitations, technical debt and production blockers
 

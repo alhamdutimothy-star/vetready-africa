@@ -1,3 +1,4 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import { randomUUID, createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -51,7 +52,7 @@ async function snapshotTables(tables: string[]) {
     if (!/^[a-z_]+$/.test(table)) throw Error('Unsafe table');
     result[table] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]') AS rows FROM ${table} t`,
+        `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]') AS rows FROM ${table} t WHERE ${verificationLegacyCatalogPredicate(table)}`,
       )
     ).rows[0].rows;
   }
@@ -362,7 +363,7 @@ it('preserves populated 014 data, sessions, evidence, training, private reviews 
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(17);
+  expect(rows).toHaveLength(18);
   for (const row of rows)
     expect(row.checksum).toBe(
       createHash('sha256')

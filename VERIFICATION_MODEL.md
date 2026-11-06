@@ -1,5 +1,11 @@
 # Verification model — Phase 3A
 
+## Current extension — Phase 3J (uncommitted)
+
+The implemented Phase 3J governed workflow extends the earlier foundation without promoting Phase 3F demonstration records. Exact approved rubric/process/child and current assessor authorization are required for effective VERIFIED outcomes. The historical Phase 3A description below remains a record of that earlier layer. See [ADR 0011](docs/adr/0011-governance-gated-verification.md).
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## IMPLEMENTED
 
 The protected authentication baseline stays unchanged. Domain roles remain in PostgreSQL, not Auth0. Existing Phase 2 assessment verification keeps approved-content, independent assigned assessor, latest human review and independent moderation constraints.

@@ -1,5 +1,11 @@
 # Explainable scoring and matching
 
+## Current extension — Phase 3J (uncommitted)
+
+Phase 3J adds no scores, weights, pass marks, facet accumulation or readiness thresholds. Explicit assessor decisions require governed criteria/version and authority references; outcomes never automatically award Job Ready, Field Ready, certification or licensing.
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## Phase 3B — participation summaries only
 
 Course/module completion derives from completed lesson rows for the exact snapshot. Counts and timestamps describe participation, not mastery or employability. There is no training-to-evidence/verification write path and no score, pass mark, weight, readiness threshold or professional gate added. Existing Phase 2 assessment scoring and Phase 3A evidence safeguards remain authoritative and unchanged.

@@ -1,3 +1,4 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { Pool } from 'pg';
 import { createHash, randomUUID } from 'node:crypto';
@@ -40,7 +41,7 @@ async function snapshot(tables: string[]) {
         : 'to_jsonb(t)';
     result[table] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(${projection} ORDER BY (${projection})::text),'[]'::jsonb) AS rows FROM ${table} t`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY (${projection})::text),'[]'::jsonb) AS rows FROM ${table} t WHERE ${verificationLegacyCatalogPredicate(table)}`,
       )
     ).rows[0].rows;
   }

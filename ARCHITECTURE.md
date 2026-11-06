@@ -1,5 +1,11 @@
 # System architecture proposal
 
+## Current extension — Phase 3J (uncommitted)
+
+Phase 3J adds immutable review/assignment events and governed rubric/assessor references over existing evidence identities. Historical demo workflows and engine-1 receipts are preserved. See [ADR 0011](docs/adr/0011-governance-gated-verification.md) and [current validation](docs/PHASE3J_COMPLETION.md).
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## Current implementation — Phase 3I bounded development workflow
 
 Starting protected checkpoint: `abdfe9d555028fd45c384cff9bf99904be787aa6`, tag `phase-3h1-audit-remediation`. Phase 3I changes are uncommitted for review. See [Phase 3I implementation and validation](docs/PHASE3I_COMPLETION.md). Immutable owner plans reference existing competency-profile receipts; explicit released training mappings connect needs to existing enrollments, live progress and separate assessment follow-up. Dairy uses its existing governed demo delivery; a generic reading view supports other existing course snapshots without adding pathway content. Unknown evidence and unconfigured requirements remain explicit. Learning completion cannot close a competency gap or grant readiness. No professional policy, authentication change or employer-access expansion is included.
@@ -9,7 +15,6 @@ The next scope remains subject to independent review; professional governance, p
 ## Historical design and milestone records
 
 The sections below preserve earlier proposals and checkpoint-specific status, including superseded phase numbering and provider setup statements. They are historical, not current delivery or production-readiness claims. Private storage, workers/outbox and public search in proposed designs are not implemented production services. Existing end-to-end tests use Vitest and HTTP against built services; Playwright browser testing remains proposed.
-
 
 ## IMPLEMENTED — Phase 3B training foundation
 

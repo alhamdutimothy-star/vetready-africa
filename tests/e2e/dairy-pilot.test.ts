@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import { developmentDetailSchema } from '@vetready/contracts';
+import {
+  developmentDetailSchema,
+  verificationProjectionSchema,
+} from '@vetready/contracts';
 import { employerExplanationSchema } from '../../apps/web/lib/recruitment';
 import { competencyProfileResponseSchema } from '../../apps/web/lib/competency-profile';
 import {
@@ -17,6 +20,10 @@ import type { Pool } from 'pg';
 import { createApp } from '../../apps/api/dist/app';
 import { encryptCookie } from '../../apps/web/lib/oidc';
 import { prepareTestDatabase } from '../helpers/database';
+import {
+  syntheticVerificationGovernance,
+  authorizeSyntheticAssessor,
+} from '../helpers/verification';
 import { testIssuer } from '../helpers/issuer';
 let web: ChildProcess,
   app: INestApplication,
@@ -30,6 +37,7 @@ let origin: string,
   candidateCookie: string,
   adminCookie: string,
   assessorCookie: string,
+  syntheticSessionKey: string,
   caseId: string,
   attemptId: string;
 async function http(
@@ -61,6 +69,8 @@ beforeAll(async () => {
   });
   await app.listen(0, '127.0.0.1');
   apiOrigin = await app.getUrl();
+});
+beforeAll(async () => {
   const listener = createServer();
   listener.listen(0, '127.0.0.1');
   await once(listener, 'listening');
@@ -69,7 +79,7 @@ beforeAll(async () => {
   const port = address.port;
   await new Promise<void>((resolve) => listener.close(() => resolve()));
   origin = `http://127.0.0.1:${port}`;
-  const syntheticSessionKey = randomBytes(32).toString('hex');
+  syntheticSessionKey = randomBytes(32).toString('hex');
   web = spawn(
     process.execPath,
     [
@@ -109,6 +119,8 @@ beforeAll(async () => {
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   if (!ready) throw new Error('Web test server unavailable');
+});
+beforeAll(async () => {
   candidate = await identity.token('dairy-web-candidate');
   admin = await identity.token('dairy-web-admin');
   assessor = await identity.token('dairy-web-assessor');
@@ -822,4 +834,574 @@ it('connects private dairy gaps to explicitly mapped demo learning and separate 
   ).toBe(201);
   const anonymous = await (await fetch(url)).text();
   expect(anonymous).not.toContain('My development plan');
+});
+it('continues the completed dairy development journey through governed verification and the private Passport', async () => {
+  const plans = z
+    .array(z.object({ id: z.uuid() }))
+    .parse(
+      await (
+        await http('/candidates/me/development-workflows', candidate)
+      ).json(),
+    );
+  const plan = developmentDetailSchema.parse(
+    await (
+      await http(
+        `/candidates/me/development-workflows/${plans[0]!.id}`,
+        candidate,
+      )
+    ).json(),
+  );
+  expect(
+    plan.courses.some((c) => c.progress.state === 'LEARNING_COMPLETED'),
+  ).toBe(true);
+  expect(plan.courses.every((c) => c.progress.gapResolved === false)).toBe(
+    true,
+  );
+  const before = competencyProfileResponseSchema.parse(
+    await (await http('/candidates/me/competency-profile', candidate)).json(),
+  );
+  expect(before.governedVerification ?? []).toEqual([]);
+  const user = async (token: string) =>
+    z.object({ id: z.uuid() }).parse(await (await http('/me', token)).json())
+      .id;
+  const governor = await identity.token('synthetic-verification-governor');
+  const g = await syntheticVerificationGovernance(pool, {
+    governor: await user(governor),
+    author: await user(admin),
+    assessor: await user(assessor),
+    path: plan.pathwayVersionId,
+  });
+  // Delivered demo definitions cannot be approved in place. Add only a clearly
+  // synthetic software competency before releasing its explicitly mapped course.
+  const courseResponse = await http('/admin/training/courses', admin, 'POST', {
+    code: 'SYNTHETIC_3J_' + randomUUID().replaceAll('-', '').toUpperCase(),
+    content: {
+      title: 'Synthetic verification protocol practice',
+      pathwayVersionIds: [g.path],
+      competencyMappings: [
+        { pathwayVersionId: g.path, childVersionId: g.child },
+      ],
+      modules: [
+        {
+          code: 'PROTOCOL',
+          title: 'Software fixture',
+          lessons: [
+            {
+              code: 'READING',
+              title: 'Synthetic practice',
+              body: 'Software protocol fixture only. No veterinary standard.',
+            },
+          ],
+        },
+      ],
+    },
+  });
+  expect(courseResponse.status).toBe(201);
+  const course = z
+    .object({ courseVersionId: z.uuid() })
+    .parse(await courseResponse.json()).courseVersionId;
+  expect(
+    (
+      await http(
+        `/admin/training/versions/${course}/release-demo`,
+        admin,
+        'POST',
+      )
+    ).status,
+  ).toBe(201);
+  const receipt = await http(
+    '/candidates/me/development-workflows',
+    candidate,
+    'POST',
+    { commandId: randomUUID(), pathwayVersionId: g.path },
+  );
+  expect(receipt.status).toBe(201);
+  const nextPlan = z.object({ id: z.uuid() }).parse(await receipt.json()).id;
+  const needs = developmentDetailSchema.parse(
+    await (
+      await http(`/candidates/me/development-workflows/${nextPlan}`, candidate)
+    ).json(),
+  );
+  expect(
+    needs.items
+      .find((i) => i.childVersionId === g.child)
+      ?.recommendations.some((r) => r.courseVersionId === course),
+  ).toBe(true);
+  const enrolled = await http(
+    `/candidates/me/development-workflows/${nextPlan}/courses/${course}/start`,
+    candidate,
+    'POST',
+  );
+  expect(enrolled.status).toBe(201);
+  const enrollment = z.object({ id: z.uuid() }).parse(await enrolled.json()).id;
+  const learning = z
+    .object({
+      course: z.object({
+        modules: z.array(
+          z.object({
+            lessons: z.array(z.object({ id: z.uuid(), revision: z.number() })),
+          }),
+        ),
+      }),
+    })
+    .parse(
+      await (
+        await http(
+          `/candidates/me/training/enrollments/${enrollment}`,
+          candidate,
+        )
+      ).json(),
+    );
+  for (const m of learning.course.modules)
+    for (const l of m.lessons)
+      expect(
+        (
+          await http(
+            `/candidates/me/training/enrollments/${enrollment}/lessons/${l.id}/progress`,
+            candidate,
+            'PUT',
+            {
+              commandId: randomUUID(),
+              expectedRevision: l.revision,
+              state: 'COMPLETED',
+              resumePosition: 0,
+            },
+          )
+        ).status,
+      ).toBe(200);
+  const completed = developmentDetailSchema.parse(
+    await (
+      await http(`/candidates/me/development-workflows/${nextPlan}`, candidate)
+    ).json(),
+  );
+  expect(
+    completed.courses.find((c) => c.id === course)?.progress,
+  ).toMatchObject({ state: 'LEARNING_COMPLETED', gapResolved: false });
+  const unresolved = competencyProfileResponseSchema.parse(
+    await (await http('/candidates/me/competency-profile', candidate)).json(),
+  );
+  expect(unresolved.governedVerification ?? []).toEqual([]);
+  expect(
+    unresolved.competencies
+      .find((c) => c.id === g.child)
+      ?.facets.find((f) => f.facet === 'PRACTICALLY_VERIFIED')?.state,
+  ).not.toBe('VERIFIED');
+  const created = await http(
+    '/candidates/me/verifications',
+    candidate,
+    'POST',
+    {
+      commandId: randomUUID(),
+      rubricVersionId: g.rubric,
+      summary: 'PRIVATE_3J_ACCOUNT synthetic owned supervised evidence',
+      activity: 'Synthetic software protocol activity only',
+      performedAt: '2026-01-01T00:00:00.000Z',
+      locationType: 'Synthetic facility',
+      process: 'IN_PERSON',
+      declaration: true,
+    },
+  );
+  expect(created.status).toBe(201);
+  const id = z.object({ id: z.uuid() }).parse(await created.json()).id;
+  expect(
+    (
+      await http(`/admin/verifications/${id}/assignments`, admin, 'POST', {
+        commandId: randomUUID(),
+        expectedRevision: 0,
+        assessorId: await user(assessor),
+        reason: 'Synthetic governed assignment',
+      })
+    ).status,
+  ).toBe(201);
+  expect(
+    (
+      await http(`/assessor/verifications/${id}/events`, assessor, 'POST', {
+        kind: 'START_REVIEW',
+        commandId: randomUUID(),
+        expectedRevision: 1,
+      })
+    ).status,
+  ).toBe(201);
+  const review = z
+    .object({ evidence: z.object({ id: z.uuid() }) })
+    .parse(
+      await (await http(`/assessor/verifications/${id}`, assessor)).json(),
+    );
+  expect(
+    (
+      await http(`/assessor/verifications/${id}/events`, assessor, 'POST', {
+        kind: 'DECISION',
+        reviewKind: 'PRIMARY',
+        commandId: randomUUID(),
+        expectedRevision: 2,
+        outcome: 'VERIFIED',
+        conflictDeclaredClear: true,
+        rationale: 'PRIVATE_3J_REVIEW synthetic structured observation',
+        candidateExplanation:
+          'Synthetic software verification decision recorded',
+        findings: g.criteria.map((c) => ({
+          criterionId: c.id,
+          criterionVersion: c.version,
+          observation: 'Synthetic supervised software fixture observed',
+          outcome: 'DEMONSTRATED',
+          rationale: 'Synthetic software protocol only',
+          evidenceIds: [review.evidence.id],
+        })),
+      })
+    ).status,
+  ).toBe(201);
+  const final = competencyProfileResponseSchema.parse(
+    await (await http('/candidates/me/competency-profile', candidate)).json(),
+  );
+  expect(
+    final.governedVerification!.find((v) => v.caseId === id),
+  ).toMatchObject({
+    verified: true,
+    evidenceLevelAfter: 'PRACTICALLY_VERIFIED',
+    readiness: 'UNCONFIGURED',
+  });
+  expect(final.readiness.determination).toBeNull();
+  for (const route of ['/skills-passport', `/verifications/owner/${id}`]) {
+    const html = await (
+      await fetch(origin + route, { headers: { cookie: candidateCookie } })
+    ).text();
+    expect(html).toContain(
+      route === '/skills-passport'
+        ? 'Verified evidence'
+        : 'Synthetic software verification decision recorded',
+    );
+    expect(html).not.toContain('PRIVATE_3J_ACCOUNT');
+    expect(html).not.toContain('PRIVATE_3J_REVIEW');
+    expect(html).not.toContain(candidate);
+  }
+  expect(
+    await (await fetch(origin + `/verifications/owner/${id}`)).text(),
+  ).not.toContain('Synthetic software verification decision recorded');
+});
+
+it('removes effective verification from the built profile/Passport after reviewer recusal without rewriting its decision', async () => {
+  const rows = z
+    .array(verificationProjectionSchema)
+    .parse(
+      await (await http('/candidates/me/verifications', candidate)).json(),
+    );
+  const id = rows.find((v) => v.verified)!.caseId;
+  const history = z
+    .object({ revision: z.number() })
+    .parse(
+      await (
+        await http('/candidates/me/verifications/' + id, candidate)
+      ).json(),
+    );
+  const before = (
+    await pool.query(
+      "SELECT * FROM verification_case_events WHERE case_id=$1 AND kind='DECISION' ORDER BY revision",
+      [id],
+    )
+  ).rows;
+  expect(
+    (
+      await http(
+        '/assessor/verifications/' + id + '/events',
+        assessor,
+        'POST',
+        {
+          kind: 'RECUSE',
+          commandId: randomUUID(),
+          expectedRevision: history.revision,
+          category: 'GENERAL_DECLARED_CONFLICT',
+          reason: 'Synthetic conflict discovered after review',
+        },
+      )
+    ).status,
+  ).toBe(201);
+  const profile = competencyProfileResponseSchema.parse(
+    await (await http('/candidates/me/competency-profile', candidate)).json(),
+  );
+  expect(
+    profile.governedVerification!.find((v) => v.caseId === id),
+  ).toMatchObject({
+    verified: false,
+    evidenceLevelAfter: 'SELF_DECLARED',
+    readiness: 'UNCONFIGURED',
+  });
+  for (const route of ['/skills-passport', '/verifications/owner/' + id]) {
+    const html = await (
+      await fetch(origin + route, { headers: { cookie: candidateCookie } })
+    ).text();
+    expect(html).toContain('Verification is not currently effective');
+    expect(html).not.toContain('PRIVATE_3J_REVIEW');
+    expect(html).not.toContain('PRIVATE_3J_ACCOUNT');
+  }
+  expect((await http('/assessor/verifications/' + id, assessor)).status).toBe(
+    404,
+  );
+  expect(
+    (
+      await pool.query(
+        "SELECT * FROM verification_case_events WHERE case_id=$1 AND kind='DECISION' ORDER BY revision",
+        [id],
+      )
+    ).rows,
+  ).toEqual(before);
+});
+it('removes a moderated professional claim from built candidate views after supporting primary authority revocation', async () => {
+  const user = async (token: string) =>
+    z.object({ id: z.uuid() }).parse(await (await http('/me', token)).json())
+      .id;
+  const governor = await identity.token('synthetic-chain-governor');
+  const moderator = await identity.token('synthetic-chain-moderator');
+  const governorId = await user(governor),
+    moderatorId = await user(moderator);
+  for (const role of ['ASSESSOR', 'ADMIN'])
+    await pool.query(
+      "INSERT INTO user_role_assignments(user_id,role_code,role_scope,reason) VALUES($1,$2,'PLATFORM','Synthetic moderation protocol fixture')",
+      [moderatorId, role],
+    );
+  const g = await syntheticVerificationGovernance(pool, {
+    governor: governorId,
+    author: await user(admin),
+    assessor: await user(assessor),
+    moderation: true,
+  });
+  await authorizeSyntheticAssessor(pool, governorId, moderatorId, g.rubric);
+  const submitted = await http(
+    '/candidates/me/verifications',
+    candidate,
+    'POST',
+    {
+      commandId: randomUUID(),
+      rubricVersionId: g.rubric,
+      summary: 'PRIVATE_AUTHORITY_CHAIN_ACCOUNT synthetic software fixture',
+      activity: 'Synthetic authority chain protocol',
+      performedAt: '2026-01-01T00:00:00.000Z',
+      locationType: 'Synthetic audit facility',
+      process: 'IN_PERSON',
+      declaration: true,
+    },
+  );
+  expect(submitted.status).toBe(201);
+  const id = z.object({ id: z.uuid() }).parse(await submitted.json()).id;
+  const owner = async () =>
+    z
+      .object({
+        revision: z.number(),
+        history: z.array(z.object({ id: z.uuid(), kind: z.string() })),
+      })
+      .parse(
+        await (
+          await http('/candidates/me/verifications/' + id, candidate)
+        ).json(),
+      );
+  for (const [token, assessorId, reviewKind] of [
+    [assessor, await user(assessor), 'PRIMARY'],
+    [moderator, moderatorId, 'MODERATION'],
+  ]) {
+    expect(
+      (
+        await http(`/admin/verifications/${id}/assignments`, admin, 'POST', {
+          commandId: randomUUID(),
+          expectedRevision: (await owner()).revision,
+          assessorId,
+          reason: 'Synthetic independent supporting review',
+        })
+      ).status,
+    ).toBe(201);
+    expect(
+      (
+        await http(`/assessor/verifications/${id}/events`, token!, 'POST', {
+          commandId: randomUUID(),
+          expectedRevision: (await owner()).revision,
+          kind: 'START_REVIEW',
+        })
+      ).status,
+    ).toBe(201);
+    const review = z
+      .object({ evidence: z.object({ id: z.uuid() }) })
+      .parse(
+        await (await http(`/assessor/verifications/${id}`, token!)).json(),
+      );
+    const d = await owner(),
+      prior = d.history.filter((e) => e.kind === 'DECISION').at(-1);
+    expect(
+      (
+        await http(`/assessor/verifications/${id}/events`, token!, 'POST', {
+          commandId: randomUUID(),
+          expectedRevision: d.revision,
+          kind: 'DECISION',
+          reviewKind,
+          outcome: 'VERIFIED',
+          conflictDeclaredClear: true,
+          rationale: 'PRIVATE_AUTHORITY_CHAIN_REVIEW synthetic rationale',
+          candidateExplanation: 'Synthetic software chain decision',
+          ...(prior ? { supersedesDecisionId: prior.id } : {}),
+          findings: g.criteria.map((c) => ({
+            criterionId: c.id,
+            criterionVersion: c.version,
+            observation: 'Synthetic software observation only',
+            outcome: 'DEMONSTRATED',
+            rationale: 'Synthetic software rationale only',
+            evidenceIds: [review.evidence.id],
+          })),
+        })
+      ).status,
+    ).toBe(201);
+  }
+  const before = (
+    await pool.query(
+      "SELECT * FROM verification_case_events WHERE case_id=$1 AND kind='DECISION' ORDER BY revision",
+      [id],
+    )
+  ).rows;
+  const current = competencyProfileResponseSchema.parse(
+    await (await http('/candidates/me/competency-profile', candidate)).json(),
+  );
+  expect(
+    current.governedVerification!.find((v) => v.caseId === id)?.verified,
+  ).toBe(true);
+  expect(
+    await (
+      await fetch(origin + '/skills-passport', {
+        headers: { cookie: candidateCookie },
+      })
+    ).text(),
+  ).toContain('Verified evidence');
+  await pool.query(
+    'INSERT INTO verification_governance_revocations(authorization_id,reason,actor_id,request_id) VALUES($1,$2,$3,$4)',
+    [
+      g.authorization,
+      'Synthetic supporting authority withdrawn',
+      governorId,
+      randomUUID(),
+    ],
+  );
+  for (const endpoint of [
+    '/candidates/me/competency-profile',
+    '/candidates/me/skills-passport',
+  ]) {
+    const response = await (await http(endpoint, candidate)).json();
+    const projected = z
+      .object({ governedVerification: z.array(verificationProjectionSchema) })
+      .parse(response);
+    expect(
+      projected.governedVerification.find((v) => v.caseId === id),
+    ).toMatchObject({
+      verified: false,
+      evidenceLevelAfter: 'SELF_DECLARED',
+      readiness: 'UNCONFIGURED',
+    });
+  }
+  for (const route of [
+    '/competencies',
+    '/skills-passport',
+    '/verifications/owner/' + id,
+  ]) {
+    const html = await (
+      await fetch(origin + route, { headers: { cookie: candidateCookie } })
+    ).text();
+    expect(html).toContain('Verification is not currently effective');
+    expect(html).not.toContain('Verified evidence');
+    expect(html).not.toContain('PRIVATE_AUTHORITY_CHAIN_ACCOUNT');
+    expect(html).not.toContain('PRIVATE_AUTHORITY_CHAIN_REVIEW');
+  }
+  expect(
+    (
+      await pool.query(
+        "SELECT * FROM verification_case_events WHERE case_id=$1 AND kind='DECISION' ORDER BY revision",
+        [id],
+      )
+    ).rows,
+  ).toEqual(before);
+}, 60000);
+it('continues a withdrawn reassessment and appeals the immutable historical decision through the built private journey', async () => {
+  const rows = z
+    .array(verificationProjectionSchema)
+    .parse(
+      await (await http('/candidates/me/verifications', candidate)).json(),
+    );
+  const original = rows[0]!;
+  const body = (previousCaseId: string) => ({
+    commandId: randomUUID(),
+    rubricVersionId: original.rubricVersionId,
+    summary: 'Synthetic follow-on owned reassessment account',
+    activity: 'Synthetic protocol reassessment',
+    performedAt: '2026-01-01T00:00:00.000Z',
+    locationType: 'Synthetic facility',
+    process: 'IN_PERSON',
+    declaration: true,
+    previousCaseId,
+  });
+  const secondResponse = await http(
+    '/candidates/me/verifications',
+    candidate,
+    'POST',
+    body(original.caseId),
+  );
+  expect(secondResponse.status).toBe(201);
+  const second = z
+    .object({ id: z.uuid() })
+    .parse(await secondResponse.json()).id;
+  expect(
+    (
+      await http(
+        '/candidates/me/verifications/' + second + '/events',
+        candidate,
+        'POST',
+        {
+          kind: 'WITHDRAW',
+          commandId: randomUUID(),
+          expectedRevision: 0,
+          reason: 'Synthetic withdrawal of pending reassessment',
+        },
+      )
+    ).status,
+  ).toBe(201);
+  const thirdResponse = await http(
+    '/candidates/me/verifications',
+    candidate,
+    'POST',
+    body(second),
+  );
+  expect(thirdResponse.status).toBe(201);
+  const third = z.object({ id: z.uuid() }).parse(await thirdResponse.json()).id;
+  const old = z
+    .object({ revision: z.number() })
+    .parse(
+      await (
+        await http('/candidates/me/verifications/' + original.caseId, candidate)
+      ).json(),
+    );
+  expect(
+    (
+      await http(
+        '/candidates/me/verifications/' + original.caseId + '/events',
+        candidate,
+        'POST',
+        {
+          kind: 'APPEAL',
+          commandId: randomUUID(),
+          expectedRevision: old.revision,
+          reason: 'Synthetic challenge of the historical decision',
+        },
+      )
+    ).status,
+  ).toBe(201);
+  const html = await (
+    await fetch(origin + '/verifications/owner/' + original.caseId, {
+      headers: { cookie: candidateCookie },
+    })
+  ).text();
+  expect(html).toContain('APPEAL');
+  expect(html).toContain(
+    'Recorded history below does not itself establish current',
+  );
+  const visible = z
+    .array(verificationProjectionSchema)
+    .parse(
+      await (await http('/candidates/me/verifications', candidate)).json(),
+    );
+  expect(
+    visible.some((v) => v.caseId === original.caseId || v.caseId === second),
+  ).toBe(false);
+  expect(visible.find((v) => v.caseId === third)?.verified).toBe(false);
 });

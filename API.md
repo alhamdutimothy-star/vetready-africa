@@ -214,3 +214,26 @@ Existing bearer/browser-session authentication and `candidate:own` authorization
 - `POST /api/v1/candidates/me/development-workflows/:id/courses/:course/start`: owner-confirmed recommendation only; canonical enrollment and immutable audited plan/enrollment link are created atomically. Existing enrollments are reused.
 
 Learning updates and separate follow-up attempts use the existing training-progress and assessment endpoints. The detail response preserves immutable `items` and exposes current `competencyFollowUps` by exact child/course/mapping references. Module-specific follow-ups require matching module references; lesson-specific follow-ups require an exact lesson reference. Shared course membership or a course-only competency link never implies scoped assessment applicability. Missing/ambiguous relationships produce no competency-specific follow-up. Explicit unscoped assessment links appear separately as `courses[].courseLevelFollowUps` with `scope=COURSE`, displayed once per course; an assessment with a course-wide association is not duplicated beneath competencies. Both response categories retain source assessment-link IDs. Learning completion does not verify competency, close a gap or configure professional policy.
+
+## Phase 3J — governance-gated competency verification
+
+All routes use existing bearer/browser-session authentication. Candidate routes require candidate:own and derive ownership server-side. Assessor routes require assessment:review plus the latest independent case assignment; admin routes require assessment:assign and return references/history without evidence narratives. Employers gain no access.
+
+- GET/POST /api/v1/candidates/me/verifications: own current verification lineages / strict declared evidence submission with commandId, exact rubricVersionId, summary, activity, performedAt (UTC ISO), general locationType, process and optional previousCaseId. No client candidate/actor ID is accepted.
+- GET /api/v1/candidates/me/verifications/options: available explicit rubric/competency versions; no option is fabricated when governance is absent.
+- GET /api/v1/candidates/me/verifications/:id: own immutable history and sanitised result.
+- POST /api/v1/candidates/me/verifications/:id/events: explicit APPEAL or pre-decision WITHDRAW.
+- GET /api/v1/assessor/verifications and /:id: assigned case references / scoped review evidence and structured criteria.
+- POST /api/v1/assessor/verifications/:id/events: START_REVIEW, RECUSE or structured DECISION, including reviewKind PRIMARY/MODERATION, exact criterion/version/evidence references, private rationale, candidate-safe explanation, conflict clearance and optional latest supersedesDecisionId.
+- GET /api/v1/admin/verifications and /:id: bounded assignment queue / minimal administrative history.
+- POST /api/v1/admin/verifications/:id/assignments: exact assessorId, reason, commandId and expectedRevision; reassignment retains history.
+
+Every event requires commandId and expectedRevision. Exact retries replay; changed command meaning or stale revisions conflict. Strict schema failures use 422, unavailable private resources 404, capability failures 403, governance/lifecycle conflicts 409 and canonical audit failures safe 500. No API accepts an authorizationId or approval assertion from a client; the server resolves persisted authority.
+
+Live owner competency-profile and skills-passport responses add governedVerification with exact competency/evidence/rubric/policy/process, before/after maturity, explicit decision and candidate-safe explanation. Historical engine-1 receipts stay unchanged. Readiness remains UNCONFIGURED; no certification, licensing or employer sharing is enabled. Governance approvals are not seeded and have no shortcut approval endpoint. See docs/adr/0011-governance-gated-verification.md.
+
+### Phase 3J scoped audit remediation
+
+The existing RECUSE event may be recorded by a currently assigned reviewer or an active review-capability holder who previously decided that exact case. This metadata-only self-conflict path does not grant private reads, reassignment or decision authority. Recusal of a supporting primary reviewer/moderator withholds current verification; immutable historical outcomes remain recorded. Only an independently authorised replacement review chain can restore an effective outcome.
+
+Malformed persisted criterion structures fail closed at storage, repository and effective-projection boundaries. Criteria follow the canonical shared schema; no professional decision thresholds are added. A withdrawn pending reassessment may receive one same-owner/scope successor, and owner appeal eligibility for historical decided cases is retained. Superseded review decisions and duplicate successors remain blocked. Endpoint/body contracts are unchanged.

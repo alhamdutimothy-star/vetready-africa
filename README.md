@@ -1,5 +1,11 @@
 # VetReady Africa
 
+## Current extension — Phase 3J (uncommitted)
+
+Phase 3J adds a governance-gated competency-verification workflow over canonical evidence, with assigned assessors, structured findings and a private Passport overlay. It is uncommitted for review. No professional approvals are seeded; real VERIFIED outcomes require approved governance. See [Phase 3J completion](docs/PHASE3J_COMPLETION.md).
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## Current implementation — Phase 3I (uncommitted for review)
 
 Protected baseline: `abdfe9d555028fd45c384cff9bf99904be787aa6`, tag `phase-3h1-audit-remediation`. [Phase 3I](docs/PHASE3I_COMPLETION.md) connects owner-only competency gaps to immutable development plans, explicitly mapped governed demo learning, real training progress and separate case follow-up. Use `/development/next-steps` from the development dashboard. No mapping means no activity is fabricated. Unknown/unconfigured requirements remain explicit; completion never awards competence or professional status. Dairy reuses existing pilot content; no new veterinary standards or pathway 2–4 content are supplied. This remains a bounded technical pilot, not production recruitment or professional verification.

@@ -1,5 +1,11 @@
 # Competency and assessment architecture
 
+## Current extension — Phase 3J (uncommitted)
+
+The live owner profile and private Passport expose a separate governedVerification projection for exact child/pathway/rubric/evidence decisions. Historical engine-1 facets/snapshots are preserved. Verified individual evidence does not configure professional requirements or readiness. See [ADR 0011](docs/adr/0011-governance-gated-verification.md).
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## Phase 3B — learning support is not demonstrated competence
 
 Training maps many-to-many to existing exact group/child versions and pathway applicability. No taxonomy is duplicated. Completing a course/module/lesson writes learning progress only; it does not create knowledge/case/practical verification, readiness, official awards, certificates or Passport claims. Professional mappings/objectives remain **PROPOSED — REQUIRES DOMAIN EXPERT VALIDATION**. See [training model](TRAINING_MODEL.md).

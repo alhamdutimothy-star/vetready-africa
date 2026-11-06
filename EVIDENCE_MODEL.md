@@ -1,5 +1,11 @@
 # Evidence model — Phase 3A
 
+## Current extension — Phase 3J (uncommitted)
+
+New Phase 3J cases refer to canonical external submission receipts; the original receipt remains immutable and UNVERIFIED. Later authorised decisions are an immutable, sanitised verification overlay, not a destructive evidence upgrade. Demo evidence is excluded. See [ADR 0011](docs/adr/0011-governance-gated-verification.md).
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## IMPLEMENTED: one canonical ledger
 
 `competency_evidence` remains the child-level evidence receipt/status ledger. The legacy group-level `evidence_records` API remains compatible; it does not become child verification automatically. Assessment attempts, responses, reviews and rubric observations remain Phase 2 sources. There is no second case engine, LMS truth store, award store or readiness engine.

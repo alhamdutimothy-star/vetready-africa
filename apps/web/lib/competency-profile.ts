@@ -5,6 +5,7 @@ import {
   profileCompetencySchema,
   profileFacetSchema,
   profileSourceSchema,
+  verificationProjectionSchema,
 } from '@vetready/contracts';
 const disposition = z.enum([
   'VERIFIED',
@@ -63,6 +64,7 @@ const root = z
     configurationStatus: z.literal('UNCONFIGURED'),
     readiness,
     sharingEnabled: z.literal(false),
+    governedVerification: z.array(verificationProjectionSchema).optional(),
     pathways: z.array(profilePathwaySchema),
     groups: z.array(profileGroupSchema),
     competencies: z.array(competency),

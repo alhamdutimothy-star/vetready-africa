@@ -66,3 +66,4 @@ export * from './practical';
 export * from './competency-profile';
 export * from './recruitment';
 export * from './development';
+export * from './competency-verification';

@@ -1,5 +1,11 @@
 # Relational database architecture
 
+## Current extension — Phase 3J (uncommitted)
+
+Forward migration 018 adds verification rubric versions, assessor authorizations, revocations, cases and immutable event history. Existing canonical evidence receipts and migrations 001–017 are untouched. Ledger checksums govern repeatability. No governance approvals or user authority grants are seeded. See [ADR 0011](docs/adr/0011-governance-gated-verification.md).
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## IMPLEMENTED — migration 010
 
 Forward-only 010 adds stable course/module/lesson identities, course aggregate/module/lesson versions, scoped pathway/competency/assessment links, unique candidate/version enrollments, canonical lesson progress and immutable idempotency receipts. Composite FKs protect hierarchy, ownership and version consistency; triggers freeze released content and enforce state/revision/audit integrity. Only two explicitly scoped training capabilities and their ADMIN/SUPER_ADMIN permissions are added. Existing rows and migrations 001–009 are preserved. See [training ERD and invariants](TRAINING_MODEL.md).

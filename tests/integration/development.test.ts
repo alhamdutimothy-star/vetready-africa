@@ -1,3 +1,4 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { beforeAll, afterAll, it, expect, vi } from 'vitest';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -180,7 +181,7 @@ beforeAll(async () => {
       if (!/^[a-z_][a-z0-9_]*$/.test(name)) throw Error('Invalid table');
       result[name] = (
         await pool.query(
-          `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]') AS rows FROM ${name} t`,
+          `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]') AS rows FROM ${name} t WHERE ${verificationLegacyCatalogPredicate(name)}`,
         )
       ).rows[0].rows;
     }
@@ -447,7 +448,7 @@ it('preserves populated 001–016 records on upgrade/rerun and validates 017 che
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(17);
+  expect(rows).toHaveLength(18);
   for (const r of rows)
     expect(r.checksum).toBe(
       createHash('sha256')
@@ -456,7 +457,7 @@ it('preserves populated 001–016 records on upgrade/rerun and validates 017 che
     );
   expect(
     readdirSync('db/migrations').filter((n) => n.endsWith('.sql')),
-  ).toHaveLength(17);
+  ).toHaveLength(18);
 });
 it('makes plan creation atomic with canonical auditing', async () => {
   await pool.query(

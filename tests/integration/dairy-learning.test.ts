@@ -1,3 +1,4 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import { Pool } from 'pg';
 import request from 'supertest';
@@ -59,7 +60,7 @@ const snapshot = async () => {
         : 'to_jsonb(t)';
     data[t.tablename] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]') AS rows FROM ${t.tablename} t`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]') AS rows FROM ${t.tablename} t WHERE ${verificationLegacyCatalogPredicate(t.tablename)}`,
       )
     ).rows[0].rows;
   }
@@ -216,7 +217,7 @@ it('upgrades populated 012 without rewriting sessions, cases, learning or audit 
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(17);
+  expect(rows).toHaveLength(18);
   for (const r of rows)
     expect(r.checksum).toBe(
       createHash('sha256')

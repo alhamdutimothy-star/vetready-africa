@@ -2,7 +2,6 @@
 
 Historical Phase 3H.1 checkpoint: subsequently committed at `abdfe9d555028fd45c384cff9bf99904be787aa6`, tagged `phase-3h1-audit-remediation`. The pre-commit status and Phase 3I scope recommendation below describe that earlier checkpoint. Current implementation/validation is recorded in [Phase 3I completion](PHASE3I_COMPLETION.md).
 
-
 ## Starting checkpoint
 
 Repository: `C:\Users\HP\Projects\vetready-africa`; branch/tracking branch: `feat/phase-3-training-verification` / `origin/feat/phase-3-training-verification`; HEAD: `a14c2cd552406bca28e5317b0d9bd75b1244b3d1`; tag: `phase-3h-employer-matching-pilot`. Starting tree clean; ahead/behind 0/0. Configured database ledger could not be read (`ECONNREFUSED`); no development database was changed. Migration validation uses an isolated disposable database.
@@ -15,15 +14,15 @@ Current architecture: Next.js server-rendered web → authenticated NestJS API �
 
 ## Product completeness and professional boundaries
 
-| State | Capability |
-| --- | --- |
-| Implemented | Authentication, candidate profile/pathway interest, baseline assessment and governed review foundations, generic training, competency profiles and immutable snapshots |
+| State                       | Capability                                                                                                                                                                                  |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Implemented                 | Authentication, candidate profile/pathway interest, baseline assessment and governed review foundations, generic training, competency profiles and immutable snapshots                      |
 | Implemented technical pilot | Dairy learning/cases, practical demonstration review, private owner Skills Passport, explicit employer consent, one-organisation/one-opportunity technical matching and manual shortlisting |
-| Incomplete | Equivalent pathway 2–4 delivery, automatic gap-plan-to-course enrollment, production private evidence storage and full journey orchestration |
-| Proposed | 12 shared competency groups, four pathways and 69 child definitions: **PROPOSED / REQUIRES DOMAIN EXPERT VALIDATION** |
-| Unconfigured | Professional matching policies, readiness thresholds and professional weighted scoring |
-| Intentionally blocked | Production professional practical verification, Job Ready/Field Ready awards, certification/licensing outputs, public discovery/ranking and automated rejection/hiring |
-| Production-ready | No production recruitment or professional qualification readiness is claimed |
+| Incomplete                  | Equivalent pathway 2–4 delivery, automatic gap-plan-to-course enrollment, production private evidence storage and full journey orchestration                                                |
+| Proposed                    | 12 shared competency groups, four pathways and 69 child definitions: **PROPOSED / REQUIRES DOMAIN EXPERT VALIDATION**                                                                       |
+| Unconfigured                | Professional matching policies, readiness thresholds and professional weighted scoring                                                                                                      |
+| Intentionally blocked       | Production professional practical verification, Job Ready/Field Ready awards, certification/licensing outputs, public discovery/ranking and automated rejection/hiring                      |
+| Production-ready            | No production recruitment or professional qualification readiness is claimed                                                                                                                |
 
 Learning is participation, assessment is assessed performance, and demonstration is demonstration. None automatically becomes professional verification. Technical eligibility is not professional qualification. A private Passport does not create public visibility or employer access. No professional content, thresholds, weights, mandatory requirements or licensing standards were approved or invented.
 

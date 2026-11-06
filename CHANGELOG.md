@@ -1,5 +1,11 @@
 # Changelog
 
+## Current extension — Phase 3J (uncommitted)
+
+Added governance-gated verification cases, scoped review/recusal, immutable structured decisions, reassessment and appeal foundations, sanitised private profile/Passport projections and forward migration 018. See [validation and limitations](docs/PHASE3J_COMPLETION.md).
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## Unreleased — Phase 3I development next steps
 
 - Added immutable profile-backed development plans and audited explicit enrollment links with migration 017.

@@ -1,7 +1,9 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import { randomUUID, createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { Agent } from 'node:http';
 import { Pool } from 'pg';
 import request from 'supertest';
 import type { INestApplication } from '@nestjs/common';
@@ -32,13 +34,17 @@ let candidateId: string,
   pathway: string,
   pathwayRoot: string,
   child: string;
+let deliveredMapping: { child_version_id: string; group_version_id: string };
+const transport = new Agent({ keepAlive: true });
 const api = (
   method: 'get' | 'post' | 'put',
   path: string,
   token = candidate,
 ) => {
   const client = request(app.getHttpServer());
-  return client[method]('/api/v1' + path).auth(token, { type: 'bearer' });
+  return client[method]('/api/v1' + path)
+    .agent(transport)
+    .auth(token, { type: 'bearer' });
 };
 const command = () => ({ commandId: randomUUID() });
 let evaluationCommand: { commandId: string };
@@ -83,7 +89,7 @@ async function tables(names: string[]) {
     if (!/^[a-z_]+$/.test(n)) throw Error('Unsafe table');
     out[n] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]') AS data FROM ${n} t`,
+        `SELECT coalesce(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text),'[]') AS data FROM ${n} t WHERE ${verificationLegacyCatalogPredicate(n)}`,
       )
     ).rows[0].data;
   }
@@ -119,6 +125,22 @@ beforeAll(async () => {
       stdio: 'pipe',
     });
   script('scripts/seed.ts');
+  // Establish the historical BEFORE INSERT invariant before 016/018 exist.
+  deliveredMapping = (
+    await pool.query(
+      `SELECT m.child_version_id,m.group_version_id FROM child_group_mappings m
+     JOIN assessment_blueprint b ON b.child_version_id=m.child_version_id
+     JOIN assessment_versions a ON a.id=b.assessment_version_id
+     WHERE a.status<>'DRAFT' ORDER BY m.child_version_id,m.group_version_id LIMIT 1`,
+    )
+  ).rows[0];
+  expect(deliveredMapping).toBeDefined();
+  await expect(
+    pool.query(
+      'INSERT INTO child_group_mappings(child_version_id,group_version_id) VALUES($1,$2) ON CONFLICT DO NOTHING',
+      [deliveredMapping.child_version_id, deliveredMapping.group_version_id],
+    ),
+  ).rejects.toThrow('Referenced child structure immutable');
   console.info('Phase 3H fixture: pre-016 seed complete');
   issuer = await testIssuer();
   app = await createApp({
@@ -129,6 +151,7 @@ beforeAll(async () => {
     NODE_ENV: 'test',
     PORT: 4000,
   });
+  await app.listen(0, '127.0.0.1');
   [candidate, other, employer, outsider, admin, assessor] = (await Promise.all(
     [
       'pilot-candidate',
@@ -184,7 +207,14 @@ beforeAll(async () => {
   ).body.id;
   const target = (
     await pool.query(
-      'SELECT m.child_version_id AS child,pc.pathway_version_id AS path,pv.pathway_id AS root FROM child_group_mappings m JOIN pathway_competencies pc ON pc.competency_version_id=m.group_version_id JOIN pathway_versions pv ON pv.id=pc.pathway_version_id ORDER BY m.child_version_id LIMIT 1',
+      `SELECT m.child_version_id AS child,pc.pathway_version_id AS path,pv.pathway_id AS root
+       FROM child_group_mappings m JOIN pathway_competencies pc ON pc.competency_version_id=m.group_version_id
+       JOIN pathway_versions pv ON pv.id=pc.pathway_version_id
+       JOIN child_competency_versions cv ON cv.id=m.child_version_id JOIN child_competencies ch ON ch.id=cv.child_id
+       WHERE cv.validation_status NOT IN ('APPROVED','RETIRED') AND NOT EXISTS(
+         SELECT 1 FROM assessment_blueprint b JOIN assessment_versions a ON a.id=b.assessment_version_id
+         WHERE b.child_version_id=m.child_version_id AND a.status<>'DRAFT')
+       ORDER BY ch.code,pc.pathway_version_id,m.group_version_id LIMIT 1`,
     )
   ).rows[0];
   child = target.child;
@@ -208,7 +238,9 @@ beforeAll(async () => {
   console.info('Phase 3H fixture: additive upgrade and rerun verified');
 }, 600000);
 afterAll(async () => {
+  transport.destroy();
   await app?.close();
+  if (app) expect(app.getHttpServer().listening).toBe(false);
   await issuer?.close();
   await pool?.end();
 });
@@ -218,7 +250,7 @@ it('adds 016 without rewriting populated 001–015 data and validates every chec
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(17);
+  expect(rows).toHaveLength(18);
   for (const r of rows)
     expect(r.checksum).toBe(
       createHash('sha256')
@@ -920,6 +952,14 @@ it('makes location declarations stale when an explicitly shared location changes
       action: 'SHORTLIST',
     })
     .expect(409);
+});
+it('retains the stricter historical delivered-child insertion guard after the 018 upgrade', async () => {
+  await expect(
+    pool.query(
+      'INSERT INTO child_group_mappings(child_version_id,group_version_id) VALUES($1,$2) ON CONFLICT DO NOTHING',
+      [deliveredMapping.child_version_id, deliveredMapping.group_version_id],
+    ),
+  ).rejects.toThrow('Referenced child structure immutable');
 });
 it('retains foreign-key provenance and freezes job-referenced child definitions and mappings', async () => {
   const target = (

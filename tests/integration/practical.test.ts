@@ -1,3 +1,4 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import { randomUUID, createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -76,7 +77,7 @@ async function snapshot(tables: string[]) {
         : 'to_jsonb(t)';
     rows[t] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(${projection} ORDER BY (${projection})::text),'[]') AS rows FROM ${t} t`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY (${projection})::text),'[]') AS rows FROM ${t} t WHERE ${verificationLegacyCatalogPredicate(t)}`,
       )
     ).rows[0].rows;
   }
@@ -215,7 +216,7 @@ it('preserves populated 013 records and validates all migration checksums and re
       'SELECT name,checksum FROM schema_migrations ORDER BY name',
     )
   ).rows;
-  expect(rows).toHaveLength(17);
+  expect(rows).toHaveLength(18);
   for (const r of rows)
     expect(r.checksum).toBe(
       createHash('sha256')

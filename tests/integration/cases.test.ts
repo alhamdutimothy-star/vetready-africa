@@ -1,3 +1,4 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { readFileSync, readdirSync } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -58,7 +59,7 @@ async function snapshot(tables: string[]) {
         : 'to_jsonb(t)';
     result[table] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]') AS rows FROM ${table} t`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]') AS rows FROM ${table} t WHERE ${verificationLegacyCatalogPredicate(table)}`,
       )
     ).rows[0].rows;
   }
@@ -666,7 +667,7 @@ it('audits case construction atomically and keeps migrations repeatable with sta
   expect(
     (await pool.query('SELECT * FROM schema_migrations ORDER BY name')).rows,
   ).toEqual(before);
-  expect(before).toHaveLength(17);
+  expect(before).toHaveLength(18);
 });
 
 it('rolls back all case content and audit records if the canonical audit write fails', async () => {

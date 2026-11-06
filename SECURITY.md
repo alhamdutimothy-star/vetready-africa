@@ -1,5 +1,11 @@
 # Security, privacy and Nigerian operating review
 
+## Current extension — Phase 3J (uncommitted)
+
+Phase 3J keeps authentication unchanged and adds exact-case assessor access, permanent per-case recusal, strict owner boundaries, immutable structured decisions and separately provisioned verification:govern authority. Employers receive no new evidence, narrative or Passport access. Secure uploads remain absent; only minimised text/metadata is accepted. See [ADR 0011](docs/adr/0011-governance-gated-verification.md) for governance provisioning and database trust limitations.
+
+Earlier checkpoint sections below retain their historical scope.
+
 ## Phase 3B additions
 
 Explicit `training:manage`/`training:assign` capabilities are granted only to ADMIN/SUPER_ADMIN; existing guards and authentication/session code are unchanged. Candidate progress is owner-scoped, revision-aware and idempotent, with composite FKs and atomic transition audits. Management authority does not qualify a professional assessor. Demo-only release is distinct from production approval, which remains disabled. No UI, upload/media provider, secret or public caching configuration is added. See [training security/resume boundaries](TRAINING_MODEL.md).

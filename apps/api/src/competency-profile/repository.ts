@@ -1,4 +1,5 @@
 import { readProfileFacts } from './facts';
+import { readGovernedVerification } from '../verification/projection';
 import {
   Injectable,
   Inject,
@@ -45,11 +46,18 @@ export class CompetencyProfileRepository {
         'SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY',
       );
       const owner = await this.owner(c, ctx);
-      return aggregateCompetencyProfile(await readProfileFacts(c, owner));
+      return {
+        ...aggregateCompetencyProfile(await readProfileFacts(c, owner)),
+        governedVerification: await readGovernedVerification(c, owner),
+      };
     });
   }
   async passport(ctx: OperationContext) {
-    return skillsPassport(await this.current(ctx));
+    const profile = await this.current(ctx);
+    return {
+      ...skillsPassport(profile),
+      governedVerification: profile.governedVerification,
+    };
   }
   async competency(ctx: OperationContext, id: string) {
     const p = await this.current(ctx);

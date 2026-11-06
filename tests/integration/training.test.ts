@@ -1,3 +1,4 @@
+import { verificationLegacyCatalogPredicate } from '../helpers/verification';
 import { beforeAll, afterAll, it, expect } from 'vitest';
 import { Pool } from 'pg';
 import request from 'supertest';
@@ -82,7 +83,7 @@ async function snapshot() {
         : 'to_jsonb(t)';
     result[tablename] = (
       await pool.query(
-        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]'::jsonb) AS rows FROM ${tablename} t ${exclude}`,
+        `SELECT coalesce(jsonb_agg(${projection} ORDER BY ${projection}::text),'[]'::jsonb) AS rows FROM ${tablename} t ${exclude} ${exclude ? 'AND' : 'WHERE'} ${verificationLegacyCatalogPredicate(tablename)}`,
       )
     ).rows[0].rows;
   }

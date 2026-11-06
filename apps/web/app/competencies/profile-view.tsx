@@ -76,6 +76,40 @@ export async function ProfileView({
         requirements remain unconfigured.
       </p>
       <p>Evaluated {p.evaluatedAt}</p>
+      <p>
+        <Link href="/verifications">
+          Submit evidence or review my verification decisions
+        </Link>
+      </p>
+      {p.governedVerification && p.governedVerification.length > 0 && (
+        <section>
+          <h2>Governed competency verification</h2>
+          <p>
+            Separate from historical evidence snapshots and learning progress.
+            Individual evidence verification does not award professional
+            readiness.
+          </p>
+          {p.governedVerification
+            .filter((v) => !path || v.pathwayVersionId === path.id)
+            .map((v) => (
+              <p key={v.caseId}>
+                <Link href={`/verifications/owner/${v.caseId}`}>
+                  {p.competencies
+                    .find((c) => c.id === v.childVersionId)
+                    ?.code.replaceAll('_', ' ') ?? v.childVersionId}
+                </Link>
+                :{' '}
+                {v.verified
+                  ? 'Verified evidence'
+                  : v.outcome === 'VERIFIED'
+                    ? 'Verification is not currently effective; governance or moderation remains outstanding'
+                    : (v.outcome ?? 'Pending review')}{' '}
+                · {v.evidenceLevelAfter} · {v.process} · rubric{' '}
+                {v.rubricVersionId}
+              </p>
+            ))}
+        </section>
+      )}
       {status && (
         <p role="alert">
           The private snapshot was not saved. Check your connection and retry.

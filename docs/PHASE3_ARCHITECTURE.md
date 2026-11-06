@@ -10,7 +10,6 @@ The next scope remains subject to independent review; professional governance, p
 
 The sections below preserve earlier proposals and checkpoint-specific status, including superseded phase numbering and provider setup statements. They are historical, not current delivery or production-readiness claims. Private storage, workers/outbox and public search in proposed designs are not implemented production services. Existing end-to-end tests use Vitest and HTTP against built services; Playwright browser testing remains proposed.
 
-
 ## IMPLEMENTED: Phase 3B governed training
 
 Migration 010 and training API/domain/contracts add immutable demo course snapshots, reusable competency/assessment references and candidate-owned, resumable learning participation. Production approval and competence awards remain disabled. The accepted Phase 3A checkpoint was `df6c0ca`; authentication and migrations 001–009 are protected. See [training model](../TRAINING_MODEL.md) and [ADR 0005](adr/0005-governed-training-and-progress.md). Phase 3C remains deferred.
