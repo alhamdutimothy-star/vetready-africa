@@ -35,6 +35,9 @@ export default async function Dairy({
     <>
       <Link href="/dashboard">My profile</Link>
       <h1>Commercial Dairy Practice</h1>
+      <p>
+        <Link href="/dairy/journey">My dairy journey and next step</Link>
+      </p>
       <p className="notice">{d.notice}</p>
       <p>
         Observe → Identify → Prioritise → Investigate → Interpret → Recommend →

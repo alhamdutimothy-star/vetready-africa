@@ -15,6 +15,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Link>
           <nav aria-label="Main">
             <Link href="/dashboard">My profile</Link>
+            {' · '}
+            <Link href="/dairy/journey">My dairy journey</Link>
           </nav>
         </header>
         <main>{children}</main>

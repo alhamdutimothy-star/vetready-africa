@@ -72,7 +72,7 @@ export default async function Dashboard({
         <Link href="/skills-passport">My private Skills Passport</Link>
       </p>
       <p>
-        <Link className="button" href="/dairy">
+        <Link className="button" href="/dairy/journey">
           Open the Commercial Dairy Practice pilot
         </Link>
       </p>

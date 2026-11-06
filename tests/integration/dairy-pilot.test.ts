@@ -10,6 +10,10 @@ import request from 'supertest';
 import type { INestApplication } from '@nestjs/common';
 import { createApp } from '../../apps/api/dist/app';
 import { testIssuer } from '../helpers/issuer';
+import { dairyJourney } from '../../apps/web/lib/dairy-journey';
+import { pilotDashboardSchema } from '../../apps/web/lib/dairy-pilot';
+import { competencyProfileResponseSchema } from '../../apps/web/lib/competency-profile';
+import { attemptsSchema } from '../../apps/web/lib/assessment';
 import {
   pilotAttemptSchema,
   staffPilotSchema,
@@ -905,4 +909,24 @@ it('requires a fresh review revision after returned moderation while preserving 
   expect(
     final.feedback.find((f: { id: string }) => f.id === previous.id).moderation,
   ).toBe('RETURNED');
+});
+
+it('composes dairy journey progress from owner-scoped API facts without promoting completed learning or demo evidence', async () => {
+  const d = pilotDashboardSchema.parse(
+    (await get('/candidates/me/dairy-pilot').expect(200)).body,
+  );
+  const p = competencyProfileResponseSchema.parse(
+    (await get('/candidates/me/competency-profile').expect(200)).body,
+  );
+  const a = attemptsSchema.parse(
+    (await get('/candidates/me/attempts').expect(200)).body,
+  );
+  const journey = dairyJourney(d, p, a);
+  expect(journey.available).toBe(true);
+  expect(journey.available && journey.effectiveCount).toBe(0);
+  expect(p.readiness.determination).toBeNull();
+  expect(p.readiness.status).toBe('UNAVAILABLE');
+  const stranger = await get('/candidates/me/dairy-pilot', other).expect(200);
+  expect(stranger.body.attempts).toEqual([]);
+  await get('/candidates/me/competency-profile', other).expect(404);
 });

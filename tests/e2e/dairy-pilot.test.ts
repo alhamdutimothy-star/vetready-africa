@@ -5,6 +5,9 @@ import {
 } from '@vetready/contracts';
 import { employerExplanationSchema } from '../../apps/web/lib/recruitment';
 import { competencyProfileResponseSchema } from '../../apps/web/lib/competency-profile';
+import { dairyJourney } from '../../apps/web/lib/dairy-journey';
+import { pilotDashboardSchema } from '../../apps/web/lib/dairy-pilot';
+import { attemptsSchema } from '../../apps/web/lib/assessment';
 import {
   pilotAttemptSchema,
   staffPilotSchema,
@@ -1061,6 +1064,32 @@ it('continues the completed dairy development journey through governed verificat
     readiness: 'UNCONFIGURED',
   });
   expect(final.readiness.determination).toBeNull();
+  const journey = await (
+    await fetch(origin + '/dairy/journey', {
+      headers: { cookie: candidateCookie },
+    })
+  ).text();
+  expect(journey).toContain('Currently effective governed verification');
+  expect(journey).toContain('EFFECTIVELY_VERIFIED');
+  const dairyState = pilotDashboardSchema.parse(
+    await (await http('/candidates/me/dairy-pilot', candidate)).json(),
+  );
+  const reconciled = dairyJourney(dairyState, final, []);
+  const effectiveEvidence = final.governedVerification!.find(
+    (v) => v.caseId === id,
+  )!.evidenceId;
+  expect(
+    final.sources.find((s) => s.id === effectiveEvidence)?.reviewPending,
+  ).toBe(true);
+  expect(final.sources.find((s) => s.id === effectiveEvidence)?.lifecycle).toBe(
+    'SUBMITTED',
+  );
+  expect(
+    reconciled.available &&
+      reconciled.pendingEvidence.some((s) => s.id === effectiveEvidence),
+  ).toBe(false);
+  expect(journey).toContain('Readiness: unavailable');
+  expect(journey).not.toContain('PRIVATE_3J_REVIEW');
   for (const route of ['/skills-passport', `/verifications/owner/${id}`]) {
     const html = await (
       await fetch(origin + route, { headers: { cookie: candidateCookie } })
@@ -1404,4 +1433,77 @@ it('continues a withdrawn reassessment and appeals the immutable historical deci
     visible.some((v) => v.caseId === original.caseId || v.caseId === second),
   ).toBe(false);
   expect(visible.find((v) => v.caseId === third)?.verified).toBe(false);
+});
+
+it('connects the private dairy journey to existing assessment, learning, evidence, verification and Passport without inventing readiness', async () => {
+  const d = pilotDashboardSchema.parse(
+    await (await http('/candidates/me/dairy-pilot', candidate)).json(),
+  );
+  const p = competencyProfileResponseSchema.parse(
+    await (await http('/candidates/me/competency-profile', candidate)).json(),
+  );
+  const a = attemptsSchema.parse(
+    await (await http('/candidates/me/attempts', candidate)).json(),
+  );
+  const summary = dairyJourney(d, p, a);
+  expect(summary.available).toBe(true);
+  const response = await fetch(origin + '/dairy/journey', {
+    headers: { cookie: candidateCookie },
+  });
+  const html = await response.text();
+  expect(response.status).toBe(200);
+  expect(response.headers.get('cache-control')).toContain('no-store');
+  expect(html).toContain('My Commercial Dairy Practice journey');
+  expect(html).toContain('Readiness: unavailable');
+  expect(html).toContain(
+    'professional thresholds require domain-expert validation',
+  );
+  expect(html).toContain('Completion is learning progress only');
+  expect(html).toContain(
+    'Learning, assessment and candidate claims do not establish practical competence',
+  );
+  for (const route of [
+    '/development?pathway=',
+    '/development/next-steps',
+    '/dairy/learning',
+    '/practical',
+    '/verifications',
+    '/competencies?pathway=',
+    '/skills-passport?pathway=',
+  ])
+    expect(html).toContain(route);
+  for (const secret of [
+    candidate,
+    assessor,
+    'PRIVATE_PRACTICAL_SSR_ACTIVITY',
+    'PRIVATE_REVIEW_SENTINEL',
+    'PRIVATE_DAIRY_SSR_SENTINEL',
+    'accessToken',
+  ])
+    expect(html).not.toContain(secret);
+  expect(summary.available && summary.effectiveCount).toBe(
+    p.governedVerification
+      ?.filter((v) => v.verified && v.pathwayVersionId === d.pathway.version_id)
+      .map((v) => v.childVersionId)
+      .filter((id, i, all) => all.indexOf(id) === i).length ?? 0,
+  );
+});
+it('does not expose the dairy owner journey anonymously or to a different candidate without a profile', async () => {
+  const anonymous = await (await fetch(origin + '/dairy/journey')).text();
+  expect(anonymous).toContain('Sign in to continue');
+  expect(anonymous).not.toContain('dairy enrollments;');
+  const token = await identity.token('phase3k-unrelated-candidate');
+  const session = await http('/sessions', token, 'POST');
+  expect(session.status).toBe(201);
+  const { handle } = z
+    .object({ handle: z.string() })
+    .parse(await session.json());
+  const cookie = `vetready_session=${await encryptCookie({ accessToken: token, sessionHandle: handle }, syntheticSessionKey, 'session', 300)}`;
+  const html = await (
+    await fetch(origin + '/dairy/journey', { headers: { cookie } })
+  ).text();
+  expect(html).toContain('Save your private candidate profile');
+  expect(html).not.toContain('dairy enrollments;');
+  expect(html).not.toContain('PRIVATE_PRACTICAL_SSR_ACTIVITY');
+  expect(html).not.toContain(token);
 });
