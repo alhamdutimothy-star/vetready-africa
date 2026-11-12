@@ -67,3 +67,4 @@ export * from './competency-profile';
 export * from './recruitment';
 export * from './development';
 export * from './competency-verification';
+export * from './dairy-verification-configuration';
